@@ -2,18 +2,19 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PIECE_COLORS } from '../constants/colors';
 
-const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, borderClass, align = 'left' }) => {
+const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, borderClass, align = 'left', compact = false }) => {
     return (
         <motion.div
             animate={{
-                scale: isActive ? 1.05 : 1,
+                scale: isActive ? (compact ? 1.02 : 1.05) : 1,
                 opacity: isActive ? 1 : 0.7,
                 y: isActive ? -2 : 0
             }}
             className={`
                 relative flex flex-col ${align === 'right' ? 'items-end' : 'items-start'} 
-                p-4 rounded-xl bg-gray-900/60 backdrop-blur-xl border 
-                transition-all duration-300 w-full max-w-[160px] overflow-hidden shadow-lg
+                ${compact ? 'p-2 min-w-[100px] max-w-[120px]' : 'p-4 w-full max-w-[160px]'}
+                rounded-xl bg-gray-900/60 backdrop-blur-xl border 
+                transition-all duration-300 overflow-hidden shadow-lg
             `}
             style={{
                 borderColor: isActive ? borderClass : 'rgba(255,255,255,0.05)',
@@ -36,7 +37,7 @@ const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, b
 
             {/* Label */}
             <span
-                className={`text-[10px] font-bold tracking-[0.15em] uppercase mb-1 ${isActive ? 'text-white' : 'text-gray-500'}`}
+                className={`font-bold tracking-[0.15em] uppercase mb-0.5 ${compact ? 'text-[8px]' : 'text-[10px]'} ${isActive ? 'text-white' : 'text-gray-500'}`}
                 style={{ textShadow: isActive ? `0 0 8px ${borderClass}` : 'none' }}
             >
                 {label}
@@ -45,7 +46,7 @@ const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, b
             {/* Score - Compact Neon Effect */}
             <div className="flex items-baseline gap-1">
                 <span
-                    className="text-4xl font-black text-white leading-none"
+                    className={`${compact ? 'text-2xl' : 'text-4xl'} font-black text-white leading-none`}
                     style={{
                         fontFamily: '"Inter", sans-serif',
                         textShadow: isActive
@@ -55,12 +56,12 @@ const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, b
                 >
                     {score}
                 </span>
-                <span className="text-[10px] font-bold text-gray-500 tracking-wider transform translate-y-[-2px]">PTS</span>
+                <span className={`${compact ? 'text-[8px]' : 'text-[10px]'} font-bold text-gray-500 tracking-wider transform translate-y-[-2px]`}>PTS</span>
             </div>
 
             {/* Time (for VS modes) */}
             {totalTime !== undefined && (
-                <div className={`mt-2 flex items-center gap-1 text-[10px] font-mono ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>
+                <div className={`mt-1 flex items-center gap-1 ${compact ? 'text-[9px]' : 'text-[10px]'} font-mono ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>
                     <span>TIME:</span>
                     <span>{totalTime}</span>
                 </div>
@@ -76,7 +77,8 @@ const ScoreBoard = ({
     lastActionMessage,
     gameMode,
     totalThinkingTime,
-    isReplaying
+    isReplaying,
+    compactMode = false
 }) => {
     const isCPUMode = gameMode?.startsWith('CPU_');
     const isSoloMode = gameMode === 'SOLO';
@@ -103,29 +105,31 @@ const ScoreBoard = ({
     return (
         <div className="w-full max-w-lg mx-auto mb-2 px-2">
             {/* Status Bar / Notification - Compact */}
-            <div className="flex justify-center mb-3">
-                <div className="relative group">
-                    <div
-                        className="absolute inset-0 bg-gray-900/90 backdrop-blur-xl rounded-full border border-gray-700/50 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
-                        style={{
-                            borderColor: phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.3)' : (turn === 1 ? 'rgba(96, 165, 250, 0.3)' : 'rgba(251, 113, 133, 0.3)'),
-                            boxShadow: `0 0 20px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.1)' : (turn === 1 ? 'rgba(96, 165, 250, 0.1)' : 'rgba(251, 113, 133, 0.1)')}`
-                        }}
-                    />
-                    <div className="relative px-6 py-1.5 flex items-center gap-3">
+            {!compactMode && (
+                <div className="flex justify-center mb-3">
+                    <div className="relative group">
                         <div
-                            className={`w-2 h-2 rounded-full ${phase === 'REMOVING' ? 'bg-yellow-400 animate-pulse' : (turn === 1 ? 'bg-blue-400' : 'bg-rose-400')}`}
-                            style={{ boxShadow: phase === 'REMOVING' ? '0 0 8px #FACC15' : (turn === 1 ? '0 0 8px #60A5FA' : '0 0 8px #FB7185') }}
+                            className="absolute inset-0 bg-gray-900/90 backdrop-blur-xl rounded-full border border-gray-700/50 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                            style={{
+                                borderColor: phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.3)' : (turn === 1 ? 'rgba(96, 165, 250, 0.3)' : 'rgba(251, 113, 133, 0.3)'),
+                                boxShadow: `0 0 20px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.1)' : (turn === 1 ? 'rgba(96, 165, 250, 0.1)' : 'rgba(251, 113, 133, 0.1)')}`
+                            }}
                         />
-                        <span
-                            className={`text-xs font-bold tracking-widest uppercase ${getStatusColor()}`}
-                            style={{ textShadow: '0 0 15px currentColor' }}
-                        >
-                            {getStatusMessage()}
-                        </span>
+                        <div className="relative px-6 py-1.5 flex items-center gap-3">
+                            <div
+                                className={`w-2 h-2 rounded-full ${phase === 'REMOVING' ? 'bg-yellow-400 animate-pulse' : (turn === 1 ? 'bg-blue-400' : 'bg-rose-400')}`}
+                                style={{ boxShadow: phase === 'REMOVING' ? '0 0 8px #FACC15' : (turn === 1 ? '0 0 8px #60A5FA' : '0 0 8px #FB7185') }}
+                            />
+                            <span
+                                className={`text-xs font-bold tracking-widest uppercase ${getStatusColor()}`}
+                                style={{ textShadow: '0 0 15px currentColor' }}
+                            >
+                                {getStatusMessage()}
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Main Score Area - Compact Layout */}
             <div className="flex justify-center items-stretch gap-3">
@@ -138,6 +142,7 @@ const ScoreBoard = ({
                     colorClass="text-blue-400"
                     borderClass="#60A5FA" // blue-400
                     align="left"
+                    compact={compactMode}
                 />
 
                 {/* VS Badge (Center) - Hidden in Solo, Simplified */}
@@ -159,6 +164,7 @@ const ScoreBoard = ({
                         colorClass="text-rose-400"
                         borderClass="#FB7185" // rose-400
                         align="right"
+                        compact={compactMode}
                     />
                 )}
             </div>

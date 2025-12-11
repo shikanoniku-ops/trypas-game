@@ -57,5 +57,25 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
         }
     }, []);
 
+    // Handle visibility change (pause when backgrounded)
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                if (audioRef.current && isPlaying) {
+                    audioRef.current.pause();
+                }
+            } else {
+                if (audioRef.current && isPlaying) {
+                    audioRef.current.play().catch(e => console.error("Resume error:", e));
+                }
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, [isPlaying]);
+
     return useMemo(() => ({ play, pause, toggleMute, setVolume, isPlaying, isMuted }), [play, pause, toggleMute, setVolume, isPlaying, isMuted]);
 };

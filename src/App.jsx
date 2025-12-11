@@ -12,8 +12,7 @@ function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameMode, setGameMode] = useState('LOCAL');
   const [showRulesInGame, setShowRulesInGame] = useState(false);
-  const [showVolumeMenu, setShowVolumeMenu] = useState(false);
-  const [volumeLevel, setVolumeLevel] = useState('medium'); // 'high', 'medium', 'off'
+  const [isMuted, setIsMuted] = useState(false);
   const [audioInitialized, setAudioInitialized] = useState(false);
 
   // Background Music
@@ -36,7 +35,7 @@ function App() {
 
   const handleAudioSetup = (soundEnabled) => {
     if (soundEnabled) {
-      setVolumeLevel('medium');
+      setIsMuted(false);
       titleBGM.setVolume(0.3);
       gameBGM.setVolume(0.3);
       // Play appropriate music
@@ -46,7 +45,7 @@ function App() {
         titleBGM.play();
       }
     } else {
-      setVolumeLevel('off');
+      setIsMuted(true);
       titleBGM.setVolume(0);
       gameBGM.setVolume(0);
     }
@@ -93,40 +92,12 @@ function App() {
 
   const currentBGM = gameStarted ? gameBGM : titleBGM;
 
-  const handleVolumeChange = (level) => {
-    setVolumeLevel(level);
-    let volume = 0;
-
-    switch (level) {
-      case 'high':
-        volume = 0.6;
-        break;
-      case 'medium':
-        volume = 0.3;
-        break;
-      case 'off':
-        volume = 0;
-        break;
-      default:
-        volume = 0.3;
-    }
-
-    titleBGM.setVolume(volume);
-    gameBGM.setVolume(volume);
-    setShowVolumeMenu(false);
-  };
-
-  const getVolumeIcon = () => {
-    switch (volumeLevel) {
-      case 'high':
-        return '🔊';
-      case 'medium':
-        return '🔉';
-      case 'off':
-        return '🔇';
-      default:
-        return '🔉';
-    }
+  const toggleAudio = () => {
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+    const newVolume = newMutedState ? 0 : 0.3;
+    titleBGM.setVolume(newVolume);
+    gameBGM.setVolume(newVolume);
   };
 
   return (
@@ -134,49 +105,15 @@ function App() {
       {/* Music Control Button and Menu */}
       <InitialAudioModal onComplete={handleAudioSetup} />
 
-      {/* Music Control Button and Menu */}
+      {/* Music Control Button */}
       <div className="fixed top-4 right-4 z-[9999]">
         <button
-          onClick={() => setShowVolumeMenu(!showVolumeMenu)}
+          onClick={toggleAudio}
           className="w-12 h-12 flex items-center justify-center bg-gray-800/80 hover:bg-gray-700 backdrop-blur-sm rounded-full border border-gray-600 transition-all hover:scale-110 active:scale-95 pointer-events-auto cursor-pointer"
-          title="音量設定"
+          title={isMuted ? "ミュート解除" : "ミュート"}
         >
-          <span className="text-2xl">{getVolumeIcon()}</span>
+          <span className="text-2xl">{isMuted ? '🔇' : '🔊'}</span>
         </button>
-
-        {/* Volume Menu */}
-        <AnimatePresence>
-          {showVolumeMenu && (
-            <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.9 }}
-              className="absolute top-14 right-0 bg-gray-800 border border-gray-600 rounded-xl overflow-hidden shadow-2xl"
-            >
-              <button
-                onClick={() => handleVolumeChange('high')}
-                className={`w-full px-6 py-3 flex items-center gap-3 hover:bg-gray-700 transition-colors ${volumeLevel === 'high' ? 'bg-gray-700' : ''}`}
-              >
-                <span className="text-2xl">🔊</span>
-                <span className="text-sm font-bold">大</span>
-              </button>
-              <button
-                onClick={() => handleVolumeChange('medium')}
-                className={`w-full px-6 py-3 flex items-center gap-3 hover:bg-gray-700 transition-colors ${volumeLevel === 'medium' ? 'bg-gray-700' : ''}`}
-              >
-                <span className="text-2xl">🔉</span>
-                <span className="text-sm font-bold">小</span>
-              </button>
-              <button
-                onClick={() => handleVolumeChange('off')}
-                className={`w-full px-6 py-3 flex items-center gap-3 hover:bg-gray-700 transition-colors ${volumeLevel === 'off' ? 'bg-gray-700' : ''}`}
-              >
-                <span className="text-2xl">🔇</span>
-                <span className="text-sm font-bold">消</span>
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
       <div className="relative w-full max-w-4xl flex-grow flex flex-col items-center justify-center p-4">
@@ -202,29 +139,58 @@ function App() {
               transition={{ duration: 0.5 }}
               className="w-full flex flex-col items-center justify-center"
             >
-              {/* Logo - Compact & Responsive */}
-              <img
-                src="/trypas-logo.png"
-                alt="TRYPAS"
-                className="w-[100px] md:absolute md:top-6 md:left-6 md:w-[180px] mb-1 md:mb-0 opacity-90 drop-shadow-xl z-20"
-              />
+              {/* Game Header - Redesigned for Mobile */}
+              <div className="flex-shrink-0 w-full max-w-[95%] mb-2">
+                <div className="flex flex-row items-center justify-between gap-4">
+                  {/* Left Side: Logo & Status */}
+                  <div className="flex flex-col items-start gap-2">
+                    <img
+                      src="/trypas-logo.png"
+                      alt="TRYPAS"
+                      className="w-[120px] opacity-90 drop-shadow-lg"
+                    />
 
-              {/* Game Header */}
-              <div className="flex-shrink-0 w-full max-w-[95%]">
-                <ScoreBoard
-                  scores={scores}
-                  turn={turn}
-                  phase={phase}
-                  lastActionMessage={lastActionMessage}
-                  gameMode={gameMode}
-                  totalThinkingTime={totalThinkingTime}
-                  capturedPieces={capturedPieces}
-                  isReplaying={isReplaying}
-                />
+                    {/* Status Pill moved from ScoreBoard */}
+                    <div className="relative group">
+                      <div
+                        className="absolute inset-0 bg-gray-900/90 backdrop-blur-xl rounded-full border border-gray-700/50"
+                        style={{
+                          borderColor: phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.3)' : (turn === 1 ? 'rgba(96, 165, 250, 0.3)' : 'rgba(251, 113, 133, 0.3)'),
+                          boxShadow: `0 0 10px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.1)' : (turn === 1 ? 'rgba(96, 165, 250, 0.1)' : 'rgba(251, 113, 133, 0.1)')}`
+                        }}
+                      />
+                      <div className="relative px-4 py-1 flex items-center gap-2">
+                        <div
+                          className={`w-1.5 h-1.5 rounded-full ${phase === 'REMOVING' ? 'bg-yellow-400 animate-pulse' : (turn === 1 ? 'bg-blue-400' : 'bg-rose-400')}`}
+                        />
+                        <span
+                          className={`text-[10px] font-bold tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-blue-400' : 'text-rose-400')}`}
+                        >
+                          {phase === 'REMOVING' ? 'セットアップ' : (isReplaying ? 'リプレイ' : (isSoloMode ? 'SOLO PLAY' : (turn === 1 ? 'P1 ターン' : (isCPUMode ? 'CPU ターン' : 'P2 ターン'))))}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Side: ScoreBoard (Compact) */}
+                  <div className="flex-grow flex justify-end">
+                    <ScoreBoard
+                      scores={scores}
+                      turn={turn}
+                      phase={phase}
+                      lastActionMessage={lastActionMessage}
+                      gameMode={gameMode}
+                      totalThinkingTime={totalThinkingTime}
+                      capturedPieces={capturedPieces}
+                      isReplaying={isReplaying}
+                      compactMode={true} // New prop for compact layout
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Game Board */}
-              <div className="flex items-center justify-center w-full my-4">
+              <div className="flex items-center justify-center w-full my-1 md:my-4 scale-95 md:scale-100 origin-center">
                 <GameBoard
                   board={board}
                   onSpotClick={handleSpotClick}
@@ -251,7 +217,7 @@ function App() {
               )}
 
               {/* Score Legend (below Timer) */}
-              <div className="mb-4 p-3 bg-gray-800/50 rounded-xl border border-gray-700 max-w-md mx-4">
+              <div className="mb-2 p-2 bg-gray-800/50 rounded-xl border border-gray-700 max-w-md mx-4">
                 <div className="flex gap-4 justify-center items-center flex-wrap text-sm">
                   <div className="flex items-center gap-1.5">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: PIECE_COLORS.RED }}></div>
@@ -345,10 +311,10 @@ function App() {
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 50, opacity: 0 }}
-                    className="mb-4 p-4 bg-gray-800 rounded-2xl border-2 border-purple-500 max-w-md mx-4"
+                    className="mb-1 p-2 bg-gray-800 rounded-2xl border-2 border-purple-500 max-w-md mx-4"
                   >
-                    <div className="text-center mb-3">
-                      <span className="text-white font-bold">
+                    <div className="text-center mb-1">
+                      <span className="text-white text-sm font-bold">
                         手順 {replayStep + 1} / {moveHistory.length}
                       </span>
                     </div>
@@ -356,20 +322,20 @@ function App() {
                       <button
                         onClick={prevReplayStep}
                         disabled={replayStep === 0}
-                        className="px-4 py-2 bg-gray-700 text-white font-bold rounded-lg hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        className="px-3 py-1.5 bg-gray-700 text-white text-sm font-bold rounded-lg hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                       >
                         ⏮️ 前へ
                       </button>
                       <button
                         onClick={stopReplay}
-                        className="px-6 py-2 bg-red-600 text-white font-bold rounded-lg hover:bg-red-500 transition-colors"
+                        className="px-4 py-1.5 bg-red-600 text-white text-sm font-bold rounded-lg hover:bg-red-500 transition-colors"
                       >
                         ⏹️ 終了
                       </button>
                       <button
                         onClick={nextReplayStep}
                         disabled={replayStep >= moveHistory.length - 1}
-                        className="px-4 py-2 bg-gray-700 text-white font-bold rounded-lg hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        className="px-3 py-1.5 bg-gray-700 text-white text-sm font-bold rounded-lg hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                       >
                         次へ ⏭️
                       </button>
@@ -379,24 +345,24 @@ function App() {
               </AnimatePresence>
 
               {/* Game Footer / Controls */}
-              <div className="mt-4 flex gap-4">
+              <div className="mt-2 flex gap-3">
                 <button
                   onClick={handleBackToTitle}
-                  className="px-8 py-3 bg-gray-800 text-white font-bold rounded-full border border-gray-700 hover:bg-gray-700 transition-colors"
+                  className="px-6 py-2 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-700 hover:bg-gray-700 transition-colors"
                 >
                   TITLE
                 </button>
                 <button
                   onClick={resetGame}
-                  className="px-8 py-3 bg-gray-800 text-white font-bold rounded-full border border-gray-700 hover:bg-gray-700 transition-colors"
+                  className="px-6 py-2 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-700 hover:bg-gray-700 transition-colors"
                 >
                   RESET
                 </button>
                 <button
                   onClick={() => setShowRulesInGame(true)}
-                  className="px-8 py-3 bg-gray-800 text-white font-bold rounded-full border border-gray-700 hover:bg-gray-700 transition-colors"
+                  className="px-6 py-2 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-700 hover:bg-gray-700 transition-colors"
                 >
-                  ルール説明
+                  ルール
                 </button>
               </div>
 
