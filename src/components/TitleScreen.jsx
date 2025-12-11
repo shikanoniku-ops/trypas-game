@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PIECE_SCORES } from '../constants/colors';
 import RulesContent from './RulesContent';
 import FeedbackModal from './FeedbackModal';
+import packageJson from '../../package.json';
 
 const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
     const [showRules, setShowRules] = useState(false);
@@ -22,9 +23,14 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     alt="TRYPAS"
                     className="w-[300px] md:w-[350px] mx-auto drop-shadow-2xl"
                 />
-                <p className="text-gray-400 mt-4 text-lg tracking-widest uppercase">
-                    Strategic Board Game
-                </p>
+                <div className="mt-4 flex flex-col items-center gap-2">
+                    <span className="px-4 py-1 bg-blue-500/10 border border-blue-400/20 rounded-full text-[10px] text-blue-300 tracking-[0.3em] font-bold uppercase backdrop-blur-sm shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                        Prototype
+                    </span>
+                    <p className="text-gray-500 text-sm tracking-widest uppercase opacity-80">
+                        Strategic Board Game
+                    </p>
+                </div>
             </motion.div>
 
             <motion.div
@@ -100,15 +106,18 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                 </button>
             </motion.div>
 
-            {/* Creator Credit */}
+            {/* Creator Credit & Version */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
-                className="mt-8 text-center"
+                className="mt-8 text-center space-y-1"
             >
                 <p className="text-xs text-gray-500 uppercase tracking-wider">
                     Game Design: <span className="text-sm text-gray-400 font-semibold normal-case">Dr. Q</span>
+                </p>
+                <p className="text-[10px] text-gray-600 font-mono tracking-wider">
+                    v{packageJson.version}
                 </p>
             </motion.div>
 
