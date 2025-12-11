@@ -39,6 +39,18 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-20 transition-opacity" />
                 </button>
 
+                {/* Tutorial Button */}
+                <button
+                    onClick={() => onStart('TUTORIAL')}
+                    className="group relative px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg border border-emerald-400/30"
+                >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                        <span className="text-lg">📖</span>
+                        TUTORIAL
+                    </span>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity" />
+                </button>
+
                 <button
                     disabled
                     className="px-8 py-3 bg-gray-800/50 text-gray-500 font-bold rounded-full border border-gray-700/50 cursor-not-allowed"

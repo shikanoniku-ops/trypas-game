@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useGameLogic } from './hooks/useGameLogic';
 import { useBackgroundMusic } from './hooks/useBackgroundMusic';
+import { useTutorial } from './hooks/useTutorial';
 import TitleScreen from './components/TitleScreen';
 import GameBoard from './components/GameBoard';
 import ScoreBoard from './components/ScoreBoard';
 import InitialAudioModal from './components/InitialAudioModal';
 import RulesContent from './components/RulesContent';
 import Legend from './components/Legend';
+import TutorialGuide from './components/TutorialGuide';
 import { PIECE_SCORES, PIECE_COLORS } from './constants/colors';
 
 function App() {
@@ -79,18 +81,31 @@ function App() {
     jumpToReplayStep
   } = useGameLogic(gameMode);
 
+  // Tutorial Mode
+  const tutorial = useTutorial();
+
   const handleStartGame = (mode) => {
-    setGameMode(mode);
-    resetGame();
-    setGameStarted(true);
+    if (mode === 'TUTORIAL') {
+      tutorial.startTutorial();
+      setGameStarted(true);
+      setGameMode('TUTORIAL');
+    } else {
+      setGameMode(mode);
+      resetGame();
+      setGameStarted(true);
+    }
   };
 
   const handleBackToTitle = () => {
+    if (tutorial.isTutorialMode) {
+      tutorial.exitTutorial();
+    }
     setGameStarted(false);
   };
 
   const isCPUMode = gameMode.startsWith('CPU_');
   const isSoloMode = gameMode === 'SOLO';
+  const isTutorialMode = gameMode === 'TUTORIAL' && tutorial.isTutorialMode;
 
   const currentBGM = gameStarted ? gameBGM : titleBGM;
 
@@ -123,7 +138,74 @@ function App() {
             >
               <TitleScreen onStart={handleStartGame} onToggleAudio={toggleAudio} isMuted={isMuted} />
             </motion.div>
+          ) : isTutorialMode ? (
+            /* ========== TUTORIAL MODE ========== */
+            <motion.div
+              key="tutorial"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.5 }}
+              className="w-full h-full flex flex-col items-center justify-between"
+            >
+              {/* Header */}
+              <div className="w-full flex-shrink-0 flex flex-row items-start justify-between mb-2 px-2">
+                <div className="flex flex-col items-start gap-2">
+                  <img
+                    src="/trypas-logo.png"
+                    alt="TRYPAS"
+                    className="w-[120px] opacity-90 drop-shadow-lg"
+                  />
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-emerald-900/90 backdrop-blur-xl rounded-full border border-emerald-500/50" />
+                    <div className="relative px-4 py-1 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-xs font-bold tracking-widest uppercase text-emerald-400">
+                        TUTORIAL
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {/* Tutorial Score */}
+                <div className="bg-gray-800/80 border border-gray-600 rounded-xl px-4 py-2 text-center">
+                  <div className="text-xs text-gray-400 font-bold">SCORE</div>
+                  <div className="text-2xl font-black text-white">{tutorial.score}</div>
+                </div>
+              </div>
+
+              {/* Tutorial Guide Message */}
+              <div className="w-full flex-shrink-0 px-2 mb-2">
+                <TutorialGuide
+                  stepData={tutorial.currentStepData}
+                  currentStep={tutorial.tutorialStep}
+                  totalSteps={tutorial.totalSteps}
+                  score={tutorial.score}
+                  onAdvance={tutorial.advanceGuide}
+                  onExit={handleBackToTitle}
+                  isComplete={tutorial.isComplete}
+                />
+              </div>
+
+              {/* Tutorial Game Board */}
+              <div className="flex-grow flex items-center justify-center w-full min-h-0 py-1">
+                <div className="w-full max-w-[350px] aspect-square max-h-full">
+                  <GameBoard
+                    board={tutorial.board}
+                    onSpotClick={tutorial.handleTutorialSpotClick}
+                    selectedSpot={tutorial.selectedSpot}
+                    validMoves={tutorial.currentStepData?.type === 'MOVE_TO' ? [{ end: tutorial.currentStepData.targetSpot }] : []}
+                    highlightSpots={tutorial.currentStepData?.highlightSpots || []}
+                  />
+                </div>
+              </div>
+
+              {/* Legend */}
+              <div className="w-full flex-shrink-0 px-2 mb-2">
+                <Legend />
+              </div>
+            </motion.div>
           ) : (
+            /* ========== NORMAL GAME MODE ========== */
             <motion.div
               key="game"
               initial={{ opacity: 0, scale: 0.9 }}

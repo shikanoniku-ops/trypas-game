@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PIECE_COLORS } from '../constants/colors';
 
-const Piece = ({ color, isSelected, onClick }) => {
+const Piece = ({ color, isSelected, onClick, isHighlighted = false }) => {
     return (
         <motion.div
             layout

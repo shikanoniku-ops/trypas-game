@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Piece from './Piece';
 import { SPOT_COORDINATES } from '../constants/rules';
 
-const GameBoard = ({ board, onSpotClick, selectedSpot, validMoves }) => {
+const GameBoard = ({ board, onSpotClick, selectedSpot, validMoves, highlightSpots = [] }) => {
     // Draw lines connecting valid jumps (adjacent logic is implicit in jumps for visual?)
     // Actually, we should draw the grid lines.
     // The grid is defined by the connections.
@@ -55,6 +55,7 @@ const GameBoard = ({ board, onSpotClick, selectedSpot, validMoves }) => {
             {SPOT_COORDINATES.map((coord, index) => {
                 const isSelected = selectedSpot === index;
                 const isValidMove = validMoves.some(m => m.end === index);
+                const isHighlighted = highlightSpots.includes(index);
                 const pieceColor = board[index];
 
                 return (
@@ -63,14 +64,35 @@ const GameBoard = ({ board, onSpotClick, selectedSpot, validMoves }) => {
                         className="absolute transform -translate-x-1/2 -translate-y-1/2 w-[12%] h-[13%]" // Responsive size
                         style={{ left: `${coord.x}%`, top: `${coord.y}%` }}
                     >
+                        {/* Tutorial Highlight Ring */}
+                        {isHighlighted && (
+                            <motion.div
+                                className="absolute inset-[-4px] rounded-full border-4 border-emerald-400 pointer-events-none"
+                                animate={{
+                                    scale: [1, 1.15, 1],
+                                    opacity: [0.8, 1, 0.8],
+                                }}
+                                transition={{
+                                    duration: 1,
+                                    repeat: Infinity,
+                                    ease: 'easeInOut',
+                                }}
+                                style={{
+                                    boxShadow: '0 0 20px rgba(16, 185, 129, 0.6), inset 0 0 10px rgba(16, 185, 129, 0.3)',
+                                }}
+                            />
+                        )}
+
                         {/* Spot marker (empty hole) */}
                         <div
                             className={`absolute inset-0 rounded-full border-2 transition-colors duration-300
                 ${isValidMove
                                     ? 'border-yellow-400 bg-yellow-400/20 cursor-pointer animate-pulse'
-                                    : 'border-white/10 bg-black/20'
+                                    : isHighlighted && !pieceColor
+                                        ? 'border-emerald-400 bg-emerald-400/20 cursor-pointer'
+                                        : 'border-white/10 bg-black/20'
                                 }`}
-                            onClick={() => isValidMove && onSpotClick(index)}
+                            onClick={() => (isValidMove || isHighlighted) && onSpotClick(index)}
                         />
 
                         {/* Piece */}
@@ -80,6 +102,7 @@ const GameBoard = ({ board, onSpotClick, selectedSpot, validMoves }) => {
                                     color={pieceColor}
                                     isSelected={isSelected}
                                     onClick={() => onSpotClick(index)}
+                                    isHighlighted={isHighlighted}
                                 />
                             </div>
                         )}
