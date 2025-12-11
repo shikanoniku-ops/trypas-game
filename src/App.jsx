@@ -390,11 +390,84 @@ function App() {
               </AnimatePresence>
 
             </motion.div>
-          )
-          }
-        </AnimatePresence >
+          )}
+        </AnimatePresence>
+
+        {/* Game Over Modal */}
+        <AnimatePresence>
+          {phase === 'GAME_OVER' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[100] p-4"
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0, y: 50 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                transition={{ type: "spring", damping: 15 }}
+                className="bg-gray-800 p-8 rounded-3xl border border-gray-600 shadow-2xl max-w-sm w-full text-center relative overflow-hidden"
+              >
+                {/* Background Glow */}
+                <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-purple-500/10 pointer-events-none" />
+
+                <h2 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 drop-shadow-sm">
+                  GAME SET
+                </h2>
+                <div className="w-16 h-1 bg-gradient-to-r from-transparent via-gray-500 to-transparent mx-auto mb-6" />
+
+                {/* Result Display */}
+                <div className="mb-8">
+                  {gameMode === 'SOLO' ? (
+                    <div className="flex flex-col items-center">
+                      <span className="text-gray-400 text-sm font-bold tracking-widest mb-2">FINAL SCORE</span>
+                      <span className="text-6xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+                        {scores.p1}
+                      </span>
+                      <span className="text-xl text-gray-400 font-black mt-1">PTS</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="text-2xl font-bold text-white mb-4">
+                        WINNER: <span className={winner === 1 ? 'text-blue-400' : 'text-rose-400'}>
+                          {winner === 1 ? 'PLAYER 1' : (gameMode.startsWith('CPU') ? 'CPU' : 'PLAYER 2')}
+                        </span>
+                      </div>
+                      <div className="flex justify-center gap-8">
+                        <div className="flex flex-col">
+                          <span className="text-blue-400 font-bold text-sm">P1</span>
+                          <span className="text-3xl font-black">{scores.p1}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-rose-400 font-bold text-sm">{gameMode.startsWith('CPU') ? 'CPU' : 'P2'}</span>
+                          <span className="text-3xl font-black">{scores.p2}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Buttons */}
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={resetGame}
+                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-black rounded-xl shadow-lg transform transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    <span>🔄</span> もう一度プレイ
+                  </button>
+                  <button
+                    onClick={handleBackToTitle}
+                    className="w-full py-4 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl border border-gray-600 transition-all hover:scale-105 active:scale-95"
+                  >
+                    タイトルへ戻る
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </div >
+    </div>
   );
 }
 
