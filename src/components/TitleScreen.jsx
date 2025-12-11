@@ -24,9 +24,15 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     className="w-[300px] md:w-[350px] mx-auto drop-shadow-2xl"
                 />
                 <div className="mt-4 flex flex-col items-center gap-2">
-                    <span className="px-4 py-1 bg-blue-500/10 border border-blue-400/20 rounded-full text-[10px] text-blue-300 tracking-[0.3em] font-bold uppercase backdrop-blur-sm shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                        Prototype
-                    </span>
+                    <div className="flex items-center gap-3 px-5 py-1.5 bg-blue-500/10 border border-blue-400/20 rounded-full backdrop-blur-sm shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                        <span className="text-[10px] text-blue-300 tracking-[0.3em] font-bold uppercase">
+                            Prototype
+                        </span>
+                        <div className="w-px h-3 bg-blue-400/30"></div>
+                        <span className="text-[10px] text-blue-300/80 font-mono tracking-wider">
+                            v{packageJson.version}
+                        </span>
+                    </div>
                     <p className="text-gray-500 text-sm tracking-widest uppercase opacity-80">
                         Strategic Board Game
                     </p>
@@ -115,9 +121,6 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
             >
                 <p className="text-xs text-gray-500 uppercase tracking-wider">
                     Game Design: <span className="text-sm text-gray-400 font-semibold normal-case">Dr. Q</span>
-                </p>
-                <p className="text-[10px] text-gray-600 font-mono tracking-wider">
-                    v{packageJson.version}
                 </p>
             </motion.div>
 
