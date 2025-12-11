@@ -116,7 +116,7 @@ function App() {
         </button>
       </div>
 
-      <div className="relative w-full max-w-4xl flex-grow flex flex-col items-center justify-center p-4">
+      <div className="relative w-full max-w-[420px] h-[850px] max-h-screen flex flex-col items-center justify-between p-4 my-auto">
 
         <AnimatePresence mode="wait">
           {!gameStarted ? (
@@ -137,234 +137,116 @@ function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.5 }}
-              className="w-full flex flex-col items-center justify-center"
+              className="w-full h-full flex flex-col items-center justify-between"
             >
-              {/* Game Header - Redesigned for Mobile */}
-              <div className="flex-shrink-0 w-full max-w-[95%] mb-2">
-                <div className="flex flex-row items-center justify-between gap-4">
-                  {/* Left Side: Logo & Status */}
-                  <div className="flex flex-col items-start gap-2">
-                    <img
-                      src="/trypas-logo.png"
-                      alt="TRYPAS"
-                      className="w-[120px] opacity-90 drop-shadow-lg"
-                    />
+              {/* 1. Header Area: Logo+Status (Left) vs Score (Right) */}
+              <div className="w-full flex-shrink-0 flex flex-row items-end justify-between mb-4">
 
-                    {/* Status Pill moved from ScoreBoard */}
-                    <div className="relative group">
+                {/* Left: Logo & Status Pill */}
+                <div className="flex flex-col items-start gap-4">
+                  <img
+                    src="/trypas-logo.png"
+                    alt="TRYPAS"
+                    className="w-[140px] opacity-90 drop-shadow-lg"
+                  />
+
+                  {/* Status Pill moved from ScoreBoard */}
+                  <div className="relative group">
+                    <div
+                      className="absolute inset-0 bg-gray-900/90 backdrop-blur-xl rounded-full border border-gray-700/50"
+                      style={{
+                        borderColor: phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.3)' : (turn === 1 ? 'rgba(96, 165, 250, 0.3)' : 'rgba(251, 113, 133, 0.3)'),
+                        boxShadow: `0 0 10px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.1)' : (turn === 1 ? 'rgba(96, 165, 250, 0.1)' : 'rgba(251, 113, 133, 0.1)')}`
+                      }}
+                    />
+                    <div className="relative px-4 py-1 flex items-center gap-2">
                       <div
-                        className="absolute inset-0 bg-gray-900/90 backdrop-blur-xl rounded-full border border-gray-700/50"
-                        style={{
-                          borderColor: phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.3)' : (turn === 1 ? 'rgba(96, 165, 250, 0.3)' : 'rgba(251, 113, 133, 0.3)'),
-                          boxShadow: `0 0 10px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.1)' : (turn === 1 ? 'rgba(96, 165, 250, 0.1)' : 'rgba(251, 113, 133, 0.1)')}`
-                        }}
+                        className={`w-1.5 h-1.5 rounded-full ${phase === 'REMOVING' ? 'bg-yellow-400 animate-pulse' : (turn === 1 ? 'bg-blue-400' : 'bg-rose-400')}`}
                       />
-                      <div className="relative px-4 py-1 flex items-center gap-2">
-                        <div
-                          className={`w-1.5 h-1.5 rounded-full ${phase === 'REMOVING' ? 'bg-yellow-400 animate-pulse' : (turn === 1 ? 'bg-blue-400' : 'bg-rose-400')}`}
-                        />
-                        <span
-                          className={`text-[10px] font-bold tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-blue-400' : 'text-rose-400')}`}
-                        >
-                          {phase === 'REMOVING' ? 'セットアップ' : (isReplaying ? 'リプレイ' : (isSoloMode ? 'SOLO PLAY' : (turn === 1 ? 'P1 ターン' : (isCPUMode ? 'CPU ターン' : 'P2 ターン'))))}
-                        </span>
-                      </div>
+                      <span
+                        className={`text-[10px] font-bold tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-blue-400' : 'text-rose-400')}`}
+                      >
+                        {phase === 'REMOVING' ? 'セットアップ' : (isReplaying ? 'リプレイ' : (isSoloMode ? 'SOLO PLAY' : (turn === 1 ? 'P1 ターン' : (isCPUMode ? 'CPU ターン' : 'P2 ターン'))))}
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  {/* Right Side: ScoreBoard (Compact) */}
-                  <div className="flex-grow flex justify-end">
-                    <ScoreBoard
-                      scores={scores}
-                      turn={turn}
-                      phase={phase}
-                      lastActionMessage={lastActionMessage}
-                      gameMode={gameMode}
-                      totalThinkingTime={totalThinkingTime}
-                      capturedPieces={capturedPieces}
-                      isReplaying={isReplaying}
-                      compactMode={true} // New prop for compact layout
-                    />
-                  </div>
+                {/* Right: ScoreBoard */}
+                <div className="flex-shrink-0 place-self-start mt-2">
+                  <ScoreBoard
+                    scores={scores}
+                    turn={turn}
+                    phase={phase}
+                    lastActionMessage={lastActionMessage}
+                    gameMode={gameMode}
+                    totalThinkingTime={totalThinkingTime}
+                    capturedPieces={capturedPieces}
+                    isReplaying={isReplaying}
+                    compactMode={true}
+                  />
                 </div>
               </div>
 
-              {/* Game Board */}
-              <div className="flex items-center justify-center w-full my-1 md:my-4 scale-95 md:scale-100 origin-center">
-                <GameBoard
-                  board={board}
-                  onSpotClick={handleSpotClick}
-                  selectedSpot={selectedSpot}
-                  validMoves={validMoves}
-                />
-              </div>
-
-              {/* Timer Display - Compact */}
-              {!isReplaying && (
-                <div className="mb-2 text-center pointer-events-none">
-                  <div className="text-xl font-bold font-mono tracking-widest bg-gray-900/40 inline-block px-4 py-1 rounded-full backdrop-blur-sm border border-gray-700/30">
-                    {isSoloMode ? (
-                      <span className="text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.5)]">
-                        {phase === 'REMOVING' ? '00:00' : `${Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:${(elapsedTime % 60).toString().padStart(2, '0')}`}
-                      </span>
-                    ) : (
-                      <span className="text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]">
-                        {phase === 'REMOVING' ? '00:00' : `${Math.floor(turnTime / 60).toString().padStart(2, '0')}:${(turnTime % 60).toString().padStart(2, '0')}`}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Score Legend (below Timer) */}
-              <div className="mb-2 p-2 bg-gray-800/50 rounded-xl border border-gray-700 max-w-md mx-4">
-                <div className="flex gap-4 justify-center items-center flex-wrap text-sm">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: PIECE_COLORS.RED }}></div>
-                    <span className="text-gray-300">{PIECE_SCORES.RED}点</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: PIECE_COLORS.YELLOW }}></div>
-                    <span className="text-gray-300">{PIECE_SCORES.YELLOW}点</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: PIECE_COLORS.GREEN }}></div>
-                    <span className="text-gray-300">{PIECE_SCORES.GREEN}点</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: PIECE_COLORS.BLUE }}></div>
-                    <span className="text-gray-300">{PIECE_SCORES.BLUE}点</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: PIECE_COLORS.WHITE }}></div>
-                    <span className="text-gray-300">{PIECE_SCORES.WHITE}点</span>
-                  </div>
+              {/* 2. Game Board (Center) */}
+              <div className="flex-grow flex items-center justify-center w-full my-2">
+                <div className="transform scale-100">
+                  <GameBoard
+                    board={board}
+                    onSpotClick={handleSpotClick}
+                    selectedSpot={selectedSpot}
+                    validMoves={validMoves}
+                  />
                 </div>
               </div>
 
-              {/* Winner Overlay Modal - Full Screen */}
-              <AnimatePresence>
-                {winner && !isReplaying && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <motion.div
-                      initial={{ scale: 0.9, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.9, opacity: 0 }}
-                      className="w-full max-w-sm bg-gray-900 border border-gray-700 rounded-3xl p-8 shadow-2xl relative overflow-hidden"
-                    >
-                      {/* Background decoration */}
-                      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
-                      <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-                      <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+              {/* 3. Footer Info (Timer, Legend, Buttons) */}
+              <div className="w-full flex flex-col items-center gap-3 mb-2">
 
-                      <div className="text-center relative z-10">
-                        <h2 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">
-                          {winner === 'SOLO' ? 'GAME OVER' :
-                            `${winner === 1 ? 'PLAYER 1' : (isCPUMode ? 'CPU' : 'PLAYER 2')} WINS!`}
-                        </h2>
+                {/* Timer */}
+                {!isReplaying && (
+                  <div className="text-center">
+                    <div className="text-2xl font-black font-mono tracking-widest text-blue-300 drop-shadow-[0_0_10px_rgba(96,165,250,0.6)] bg-gray-900/50 px-6 py-1 rounded-full border border-gray-700/50">
+                      {phase === 'REMOVING' ? '00:00' : (isSoloMode ?
+                        `${Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:${(elapsedTime % 60).toString().padStart(2, '0')}` :
+                        `${Math.floor(turnTime / 60).toString().padStart(2, '0')}:${(turnTime % 60).toString().padStart(2, '0')}`
+                      )}
+                    </div>
+                  </div>
+                )}
 
-                        <div className="my-6">
-                          <span className="text-gray-400 text-sm uppercase tracking-widest block mb-1">Final Score</span>
-                          <p className="text-3xl font-mono font-bold text-white">
-                            {isSoloMode ? `${scores.p1} PTS` : `${scores.p1} - ${scores.p2}`}
-                          </p>
-                        </div>
+                {/* Legend */}
+                <div className="px-4 py-2 bg-gray-800/80 rounded-full border border-gray-700 w-full flex justify-between items-center text-xs">
+                  <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#FF6B6B] shadow-[0_0_8px_#FF6B6B]"></div><span className="text-gray-300 font-bold">10点</span></div>
+                  <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#FFE66D] shadow-[0_0_8px_#FFE66D]"></div><span className="text-gray-300 font-bold">20点</span></div>
+                  <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#4ECDC4] shadow-[0_0_8px_#4ECDC4]"></div><span className="text-gray-300 font-bold">30点</span></div>
+                  <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#45B7D1] shadow-[0_0_8px_#45B7D1]"></div><span className="text-gray-300 font-bold">40点</span></div>
+                  <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#F7FFF7] shadow-[0_0_8px_#F7FFF7]"></div><span className="text-gray-300 font-bold">50点</span></div>
+                </div>
 
-                        <div className="flex flex-col gap-3">
-                          {moveHistory.length > 0 && (
-                            <button
-                              onClick={startReplay}
-                              className="w-full py-3 bg-gray-800 text-gray-300 font-bold rounded-xl border border-gray-700 hover:bg-gray-700 hover:text-white transition-all flex items-center justify-center gap-2"
-                            >
-                              <span>📽️</span> リプレイを見る
-                            </button>
-                          )}
-                          <button
-                            onClick={() => resetGame(false)}
-                            className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transition-all"
-                          >
-                            ネクストプレイ
-                          </button>
-                          <button
-                            onClick={() => resetGame(true)}
-                            className="w-full py-3 bg-gray-700 text-white font-bold rounded-xl border border-gray-600 hover:bg-gray-600 transition-all"
-                          >
-                            同じ盤でプレイ
-                          </button>
-                          <button
-                            onClick={handleBackToTitle}
-                            className="w-full py-3 bg-transparent text-gray-500 font-bold rounded-xl hover:bg-gray-800 hover:text-gray-300 transition-all"
-                          >
-                            タイトルへ戻る
-                          </button>
-                        </div>
+                {/* Controls Buttons */}
+                <div className="w-full flex gap-3 mt-1">
+                  <button onClick={handleBackToTitle} className="flex-1 py-3 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all">TITLE</button>
+                  <button onClick={resetGame} className="flex-1 py-3 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all">RESET</button>
+                  <button onClick={() => setShowRulesInGame(true)} className="flex-1 py-3 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all">ルール</button>
+                </div>
+
+                {/* Replay Controls (Conditional) */}
+                <AnimatePresence>
+                  {isReplaying && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="w-full overflow-hidden">
+                      <div className="flex gap-2 justify-center items-center bg-gray-800/90 p-2 rounded-xl border border-purple-500/50">
+                        <span className="text-xs font-bold text-purple-300 mr-2">Replay {replayStep + 1}/{moveHistory.length}</span>
+                        <button onClick={prevReplayStep} disabled={replayStep === 0} className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 text-xs">⏮️</button>
+                        <button onClick={stopReplay} className="px-3 py-1 bg-red-600 rounded hover:bg-red-500 text-xs">⏹️</button>
+                        <button onClick={nextReplayStep} disabled={replayStep >= moveHistory.length - 1} className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 text-xs">⏭️</button>
                       </div>
                     </motion.div>
-                  </div>
-                )}
-              </AnimatePresence>
-
-              {/* Replay Controls (below GameBoard) */}
-              <AnimatePresence>
-                {isReplaying && (
-                  <motion.div
-                    initial={{ y: 50, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: 50, opacity: 0 }}
-                    className="mb-1 p-2 bg-gray-800 rounded-2xl border-2 border-purple-500 max-w-md mx-4"
-                  >
-                    <div className="text-center mb-1">
-                      <span className="text-white text-sm font-bold">
-                        手順 {replayStep + 1} / {moveHistory.length}
-                      </span>
-                    </div>
-                    <div className="flex gap-2 justify-center items-center">
-                      <button
-                        onClick={prevReplayStep}
-                        disabled={replayStep === 0}
-                        className="px-3 py-1.5 bg-gray-700 text-white text-sm font-bold rounded-lg hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                      >
-                        ⏮️ 前へ
-                      </button>
-                      <button
-                        onClick={stopReplay}
-                        className="px-4 py-1.5 bg-red-600 text-white text-sm font-bold rounded-lg hover:bg-red-500 transition-colors"
-                      >
-                        ⏹️ 終了
-                      </button>
-                      <button
-                        onClick={nextReplayStep}
-                        disabled={replayStep >= moveHistory.length - 1}
-                        className="px-3 py-1.5 bg-gray-700 text-white text-sm font-bold rounded-lg hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                      >
-                        次へ ⏭️
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Game Footer / Controls */}
-              <div className="mt-2 flex gap-3">
-                <button
-                  onClick={handleBackToTitle}
-                  className="px-6 py-2 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-700 hover:bg-gray-700 transition-colors"
-                >
-                  TITLE
-                </button>
-                <button
-                  onClick={resetGame}
-                  className="px-6 py-2 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-700 hover:bg-gray-700 transition-colors"
-                >
-                  RESET
-                </button>
-                <button
-                  onClick={() => setShowRulesInGame(true)}
-                  className="px-6 py-2 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-700 hover:bg-gray-700 transition-colors"
-                >
-                  ルール
-                </button>
+                  )}
+                </AnimatePresence>
               </div>
+
+
 
               {/* Rules Modal During Gameplay */}
               <AnimatePresence>
@@ -518,7 +400,7 @@ function App() {
           }
         </AnimatePresence >
       </div>
-    </div>
+    </div >
   );
 }
 

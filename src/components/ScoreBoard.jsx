@@ -103,7 +103,7 @@ const ScoreBoard = ({
     };
 
     return (
-        <div className="w-full max-w-lg mx-auto mb-2 px-2">
+        <div className={`w-full ${compactMode ? '' : 'max-w-lg'} mx-auto mb-2 ${compactMode ? 'px-0' : 'px-2'}`}>
             {/* Status Bar / Notification - Compact */}
             {!compactMode && (
                 <div className="flex justify-center mb-3">
