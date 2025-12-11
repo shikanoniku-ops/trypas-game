@@ -179,9 +179,12 @@ function App() {
                 </div>
               </div>
 
+              {/* Spacer (Auto Adjust) */}
+              <div className="flex-grow min-h-2" />
+
               {/* 2. Game Board (Center) */}
-              <div className="flex-grow flex items-center justify-center w-full my-2">
-                <div className="w-full max-w-[400px]">
+              <div className="flex-shrink-1 w-full flex items-center justify-center min-h-0">
+                <div className="w-full max-w-[400px] aspect-square max-h-full">
                   <GameBoard
                     board={board}
                     onSpotClick={handleSpotClick}
@@ -191,8 +194,11 @@ function App() {
                 </div>
               </div>
 
+              {/* Spacer (Auto Adjust) */}
+              <div className="flex-grow min-h-2" />
+
               {/* 3. Footer Info (Timer, Legend, Buttons) */}
-              <div className="w-full flex flex-col items-center gap-3 mb-2">
+              <div className="w-full flex-shrink-0 flex flex-col items-center gap-3 mb-2">
 
                 {/* Timer */}
                 {!isReplaying && (
