@@ -234,13 +234,20 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
         };
     }, [resumeAudioContext]);
 
+    const reset = useCallback(() => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+        }
+    }, []);
+
     return useMemo(() => ({
         play,
         pause,
         toggleMute,
         setVolume,
+        reset,
         isPlaying,
         isMuted,
         isReady
-    }), [play, pause, toggleMute, setVolume, isPlaying, isMuted, isReady]);
+    }), [play, pause, toggleMute, setVolume, reset, isPlaying, isMuted, isReady]);
 };

@@ -23,7 +23,10 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     alt="TRYPAS"
                     className="w-[300px] md:w-[350px] mx-auto drop-shadow-2xl"
                 />
-                <div className="mt-4 flex flex-col items-center gap-2">
+                <div className="mt-1 flex flex-col items-center gap-2">
+                    <p className="text-gray-500 text-sm tracking-widest uppercase opacity-80">
+                        Strategic Board Game
+                    </p>
                     <div className="flex items-center gap-3 px-5 py-1.5 bg-blue-500/10 border border-blue-400/20 rounded-full backdrop-blur-sm shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                         <span className="text-[10px] text-blue-300 tracking-[0.3em] font-bold uppercase">
                             Prototype
@@ -33,9 +36,6 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                             v{packageJson.version}
                         </span>
                     </div>
-                    <p className="text-gray-500 text-sm tracking-widest uppercase opacity-80">
-                        Strategic Board Game
-                    </p>
                 </div>
             </motion.div>
 

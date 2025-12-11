@@ -19,39 +19,18 @@ function App() {
   const [isMuted, setIsMuted] = useState(false);
   const [audioInitialized, setAudioInitialized] = useState(false);
 
-  // Background Music
-  const titleBGM = useBackgroundMusic('/sounds/TRYPAS_Theme.mp3', 0.3);
-  const gameBGM = useBackgroundMusic('/sounds/TRYPAS_Theme.mp3', 0.3);
+  // Background Music (Single instance for continuous playback)
+  const bgm = useBackgroundMusic('/sounds/TRYPAS_Theme.mp3', 0.3);
 
-  // Music control based on game state
-  // Music control based on game state
-  useEffect(() => {
-    if (!audioInitialized) return;
-
-    if (gameStarted) {
-      titleBGM.pause();
-      gameBGM.play();
-    } else {
-      gameBGM.pause();
-      titleBGM.play();
-    }
-  }, [gameStarted, audioInitialized]);
-
+  // Initial Audio Setup
   const handleAudioSetup = (soundEnabled) => {
     if (soundEnabled) {
       setIsMuted(false);
-      titleBGM.setVolume(0.3);
-      gameBGM.setVolume(0.3);
-      // Play appropriate music
-      if (gameStarted) {
-        gameBGM.play();
-      } else {
-        titleBGM.play();
-      }
+      bgm.setVolume(0.3);
+      bgm.play();
     } else {
       setIsMuted(true);
-      titleBGM.setVolume(0);
-      gameBGM.setVolume(0);
+      bgm.setVolume(0);
     }
     setAudioInitialized(true);
   };
@@ -85,6 +64,8 @@ function App() {
   const tutorial = useTutorial();
 
   const handleStartGame = (mode) => {
+    // Only reset if specifically requested, otherwise continue playing
+    // bgm.reset(); // Removed to keep music playing seamlessly
     if (mode === 'TUTORIAL') {
       tutorial.startTutorial();
       setGameStarted(true);
@@ -100,6 +81,7 @@ function App() {
     if (tutorial.isTutorialMode) {
       tutorial.exitTutorial();
     }
+    bgm.reset(); // Reset music when returning to title
     setGameStarted(false);
   };
 
@@ -107,14 +89,11 @@ function App() {
   const isSoloMode = gameMode === 'SOLO';
   const isTutorialMode = gameMode === 'TUTORIAL' && tutorial.isTutorialMode;
 
-  const currentBGM = gameStarted ? gameBGM : titleBGM;
-
   const toggleAudio = () => {
     const newMutedState = !isMuted;
     setIsMuted(newMutedState);
     const newVolume = newMutedState ? 0 : 0.3;
-    titleBGM.setVolume(newVolume);
-    gameBGM.setVolume(newVolume);
+    bgm.setVolume(newVolume);
   };
 
   return (
