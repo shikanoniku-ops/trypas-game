@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PIECE_SCORES } from '../constants/colors';
 
-const TitleScreen = ({ onStart }) => {
+const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
     const [showRules, setShowRules] = useState(false);
     const [showCPUMenu, setShowCPUMenu] = useState(false);
 
@@ -58,6 +58,16 @@ const TitleScreen = ({ onStart }) => {
                 >
                     ルール説明
                 </button>
+
+                {/* Audio Toggle Button - Added to match Game Screen placement style (in the flow) */}
+                <div className="flex justify-center mt-2">
+                    <button
+                        onClick={onToggleAudio}
+                        className="w-[50px] h-[50px] flex items-center justify-center bg-gray-800 text-white rounded-full border border-gray-600 hover:bg-gray-700 transition-all shadow-lg"
+                    >
+                        <span className="text-xl">{isMuted ? '🔇' : '🔊'}</span>
+                    </button>
+                </div>
             </motion.div>
 
             {/* Creator Credit */}

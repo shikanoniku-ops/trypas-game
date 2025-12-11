@@ -119,7 +119,7 @@ function App() {
               transition={{ duration: 0.5 }}
               className="absolute inset-0 w-full h-full flex items-center justify-center"
             >
-              <TitleScreen onStart={handleStartGame} />
+              <TitleScreen onStart={handleStartGame} onToggleAudio={toggleAudio} isMuted={isMuted} />
             </motion.div>
           ) : (
             <motion.div
