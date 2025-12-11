@@ -229,11 +229,17 @@ function App() {
                 <AnimatePresence>
                   {isReplaying && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="w-full overflow-hidden">
-                      <div className="flex gap-2 justify-center items-center bg-gray-800/90 p-2 rounded-xl border border-purple-500/50">
-                        <span className="text-xs font-bold text-purple-300 mr-2">Replay {replayStep + 1}/{moveHistory.length}</span>
-                        <button onClick={prevReplayStep} disabled={replayStep === 0} className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 text-xs">⏮️</button>
-                        <button onClick={stopReplay} className="px-3 py-1 bg-red-600 rounded hover:bg-red-500 text-xs">⏹️</button>
-                        <button onClick={nextReplayStep} disabled={replayStep >= moveHistory.length - 1} className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 text-xs">⏭️</button>
+                      <div className="flex gap-2 justify-center items-center bg-gray-800/90 p-3 rounded-xl border border-purple-500/50">
+                        <span className="text-sm font-bold text-purple-300 mr-2">リプレイ {replayStep + 1}/{moveHistory.length}</span>
+                        <button onClick={prevReplayStep} disabled={replayStep === 0} className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 text-sm font-bold transition-colors">
+                          <span>⏮️</span> 戻る
+                        </button>
+                        <button onClick={stopReplay} className="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-500 flex items-center gap-1 text-sm font-bold transition-colors">
+                          <span>⏹️</span> 終了
+                        </button>
+                        <button onClick={nextReplayStep} disabled={replayStep >= moveHistory.length - 1} className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 text-sm font-bold transition-colors">
+                          <span>⏭️</span> 送る
+                        </button>
                       </div>
                     </motion.div>
                   )}
@@ -395,52 +401,53 @@ function App() {
 
         {/* Game Over Modal */}
         <AnimatePresence>
-          {phase === 'GAME_OVER' && (
+          {phase === 'GAME_OVER' && !isReplaying && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[100] p-4"
+              className="absolute inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[100] p-4"
             >
               <motion.div
-                initial={{ scale: 0.8, opacity: 0, y: 50 }}
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{ type: "spring", damping: 15 }}
-                className="bg-gray-800 p-8 rounded-3xl border border-gray-600 shadow-2xl max-w-sm w-full text-center relative overflow-hidden"
+                transition={{ type: "spring", damping: 20 }}
+                className="bg-[#1a1a2e] backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 shadow-2xl max-w-sm w-full text-center relative overflow-hidden"
               >
-                {/* Background Glow */}
-                <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-purple-500/10 pointer-events-none" />
+                {/* Top Gradient Line */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500" />
 
-                <h2 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 drop-shadow-sm">
-                  GAME SET
+                {/* Title */}
+                <h2 className="text-2xl font-bold text-white mb-6 mt-2">
+                  ゲーム終了
                 </h2>
-                <div className="w-16 h-1 bg-gradient-to-r from-transparent via-gray-500 to-transparent mx-auto mb-6" />
 
                 {/* Result Display */}
-                <div className="mb-8">
+                <div className="mb-6 text-gray-300">
                   {gameMode === 'SOLO' ? (
-                    <div className="flex flex-col items-center">
-                      <span className="text-gray-400 text-sm font-bold tracking-widest mb-2">FINAL SCORE</span>
-                      <span className="text-6xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-gray-400 text-sm">スコア</span>
+                      <span className="text-5xl font-bold text-white">
                         {scores.p1}
                       </span>
-                      <span className="text-xl text-gray-400 font-black mt-1">PTS</span>
+                      <span className="text-gray-500 text-sm">ポイント</span>
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <div className="text-2xl font-bold text-white mb-4">
-                        WINNER: <span className={winner === 1 ? 'text-blue-400' : 'text-rose-400'}>
-                          {winner === 1 ? 'PLAYER 1' : (gameMode.startsWith('CPU') ? 'CPU' : 'PLAYER 2')}
+                      <div className="text-lg text-white">
+                        <span className="text-gray-400">勝者: </span>
+                        <span className={winner === 1 ? 'text-blue-400' : 'text-rose-400'}>
+                          {winner === 1 ? 'プレイヤー1' : (gameMode.startsWith('CPU') ? 'CPU' : 'プレイヤー2')}
                         </span>
                       </div>
-                      <div className="flex justify-center gap-8">
-                        <div className="flex flex-col">
-                          <span className="text-blue-400 font-bold text-sm">P1</span>
-                          <span className="text-3xl font-black">{scores.p1}</span>
+                      <div className="flex justify-center gap-4">
+                        <div className="flex flex-col bg-gray-800/50 px-6 py-3 rounded-xl">
+                          <span className="text-blue-400 font-medium text-sm">P1</span>
+                          <span className="text-2xl font-bold text-white">{scores.p1}</span>
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-rose-400 font-bold text-sm">{gameMode.startsWith('CPU') ? 'CPU' : 'P2'}</span>
-                          <span className="text-3xl font-black">{scores.p2}</span>
+                        <div className="flex flex-col bg-gray-800/50 px-6 py-3 rounded-xl">
+                          <span className="text-rose-400 font-medium text-sm">{gameMode.startsWith('CPU') ? 'CPU' : 'P2'}</span>
+                          <span className="text-2xl font-bold text-white">{scores.p2}</span>
                         </div>
                       </div>
                     </div>
@@ -450,14 +457,29 @@ function App() {
                 {/* Buttons */}
                 <div className="flex flex-col gap-3">
                   <button
-                    onClick={resetGame}
-                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-black rounded-xl shadow-lg transform transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                    onClick={() => resetGame()}
+                    className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-bold rounded-lg transition-all"
                   >
-                    <span>🔄</span> もう一度プレイ
+                    次のプレイ
                   </button>
                   <button
-                    onClick={handleBackToTitle}
-                    className="w-full py-4 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl border border-gray-600 transition-all hover:scale-105 active:scale-95"
+                    onClick={() => resetGame(true)}
+                    className="w-full py-3 bg-gray-700/80 hover:bg-gray-600 text-white font-medium rounded-lg border border-gray-600/50 transition-all"
+                  >
+                    同じ盤でプレイ
+                  </button>
+                  {moveHistory && moveHistory.length > 0 && (
+                    <button
+                      onClick={startReplay}
+                      className="w-full py-3 bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white font-medium rounded-lg border border-gray-600/50 transition-all"
+                    >
+                      リプレイを見る
+                    </button>
+                  )}
+                  <div className="border-t border-gray-700/50 my-1" />
+                  <button
+                    onClick={() => { resetGame(); handleBackToTitle(); }}
+                    className="w-full py-3 text-gray-400 hover:text-white font-medium transition-all"
                   >
                     タイトルへ戻る
                   </button>
