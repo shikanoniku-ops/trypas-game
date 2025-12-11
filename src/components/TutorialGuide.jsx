@@ -134,18 +134,9 @@ const TutorialGuide = ({
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        onAdvance();
-                                    }}
-                                    className="flex-1 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
-                                >
-                                    もう一度プレイ
-                                </button>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
                                         onExit();
                                     }}
-                                    className="flex-1 py-3 bg-gray-800/80 text-white font-bold rounded-xl hover:bg-gray-700 transition-colors border border-white/20"
+                                    className="flex-1 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
                                 >
                                     タイトルへ
                                 </button>
