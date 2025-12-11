@@ -105,18 +105,9 @@ function App() {
       {/* Music Control Button and Menu */}
       <InitialAudioModal onComplete={handleAudioSetup} />
 
-      {/* Music Control Button */}
-      <div className="fixed top-4 right-4 z-[9999]">
-        <button
-          onClick={toggleAudio}
-          className="w-12 h-12 flex items-center justify-center bg-gray-800/80 hover:bg-gray-700 backdrop-blur-sm rounded-full border border-gray-600 transition-all hover:scale-110 active:scale-95 pointer-events-auto cursor-pointer"
-          title={isMuted ? "ミュート解除" : "ミュート"}
-        >
-          <span className="text-2xl">{isMuted ? '🔇' : '🔊'}</span>
-        </button>
-      </div>
 
-      <div className="relative w-full max-w-[480px] h-[900px] max-h-screen flex flex-col items-center justify-between p-4 my-auto">
+
+      <div className="relative w-full max-w-[480px] h-full max-h-[100dvh] flex flex-col items-center justify-between p-2 md:p-4 overflow-hidden text-sm md:text-base">
 
         <AnimatePresence mode="wait">
           {!gameStarted ? (
@@ -229,6 +220,9 @@ function App() {
                   <button onClick={handleBackToTitle} className="flex-1 py-3 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all">TITLE</button>
                   <button onClick={resetGame} className="flex-1 py-3 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all">RESET</button>
                   <button onClick={() => setShowRulesInGame(true)} className="flex-1 py-3 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all">ルール</button>
+                  <button onClick={toggleAudio} className="w-[50px] flex-shrink-0 flex items-center justify-center bg-gray-800 text-white rounded-full border border-gray-600 hover:bg-gray-700 transition-all">
+                    <span className="text-xl">{isMuted ? '🔇' : '🔊'}</span>
+                  </button>
                 </div>
 
                 {/* Replay Controls (Conditional) */}
