@@ -216,7 +216,7 @@ function App() {
                 <div className="px-4 py-2 bg-gray-800/80 rounded-full border border-gray-700 w-full flex justify-between items-center text-xs">
                   <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#FF6B6B] shadow-[0_0_8px_#FF6B6B]"></div><span className="text-gray-300 font-bold">10点</span></div>
                   <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#FFE66D] shadow-[0_0_8px_#FFE66D]"></div><span className="text-gray-300 font-bold">20点</span></div>
-                  <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#4ECDC4] shadow-[0_0_8px_#4ECDC4]"></div><span className="text-gray-300 font-bold">30点</span></div>
+                  <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#2ECC71] shadow-[0_0_8px_#2ECC71]"></div><span className="text-gray-300 font-bold">30点</span></div>
                   <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#45B7D1] shadow-[0_0_8px_#45B7D1]"></div><span className="text-gray-300 font-bold">40点</span></div>
                   <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-[#F7FFF7] shadow-[0_0_8px_#F7FFF7]"></div><span className="text-gray-300 font-bold">50点</span></div>
                 </div>

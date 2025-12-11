@@ -1,6 +1,6 @@
 export const PIECE_COLORS = {
     RED: '#FF6B6B',
-    GREEN: '#4ECDC4',
+    GREEN: '#2ECC71',
     BLUE: '#45B7D1',
     YELLOW: '#FFE66D',
     WHITE: '#F7FFF7',
