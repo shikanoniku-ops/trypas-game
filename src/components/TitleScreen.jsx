@@ -190,14 +190,14 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                                 <div className="grid grid-cols-5 text-center text-xs font-bold divide-x divide-gray-700 bg-gray-700/50 p-2">
                                                     <span className="text-red-400">赤</span>
                                                     <span className="text-yellow-400">黄</span>
-                                                    <span className="text-green-400">緑</span>
+                                                    <span className="text-[#2ECC71]">緑</span>
                                                     <span className="text-blue-400">青</span>
                                                     <span className="text-white">白</span>
                                                 </div>
                                                 <div className="grid grid-cols-5 text-center text-sm font-bold divide-x divide-gray-700 p-2 bg-gray-900/50">
                                                     <span className="text-red-400">10</span>
                                                     <span className="text-yellow-400">20</span>
-                                                    <span className="text-green-400">30</span>
+                                                    <span className="text-[#2ECC71]">30</span>
                                                     <span className="text-blue-400">40</span>
                                                     <span className="text-white">50</span>
                                                 </div>
@@ -208,9 +208,12 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                     {/* Step 2 */}
                                     <section>
                                         <h3 className="text-lg font-bold text-blue-300 mb-3 border-b border-gray-700 pb-1">ステップ2：ゲーム開始</h3>
-                                        <div className="flex items-start gap-3 bg-gray-700/20 p-3 rounded-lg">
-                                            <span className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">最初の1手</span>
-                                            <p className="text-sm">好きなコマを1つ選んで取り除く（この得点も加算されます）→ ゲームフェーズへ</p>
+                                        <div>
+                                            <h4 className="font-bold text-white text-sm mb-2">最初の1手</h4>
+                                            <p className="text-sm text-gray-400">
+                                                好きなコマを1つ選んでタップし、取り除きます。<br />
+                                                <span className="text-xs text-blue-400">※取り除いたコマの得点も加算されます</span>
+                                            </p>
                                         </div>
                                     </section>
 
