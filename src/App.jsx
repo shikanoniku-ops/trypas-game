@@ -107,7 +107,7 @@ function App() {
 
 
 
-      <div className="relative w-full max-w-[480px] h-full max-h-[100dvh] flex flex-col items-center justify-between p-2 md:p-4 overflow-hidden text-sm md:text-base">
+      <div className="relative w-full max-w-[480px] h-[100dvh] flex flex-col items-center justify-between p-2 md:p-4 overflow-hidden text-sm md:text-base">
 
         <AnimatePresence mode="wait">
           {!gameStarted ? (
