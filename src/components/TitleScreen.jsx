@@ -7,7 +7,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
     const [showCPUMenu, setShowCPUMenu] = useState(false);
 
     return (
-        <div className="flex flex-col items-center justify-center w-full h-full bg-gray-900">
+        <div className="flex flex-col items-center justify-center w-full h-full bg-gray-900 overflow-hidden">
             <motion.div
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}

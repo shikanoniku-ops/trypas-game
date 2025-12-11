@@ -101,13 +101,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white overflow-hidden font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center">
+    <div className="app-container bg-gray-900 text-white font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center">
       {/* Music Control Button and Menu */}
       <InitialAudioModal onComplete={handleAudioSetup} />
 
 
 
-      <div className="relative w-full max-w-[480px] h-[100dvh] flex flex-col items-center justify-between py-6 px-2 md:p-4 overflow-hidden text-sm md:text-base safe-area-inset-bottom">
+      <div className="relative w-full max-w-[480px] h-full flex flex-col items-center justify-between py-4 px-2 md:p-4 overflow-hidden text-sm md:text-base safe-area-inset-bottom">
 
         <AnimatePresence mode="wait">
           {!gameStarted ? (
