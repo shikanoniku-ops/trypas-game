@@ -140,31 +140,31 @@ function App() {
               className="w-full h-full flex flex-col items-center justify-between"
             >
               {/* 1. Header Area: Logo+Status (Left) vs Score (Right) */}
-              <div className="w-full flex-shrink-0 flex flex-row items-center justify-between mb-2">
+              <div className="w-full flex-shrink-0 flex flex-row items-start justify-between mb-4 px-2">
 
                 {/* Left: Logo & Status Pill */}
-                <div className="flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-3">
                   <img
                     src="/trypas-logo.png"
                     alt="TRYPAS"
                     className="w-[140px] opacity-90 drop-shadow-lg"
                   />
 
-                  {/* Status Pill moved from ScoreBoard */}
+                  {/* Status Pill (Setup/Turn) */}
                   <div className="relative group">
                     <div
-                      className="absolute inset-0 bg-gray-900/90 backdrop-blur-xl rounded-full border border-gray-700/50"
+                      className="absolute inset-0 bg-gray-900/90 backdrop-blur-xl rounded-full border border-gray-600"
                       style={{
-                        borderColor: phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.3)' : (turn === 1 ? 'rgba(96, 165, 250, 0.3)' : 'rgba(251, 113, 133, 0.3)'),
-                        boxShadow: `0 0 10px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.1)' : (turn === 1 ? 'rgba(96, 165, 250, 0.1)' : 'rgba(251, 113, 133, 0.1)')}`
+                        borderColor: phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.5)' : (turn === 1 ? 'rgba(96, 165, 250, 0.5)' : 'rgba(251, 113, 133, 0.5)'),
+                        boxShadow: `0 0 15px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.2)' : (turn === 1 ? 'rgba(96, 165, 250, 0.2)' : 'rgba(251, 113, 133, 0.2)')}`
                       }}
                     />
-                    <div className="relative px-4 py-1 flex items-center gap-2">
+                    <div className="relative px-5 py-1.5 flex items-center gap-2">
                       <div
-                        className={`w-1.5 h-1.5 rounded-full ${phase === 'REMOVING' ? 'bg-yellow-400 animate-pulse' : (turn === 1 ? 'bg-blue-400' : 'bg-rose-400')}`}
+                        className={`w-2 h-2 rounded-full ${phase === 'REMOVING' ? 'bg-yellow-400 animate-pulse' : (turn === 1 ? 'bg-blue-400' : 'bg-rose-400')}`}
                       />
                       <span
-                        className={`text-[10px] font-bold tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-blue-400' : 'text-rose-400')}`}
+                        className={`text-xs font-bold tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-blue-400' : 'text-rose-400')}`}
                       >
                         {phase === 'REMOVING' ? 'セットアップ' : (isReplaying ? 'リプレイ' : (isSoloMode ? 'SOLO PLAY' : (turn === 1 ? 'P1 ターン' : (isCPUMode ? 'CPU ターン' : 'P2 ターン'))))}
                       </span>
@@ -189,8 +189,8 @@ function App() {
               </div>
 
               {/* 2. Game Board (Center) */}
-              <div className="flex-grow flex items-center justify-center w-full my-1">
-                <div className="transform scale-110 origin-center">
+              <div className="flex-grow flex items-center justify-center w-full my-2">
+                <div className="w-full max-w-[400px]">
                   <GameBoard
                     board={board}
                     onSpotClick={handleSpotClick}
