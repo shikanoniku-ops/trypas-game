@@ -116,7 +116,7 @@ function App() {
         </button>
       </div>
 
-      <div className="relative w-full max-w-[420px] h-[850px] max-h-screen flex flex-col items-center justify-between p-4 my-auto">
+      <div className="relative w-full max-w-[480px] h-[900px] max-h-screen flex flex-col items-center justify-between p-4 my-auto">
 
         <AnimatePresence mode="wait">
           {!gameStarted ? (
@@ -140,7 +140,7 @@ function App() {
               className="w-full h-full flex flex-col items-center justify-between"
             >
               {/* 1. Header Area: Logo+Status (Left) vs Score (Right) */}
-              <div className="w-full flex-shrink-0 flex flex-row items-end justify-between mb-4">
+              <div className="w-full flex-shrink-0 flex flex-row items-center justify-between mb-2">
 
                 {/* Left: Logo & Status Pill */}
                 <div className="flex flex-col items-start gap-4">
@@ -173,7 +173,7 @@ function App() {
                 </div>
 
                 {/* Right: ScoreBoard */}
-                <div className="flex-shrink-0 place-self-start mt-2">
+                <div className="flex-shrink-0 mt-2">
                   <ScoreBoard
                     scores={scores}
                     turn={turn}
@@ -189,8 +189,8 @@ function App() {
               </div>
 
               {/* 2. Game Board (Center) */}
-              <div className="flex-grow flex items-center justify-center w-full my-2">
-                <div className="transform scale-100">
+              <div className="flex-grow flex items-center justify-center w-full my-1">
+                <div className="transform scale-110 origin-center">
                   <GameBoard
                     board={board}
                     onSpotClick={handleSpotClick}
