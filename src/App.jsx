@@ -527,11 +527,13 @@ function App() {
                 className="absolute bottom-8 left-0 right-0 z-[100] flex flex-col items-center gap-3 px-4 pointer-events-auto"
               >
                 {/* Hint Banner */}
-                <div className="bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-white/20">
-                  <p className="text-white font-bold text-sm">
-                    💡 {getGameHint()}
-                  </p>
-                </div>
+                {getGameHint() && (
+                  <div className="bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-white/20">
+                    <p className="text-white font-bold text-sm">
+                      💡 {getGameHint()}
+                    </p>
+                  </div>
+                )}
 
                 {/* Return Button */}
                 <button

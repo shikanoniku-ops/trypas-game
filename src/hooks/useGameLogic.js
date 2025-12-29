@@ -464,7 +464,6 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
     const getGameHint = useCallback(() => {
         if (phase !== 'GAME_OVER') return null;
 
-        const hints = [];
         const currentPlayer = isSoloMode ? 'p1' : (turn === 1 ? 'p1' : 'p2');
         const playerCaptured = capturedPieces[currentPlayer];
         const finalScore = scores[currentPlayer];
@@ -477,39 +476,8 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
             }
         }
 
-        // Count remaining pieces by color
-        const remaining = { BLUE: 0, YELLOW: 0, GREEN: 0, RED: 0 };
-        board.forEach(piece => {
-            if (piece !== null) {
-                remaining[piece]++;
-            }
-        });
-
-        // Hint: High-value pieces left on board
-        if (remaining.BLUE > 0) {
-            hints.push('青コマを優先すると高得点!');
-        } else if (remaining.YELLOW > 0) {
-            hints.push('黄色コマが残っていました');
-        }
-
-        // Hint: Red piece strategy
-        const redCount = playerCaptured.filter(p => p === 'RED').length;
-        if (redCount === 0 && remaining.RED > 0) {
-            hints.push('赤コマで連続手番を狙おう');
-        }
-
-        // Hint: Good score achieved
-        if (finalScore >= 15) {
-            hints.push('良い戦略でした!');
-        } else if (finalScore >= 10) {
-            hints.push('もう少し高得点を狙えます');
-        } else if (finalScore > 0) {
-            hints.push('高得点コマを優先しましょう');
-        }
-
-        // Return first applicable hint
-        return hints.length > 0 ? hints[0] : '次回はもっと高得点を!';
-    }, [phase, isSoloMode, turn, capturedPieces, scores, board]);
+        return null;
+    }, [phase, isSoloMode, turn, capturedPieces, scores]);
 
     return {
         board,
