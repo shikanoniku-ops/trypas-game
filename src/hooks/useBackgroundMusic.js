@@ -110,99 +110,70 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
         }
     }, [volume, isMuted]);
 
-    const play = useCallback(async () => {
+    const play = useCallback(() => {
         if (!audioRef.current) {
             console.warn('Audio element not initialized');
             return false;
         }
 
-        const attemptPlay = async () => {
-            try {
-                // AudioContextを再開（iOS Safari対策）
-                await resumeAudioContext();
+        // 1. AudioContextの再開（iOS対策）
+        // awaitせずにファイア・アンド・フォーゲットで実行する
+        // 待機するとAndroidでタッチイベントのコンテキストが切れるため
+        if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+            audioContextRef.current.resume().catch(e => console.warn('Context resume error:', e));
+        }
 
-                // 既に再生中なら何もしない
-                if (!audioRef.current.paused) {
-                    setIsPlaying(true);
-                    return true;
-                }
-
-                // Mobile対策: 音声ファイルが読み込まれていない場合は強制的にロード
-                if (audioRef.current.readyState < 2) { // HAVE_CURRENT_DATA未満
-                    console.log('Audio not ready, forcing load...');
-                    audioRef.current.load();
-                    // ロード完了を待つ（最大2秒）
-                    await new Promise((resolve, reject) => {
-                        const timeout = setTimeout(() => {
-                            reject(new Error('Audio load timeout'));
-                        }, 2000);
-
-                        const onCanPlay = () => {
-                            clearTimeout(timeout);
-                            audioRef.current.removeEventListener('canplay', onCanPlay);
-                            audioRef.current.removeEventListener('error', onError);
-                            resolve();
-                        };
-
-                        const onError = (e) => {
-                            clearTimeout(timeout);
-                            audioRef.current.removeEventListener('canplay', onCanPlay);
-                            audioRef.current.removeEventListener('error', onError);
-                            reject(e);
-                        };
-
-                        audioRef.current.addEventListener('canplay', onCanPlay);
-                        audioRef.current.addEventListener('error', onError);
-                    });
-                }
-
-                // 再生を試行
-                const playPromise = audioRef.current.play();
-
-                if (playPromise !== undefined) {
-                    await playPromise;
-                    setIsPlaying(true);
-                    console.log('Audio playback started successfully');
-                    return true;
-                }
-                return true;
-            } catch (error) {
-                throw error;
-            }
-        };
-
+        // 2. 即座に再生を実行
+        // readyStateのチェックやload()待機は行わない（ブラウザに任せる）
         try {
-            return await attemptPlay();
-        } catch (error) {
-            // NotAllowedError: ユーザー操作が必要
-            if (error.name === 'NotAllowedError') {
-                console.warn('Audio playback requires user interaction. Waiting for next user action...');
+            const playPromise = audioRef.current.play();
 
-                const retryPlay = async () => {
-                    try {
-                        await attemptPlay();
-                    } catch (e) {
-                        console.warn('Retry play also failed:', e);
-                    } finally {
-                        document.removeEventListener('click', retryPlay);
-                        document.removeEventListener('touchstart', retryPlay);
-                    }
-                };
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        setIsPlaying(true);
+                        console.log('Audio playback started successfully');
+                    })
+                    .catch(error => {
+                        console.warn('Playback failed:', error.name, error.message);
 
-                document.addEventListener('click', retryPlay, { once: true });
-                document.addEventListener('touchstart', retryPlay, { once: true });
+                        // NotAllowedErrorの場合のみ、次の操作でのリトライを予約
+                        if (error.name === 'NotAllowedError') {
+                            console.log('Scheduling retry on next interaction...');
+                            const retryPlay = () => {
+                                if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+                                    audioContextRef.current.resume();
+                                }
+                                audioRef.current?.play()
+                                    .then(() => {
+                                        setIsPlaying(true);
+                                        // 成功したらリスナー解除
+                                        document.removeEventListener('click', retryPlay);
+                                        document.removeEventListener('touchstart', retryPlay);
+                                    })
+                                    .catch(e => console.warn('Retry failed:', e));
+                            };
 
-                return false;
-            } else if (error.name === 'AbortError') {
-                // 再生が中断された（別のplay/pauseが呼ばれた）
-                console.log('Audio playback was aborted');
-            } else {
-                console.error('Audio play error:', error.name, error.message);
+                            // one-timeリスナーではなく、成功するまで残す戦略も考えられるが
+                            // createEventListenerの重複を防ぐため { once: true } 推奨
+                            document.addEventListener('click', retryPlay, { once: true });
+                            document.addEventListener('touchstart', retryPlay, { once: true });
+                        }
+                        setIsPlaying(false);
+                    });
             }
+            // Promiseが返ってこない古いブラウザ向け
+            else {
+                setIsPlaying(true);
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Audio synchronous play error:', error);
             setIsPlaying(false);
             return false;
         }
-    }, [resumeAudioContext]);
+    }, []);
 
     const pause = useCallback(() => {
         if (audioRef.current && !audioRef.current.paused) {
