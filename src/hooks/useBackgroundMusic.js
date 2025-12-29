@@ -116,31 +116,59 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
             return false;
         }
 
+        const attemptPlay = async () => {
+            try {
+                // AudioContextを再開（iOS Safari対策）
+                await resumeAudioContext();
+
+                // 既に再生中なら何もしない
+                if (!audioRef.current.paused) {
+                    setIsPlaying(true);
+                    return true;
+                }
+
+                // 再生を試行
+                const playPromise = audioRef.current.play();
+
+                if (playPromise !== undefined) {
+                    await playPromise;
+                    setIsPlaying(true);
+                    console.log('Audio playback started');
+                    return true;
+                }
+                return true;
+            } catch (error) {
+                throw error;
+            }
+        };
+
         try {
-            // AudioContextを再開（iOS Safari対策）
-            await resumeAudioContext();
-
-            // 既に再生中なら何もしない
-            if (!audioRef.current.paused) {
-                setIsPlaying(true);
-                return true;
-            }
-
-            // 再生を試行
-            const playPromise = audioRef.current.play();
-
-            if (playPromise !== undefined) {
-                await playPromise;
-                setIsPlaying(true);
-                console.log('Audio playback started');
-                return true;
-            }
-
-            return true;
+            return await attemptPlay();
         } catch (error) {
             // NotAllowedError: ユーザー操作が必要
             if (error.name === 'NotAllowedError') {
-                console.warn('Audio playback requires user interaction. Will retry on next user action.');
+                console.warn('Audio playback requires user interaction. Waiting for next user action...');
+
+                const retryPlay = async () => {
+                    try {
+                        await attemptPlay();
+                    } catch (e) {
+                        console.warn('Retry play also failed:', e);
+                    } finally {
+                        document.removeEventListener('click', retryPlay);
+                        document.removeEventListener('touchstart', retryPlay);
+                    }
+                };
+
+                document.addEventListener('click', retryPlay, { once: true });
+                document.addEventListener('touchstart', retryPlay, { once: true });
+
+                // UI上は再生中として扱っておく（次回のタップで鳴るため）
+                // ただし、完全に無音であることを示すためにfalseのままにする選択肢もあるが、
+                // ユーザーが「ON」にしたという意図を汲んでtrueにするか、
+                // あるいは「待機中」状態が必要。ここではシンプルにエラー扱いせずハンドリングする。
+                // 今回は setIsPlaying(false) のままにしておき、実際に鳴ったときに true になるようにする。
+                return false;
             } else if (error.name === 'AbortError') {
                 // 再生が中断された（別のplay/pauseが呼ばれた）
                 console.log('Audio playback was aborted');
