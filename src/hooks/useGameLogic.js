@@ -83,11 +83,11 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
 
         const interval = setInterval(() => {
             if (phase === 'PLAYING') {
-                if (isSoloMode) {
-                    // SOLOモードでは経過時間を計測
-                    setElapsedTime(prev => prev + 1);
-                } else {
-                    // 対戦モードでは思考時間を計測
+                // 全モードで経過時間を計測
+                setElapsedTime(prev => prev + 1);
+
+                if (!isSoloMode) {
+                    // 対戦モードではさらにターン思考時間を計測
                     setTurnTime(Math.floor((Date.now() - turnStartTime) / 1000));
                 }
             }
@@ -288,6 +288,11 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
             const finalP2 = currentPlayer === 'p2' ? scores.p2 + moveScore : scores.p2;
 
             if (isSoloMode) {
+                // SOLO MODE RULE: Ending with red piece = 0 points
+                if (hasRed) {
+                    setScores({ p1: 0, p2: 0 });
+                    setLastActionMessage('最後に赤コマを取ったため、スコアは0点です');
+                }
                 setWinner('SOLO'); // Special case for solo mode
             } else {
                 // 手詰まりになった方が負け（最後に手を打ったプレイヤーの相手が負け）
@@ -320,8 +325,16 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
 
         if (phase === 'REMOVING') {
             if (board[index] !== null) {
+                const removedColor = board[index];
+
+                // SOLO MODE RULE: Cannot remove red piece at the start
+                if (isSoloMode && removedColor === 'RED') {
+                    setLastActionMessage('赤コマは最初に取ることはできません');
+                    setTimeout(() => setLastActionMessage(''), 2000);
+                    return;
+                }
+
                 const newBoard = [...board];
-                const removedColor = newBoard[index];
                 const removedScore = PIECE_SCORES[removedColor];
                 newBoard[index] = null;
                 setBoard(newBoard);

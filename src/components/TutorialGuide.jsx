@@ -95,10 +95,10 @@ const TutorialGuide = ({
                     </div>
 
                     {/* Content */}
-                    <div className="p-5 pt-6">
+                    <div className="p-3 pt-4" style={{ padding: 'clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1rem)' }}>
                         {/* Header */}
-                        <div className="flex items-start gap-3 mb-3">
-                            <span className="text-3xl">{style.icon}</span>
+                        <div className="flex items-start gap-2 mb-2">
+                            <span className="text-xl" style={{ fontSize: 'clamp(1.25rem, 5vw, 1.5rem)' }}>{style.icon}</span>
                             <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
                                     <span className="text-xs font-bold text-white/60 uppercase tracking-wider">
@@ -112,7 +112,7 @@ const TutorialGuide = ({
                                 </div>
 
                                 {/* Main Message */}
-                                <p className="text-white font-bold text-base leading-relaxed whitespace-pre-line">
+                                <p className="text-white font-bold leading-snug whitespace-pre-line" style={{ fontSize: 'clamp(0.8rem, 3vw, 0.9rem)' }}>
                                     {stepData.message}
                                 </p>
                             </div>
@@ -120,8 +120,8 @@ const TutorialGuide = ({
 
                         {/* Sub Message */}
                         {stepData.subMessage && (
-                            <div className="mt-3 pt-3 border-t border-white/20">
-                                <p className="text-white/80 text-sm text-center font-medium">
+                            <div className="mt-2 pt-2 border-t border-white/20">
+                                <p className="text-white/80 text-center font-medium" style={{ fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)' }}>
                                     {isClickable && stepData.type !== 'COMPLETE' && '👆 '}
                                     {stepData.subMessage}
                                 </p>
@@ -156,10 +156,11 @@ const TutorialGuide = ({
 
                 {/* Exit Button (小さく控えめに) */}
                 {!isComplete && stepData.type !== 'COMPLETE' && (
-                    <div className="mt-3 text-center">
+                    <div className="mt-2 text-center">
                         <button
                             onClick={onExit}
-                            className="text-xs text-gray-400 hover:text-white transition-colors underline"
+                            className="text-xs text-gray-500 hover:text-gray-300 transition-colors underline"
+                            style={{ fontSize: 'clamp(0.65rem, 2vw, 0.75rem)' }}
                         >
                             チュートリアルをスキップ
                         </button>

@@ -3,98 +3,179 @@
 @tailwind utilities;
 
 /* ========================================
-   Viewport Height Fix for Mobile
+   Mobile-First Responsive Design
    ======================================== */
 
-/* Dynamic Viewport Height - 最も互換性の高い方法 */
+/* 1. Dynamic Viewport Height Variables */
 :root {
-  /* CSS変数でビューポート高さを管理 */
+  /* 動的ビューポート高さ（モバイルブラウザのアドレスバー対応） */
+  --vh: 1vh;
   --app-height: 100vh;
-  --app-height: 100dvh; /* モバイルブラウザのアドレスバーを考慮 */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
-/* HTML/Body のスクロール防止 */
+/* 2. HTML/Body - Complete Viewport Control */
 html {
+  /* ビューポート高さを完全に支配 */
   height: 100%;
+  min-height: 100%;
+
+  /* 最新ブラウザ向け動的ビューポート高さ */
   height: 100dvh;
+  min-height: 100dvh;
+
+  /* iOS Safari向けフォールバック */
+  min-height: -webkit-fill-available;
+
+  /* スクロール完全禁止 */
   overflow: hidden;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
+
+  /* モバイル最適化 */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   @apply bg-gray-900 text-white;
-  font-family: 'Inter', sans-serif;
-  
-  /* ビューポート高さを完全に埋める */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* bodyも完全な高さ */
   height: 100%;
+  min-height: 100%;
   height: 100dvh;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
   min-height: 100dvh;
-  
-  /* スクロール防止 */
+  min-height: -webkit-fill-available;
+
+  /* スクロール禁止 */
   overflow: hidden;
   overscroll-behavior: none;
-  
-  /* Safe Area (ノッチ付きデバイス対応) */
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  
-  /* モバイルでの意図しない動作を防止 */
+  position: fixed;
+  width: 100%;
+
+  /* Safe Area対応（ノッチ付きデバイス） */
+  padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+
+  /* タッチ最適化 */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+
+  /* ピンチズーム完全禁止 */
+  user-zoom: fixed;
 }
 
-/* React Root要素 */
+/* 3. React Root - Flexbox Container */
 #root {
   height: 100%;
-  height: 100dvh;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  min-height: 100dvh;
+  min-height: 100%;
+  width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-/* ========================================
-   Full Height Utility Classes
-   ======================================== */
-
-/* 動的ビューポート高さを使用するコンテナ */
-.app-container {
-  height: 100vh;
-  height: 100dvh;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  min-height: 100dvh;
-  overflow: hidden;
   position: relative;
 }
 
-/* Safe Area Inset対応 */
-.safe-area-inset-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
-}
+/* 4. App Container - Main Wrapper */
+.app-container {
+  /* 完全な高さと幅 */
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
 
-.safe-area-inset-top {
-  padding-top: env(safe-area-inset-top);
+  /* スクロール禁止 */
+  overflow: hidden;
+  position: relative;
+
+  /* Flexbox */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ========================================
-   Additional Mobile Fixes
+   JavaScript Height Calculation Support
    ======================================== */
 
-/* iOS Safari で100vhがアドレスバーを含む問題の対策 */
+/* JavaScriptから--vh変数を設定可能にする */
+.use-custom-vh {
+  height: calc(var(--vh, 1vh) * 100);
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+
+/* スクロール可能なモーダル内コンテンツ用 */
+.scrollable-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* タッチ操作最適化 */
+.touch-optimized {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ========================================
+   Browser-Specific Fixes
+   ======================================== */
+
+/* iOS Safari 専用 */
 @supports (-webkit-touch-callout: none) {
-  html, body, #root {
-    height: -webkit-fill-available;
-  }
-  
+
+  html,
+  body,
+  #root,
   .app-container {
+    height: -webkit-fill-available;
     min-height: -webkit-fill-available;
   }
+
+  /* iOS Safari でのスクロールバウンス防止 */
+  body {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+/* Android Chrome 専用 */
+@media screen and (max-width: 768px) {
+
+  /* モバイル端末でのビューポート安定化 */
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+}
+
+/* ========================================
+   Accessibility
+   ======================================== */
+
+/* フォーカス表示の改善 */
+*:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* ボタンのアクティブステート */
+button:active {
+  transform: scale(0.98);
 }

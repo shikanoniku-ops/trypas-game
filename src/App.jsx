@@ -16,6 +16,7 @@ function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameMode, setGameMode] = useState('LOCAL');
   const [showRulesInGame, setShowRulesInGame] = useState(false);
+  const [isBoardOverview, setIsBoardOverview] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [audioInitialized, setAudioInitialized] = useState(false);
 
@@ -96,6 +97,12 @@ function App() {
     bgm.setVolume(newVolume);
   };
 
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="app-container bg-gray-900 text-white font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center">
       {/* Music Control Button and Menu */}
@@ -125,15 +132,17 @@ function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.5 }}
-              className="w-full h-full flex flex-col items-center justify-between"
+              className="w-full h-full flex flex-col items-center justify-start"
+              style={{ gap: 'clamp(0.25rem, 1vh, 0.75rem)', padding: 'clamp(0.25rem, 0.5vh, 0.5rem)' }}
             >
               {/* Header */}
-              <div className="w-full flex-shrink-0 flex flex-row items-start justify-between mb-2 px-2">
+              <div className="w-full flex-shrink-0 flex flex-row items-start justify-between px-2" style={{ marginBottom: 'clamp(0.25rem, 1vh, 0.5rem)' }}>
                 <div className="flex flex-col items-start gap-2">
                   <img
                     src="/trypas-logo.png"
                     alt="TRYPAS"
-                    className="w-[120px] opacity-90 drop-shadow-lg"
+                    className="opacity-90 drop-shadow-lg"
+                    style={{ width: 'clamp(90px, 25vw, 120px)' }}
                   />
                   <div className="relative group">
                     <div className="absolute inset-0 bg-emerald-900/90 backdrop-blur-xl rounded-full border border-emerald-500/50" />
@@ -153,7 +162,7 @@ function App() {
               </div>
 
               {/* Tutorial Guide Message */}
-              <div className="w-full flex-shrink-0 px-2 mb-2">
+              <div className="w-full flex-shrink-0 px-2" style={{ marginBottom: 'clamp(0.25rem, 0.5vh, 0.5rem)' }}>
                 <TutorialGuide
                   stepData={tutorial.currentStepData}
                   currentStep={tutorial.tutorialStep}
@@ -166,8 +175,8 @@ function App() {
               </div>
 
               {/* Tutorial Game Board */}
-              <div className="flex-grow flex items-center justify-center w-full min-h-0 py-1">
-                <div className="w-full max-w-[350px] aspect-square max-h-full">
+              <div className="flex-1 w-full flex items-center justify-center min-h-0">
+                <div className="w-full aspect-square" style={{ maxWidth: 'min(350px, calc(100vw - 2rem), calc(var(--vh, 1vh) * 100 - 280px))', maxHeight: 'calc(var(--vh, 1vh) * 100 - 280px)' }}>
                   <GameBoard
                     board={tutorial.board}
                     onSpotClick={tutorial.handleTutorialSpotClick}
@@ -179,7 +188,7 @@ function App() {
               </div>
 
               {/* Legend */}
-              <div className="w-full flex-shrink-0 px-2 mb-2">
+              <div className="w-full flex-shrink-0 px-2" style={{ marginBottom: 'clamp(0.25rem, 0.5vh, 0.5rem)' }}>
                 <Legend />
               </div>
             </motion.div>
@@ -191,17 +200,19 @@ function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.5 }}
-              className="w-full h-full flex flex-col items-center justify-between"
+              className="w-full h-full flex flex-col items-center justify-start"
+              style={{ gap: 'clamp(0.25rem, 1vh, 0.75rem)', padding: 'clamp(0.25rem, 0.5vh, 0.5rem)' }}
             >
               {/* 1. Header Area: Logo+Status (Left) vs Score (Right) */}
-              <div className="w-full flex-shrink-0 flex flex-row items-start justify-between mb-4 px-2">
+              <div className="w-full flex-shrink-0 flex flex-row items-start justify-between px-2" style={{ marginBottom: 'clamp(0.25rem, 1vh, 1rem)' }}>
 
                 {/* Left: Logo & Status Pill */}
                 <div className="flex flex-col items-start gap-3">
                   <img
                     src="/trypas-logo.png"
                     alt="TRYPAS"
-                    className="w-[140px] opacity-90 drop-shadow-lg"
+                    className="opacity-90 drop-shadow-lg"
+                    style={{ width: 'clamp(90px, 25vw, 140px)' }}
                   />
 
                   {/* Status Pill (Setup/Turn) */}
@@ -242,12 +253,24 @@ function App() {
                 </div>
               </div>
 
-              {/* Spacer (Auto Adjust) */}
-              <div className="flex-grow min-h-2" />
+              {/* Setup Instruction Message (Solo Mode Only) */}
+              {/* Setup Instruction Message (Solo Mode Only) */}
+              {isSoloMode && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: phase === 'REMOVING' ? 1 : 0 }}
+                  className="w-full text-center px-4"
+                  style={{ marginBottom: 'clamp(0.25rem, 0.5vh, 0.5rem)', visibility: phase === 'REMOVING' ? 'visible' : 'hidden' }}
+                >
+                  <p className="text-yellow-300 font-bold text-sm md:text-base drop-shadow-md bg-black/30 py-1 px-3 rounded-full inline-block backdrop-blur-sm border border-yellow-500/30">
+                    赤コマ以外を一つ選択してください
+                  </p>
+                </motion.div>
+              )}
 
               {/* 2. Game Board (Center) */}
-              <div className="flex-shrink-1 w-full flex items-center justify-center min-h-0">
-                <div className="w-full max-w-[400px] aspect-square max-h-full">
+              <div className="flex-1 w-full flex items-center justify-center min-h-0">
+                <div className="w-full aspect-square" style={{ maxWidth: 'min(400px, calc(100vw - 2rem), calc(var(--vh, 1vh) * 100 - 280px))', maxHeight: 'calc(var(--vh, 1vh) * 100 - 280px)' }}>
                   <GameBoard
                     board={board}
                     onSpotClick={handleSpotClick}
@@ -257,16 +280,13 @@ function App() {
                 </div>
               </div>
 
-              {/* Spacer (Auto Adjust) */}
-              <div className="flex-grow min-h-2" />
-
               {/* 3. Footer Info (Timer, Legend, Buttons) */}
-              <div className="w-full flex-shrink-0 flex flex-col items-center gap-3 mb-2">
+              <div className="w-full flex-shrink-0 flex flex-col items-center mb-2" style={{ gap: 'clamp(0.25rem, 0.5vh, 0.75rem)' }}>
 
                 {/* Timer */}
                 {!isReplaying && (
                   <div className="text-center">
-                    <div className="text-2xl font-black font-mono tracking-widest text-blue-300 drop-shadow-[0_0_10px_rgba(96,165,250,0.6)] bg-gray-900/50 px-6 py-1 rounded-full border border-gray-700/50">
+                    <div className="font-black font-mono tracking-widest text-blue-300 drop-shadow-[0_0_10px_rgba(96,165,250,0.6)] bg-gray-900/50 px-6 py-1 rounded-full border border-gray-700/50" style={{ fontSize: 'clamp(1.125rem, 4vw, 1.75rem)' }}>
                       {phase === 'REMOVING' ? '00:00' : (isSoloMode ?
                         `${Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:${(elapsedTime % 60).toString().padStart(2, '0')}` :
                         `${Math.floor(turnTime / 60).toString().padStart(2, '0')}:${(turnTime % 60).toString().padStart(2, '0')}`
@@ -279,11 +299,11 @@ function App() {
                 <Legend />
 
                 {/* Controls Buttons */}
-                <div className="w-full flex gap-3 mt-1">
-                  <button onClick={handleBackToTitle} className="flex-1 py-3 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all">TITLE</button>
-                  <button onClick={resetGame} className="flex-1 py-3 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all">RESET</button>
-                  <button onClick={() => setShowRulesInGame(true)} className="flex-1 py-3 bg-gray-800 text-white text-sm font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all">ルール</button>
-                  <button onClick={toggleAudio} className="w-[50px] flex-shrink-0 flex items-center justify-center bg-gray-800 text-white rounded-full border border-gray-600 hover:bg-gray-700 transition-all">
+                <div className="w-full flex mt-1" style={{ gap: 'clamp(0.375rem, 1vw, 0.75rem)' }}>
+                  <button onClick={handleBackToTitle} className="flex-1 bg-gray-800 text-white font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all" style={{ padding: 'clamp(0.5rem, 1.5vh, 0.75rem) 0.5rem', fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)' }}>TITLE</button>
+                  <button onClick={resetGame} className="flex-1 bg-gray-800 text-white font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all" style={{ padding: 'clamp(0.5rem, 1.5vh, 0.75rem) 0.5rem', fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)' }}>RESET</button>
+                  <button onClick={() => setShowRulesInGame(true)} className="flex-1 bg-gray-800 text-white font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all" style={{ padding: 'clamp(0.5rem, 1.5vh, 0.75rem) 0.5rem', fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)' }}>ルール</button>
+                  <button onClick={toggleAudio} className="flex-shrink-0 flex items-center justify-center bg-gray-800 text-white rounded-full border border-gray-600 hover:bg-gray-700 transition-all" style={{ width: 'clamp(40px, 10vw, 50px)', height: 'clamp(40px, 10vw, 50px)' }}>
                     <span className="text-xl">{isMuted ? '🔇' : '🔊'}</span>
                   </button>
                 </div>
@@ -325,22 +345,22 @@ function App() {
                       initial={{ scale: 0.9, y: 20 }}
                       animate={{ scale: 1, y: 0 }}
                       exit={{ scale: 0.9, y: 20 }}
-                      className="bg-gray-800 p-8 rounded-2xl border border-gray-700 max-w-lg w-full max-h-[80vh] overflow-y-auto"
-                      onClick={e => e.stopPropagation()}
                     >
-                      <h2 className="text-2xl md:text-3xl font-black mb-6 text-white border-b border-gray-700 pb-4 flex items-center gap-3 flex-wrap">
-                        <div className="flex flex-col md:flex-row items-baseline gap-1 md:gap-3">
-                          <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-black tracking-wider">
-                            TRYPAS SOLOPLAY
-                          </span>
-                          <span className="text-lg md:text-xl text-gray-300 font-bold">
-                            の遊び方
-                          </span>
-                        </div>
-                      </h2>
+                      <div className="bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-700 max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
+                        <h2 className="text-2xl md:text-3xl font-black mb-6 text-white border-b border-gray-700 pb-4 flex items-center gap-3 flex-wrap">
+                          <div className="flex flex-col md:flex-row items-baseline gap-1 md:gap-3">
+                            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-black tracking-wider">
+                              TRYPAS SOLOPLAY
+                            </span>
+                            <span className="text-lg md:text-xl text-gray-300 font-bold">
+                              の遊び方
+                            </span>
+                          </div>
+                        </h2>
 
-                      {/* Unified Rules Content Component */}
-                      <RulesContent />
+                        {/* Unified Rules Content Component */}
+                        <RulesContent />
+                      </div>
 
                       <button
                         onClick={() => setShowRulesInGame(false)}
@@ -360,7 +380,7 @@ function App() {
 
         {/* Game Over Modal */}
         <AnimatePresence>
-          {phase === 'GAME_OVER' && !isReplaying && (
+          {phase === 'GAME_OVER' && !isReplaying && !isBoardOverview && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -384,15 +404,34 @@ function App() {
                 {/* Result Display */}
                 <div className="mb-6 text-gray-300">
                   {gameMode === 'SOLO' ? (
-                    <div className="flex flex-col items-center gap-2">
-                      <span className="text-gray-400 text-sm">スコア</span>
-                      <span className="text-5xl font-bold text-white">
-                        {scores.p1}
-                      </span>
-                      <span className="text-gray-500 text-sm">ポイント</span>
+                    <div className="flex flex-row items-center justify-center gap-4">
+                      {/* Time Card */}
+                      <div className="flex flex-col items-center bg-black/20 p-4 rounded-2xl border border-white/10 min-w-[130px]">
+                        <span className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-bold">Time</span>
+                        <span className="text-2xl font-mono font-black text-white shadow-purple-500/50 drop-shadow-sm leading-none">
+                          {formatTime(elapsedTime)}
+                        </span>
+                      </div>
+
+                      {/* Score Card */}
+                      <div className="flex flex-col items-center bg-black/20 p-4 rounded-2xl border border-white/10 min-w-[130px]">
+                        <span className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-bold">Score</span>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-4xl font-black text-yellow-400 leading-none drop-shadow-md">
+                            {scores.p1}
+                          </span>
+                          <span className="text-[10px] text-gray-500 font-bold">PTS</span>
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <div className="space-y-4">
+                      {/* Time Display for VS */}
+                      <div className="text-center mb-1">
+                        <span className="text-gray-500 text-xs mr-2 uppercase tracking-wider">Total Time</span>
+                        <span className="font-mono font-bold text-white">{formatTime(elapsedTime)}</span>
+                      </div>
+
                       <div className="text-lg text-white">
                         <span className="text-gray-400">勝者: </span>
                         <span className={winner === 1 ? 'text-blue-400' : 'text-rose-400'}>
@@ -415,6 +454,14 @@ function App() {
 
                 {/* Buttons */}
                 <div className="flex flex-col gap-3">
+                  {/* Check Board Button */}
+                  <button
+                    onClick={() => setIsBoardOverview(true)}
+                    className="w-full py-3 bg-gray-600/50 hover:bg-gray-500/50 text-white font-medium rounded-lg border border-gray-500/30 transition-all flex items-center justify-center gap-2 mb-1 group"
+                  >
+                    <span className="group-hover:scale-110 transition-transform">🔍</span>
+                    盤面を確認する
+                  </button>
                   <button
                     onClick={() => resetGame()}
                     className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-bold rounded-lg transition-all"
@@ -444,6 +491,25 @@ function App() {
                   </button>
                 </div>
               </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Board Overview Return Button */}
+        <AnimatePresence>
+          {phase === 'GAME_OVER' && !isReplaying && isBoardOverview && (
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              className="absolute bottom-8 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-auto"
+            >
+              <button
+                onClick={() => setIsBoardOverview(false)}
+                className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold shadow-lg border border-blue-400/50 backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-all"
+              >
+                <span>↩️</span> 結果画面に戻る
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
