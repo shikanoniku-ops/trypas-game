@@ -412,14 +412,6 @@ function App() {
                 <div className="mb-6 text-gray-300">
                   {gameMode === 'SOLO' ? (
                     <div className="flex flex-row items-center justify-center gap-4">
-                      {/* Time Card */}
-                      <div className="flex flex-col items-center bg-black/20 p-4 rounded-2xl border border-white/10 min-w-[130px]">
-                        <span className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-bold">Time</span>
-                        <span className="text-2xl font-mono font-black text-white shadow-purple-500/50 drop-shadow-sm leading-none">
-                          {formatTime(elapsedTime)}
-                        </span>
-                      </div>
-
                       {/* Score Card */}
                       <div className="flex flex-col items-center bg-black/20 p-4 rounded-2xl border border-white/10 min-w-[130px]">
                         <span className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-bold">Score</span>
@@ -429,6 +421,14 @@ function App() {
                           </span>
                           <span className="text-[10px] text-gray-500 font-bold">PTS</span>
                         </div>
+                      </div>
+
+                      {/* Time Card */}
+                      <div className="flex flex-col items-center bg-black/20 p-4 rounded-2xl border border-white/10 min-w-[130px]">
+                        <span className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-bold">Time</span>
+                        <span className="text-2xl font-mono font-black text-white shadow-purple-500/50 drop-shadow-sm leading-none">
+                          {formatTime(elapsedTime)}
+                        </span>
                       </div>
                     </div>
                   ) : (
