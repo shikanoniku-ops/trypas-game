@@ -140,6 +140,42 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
                 />
             </div>
+
+            {/* Rules Modal */}
+            <AnimatePresence>
+                {showRules && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+                        onClick={() => setShowRules(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-gray-900 border border-gray-700 rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <RulesContent />
+                            <button
+                                onClick={() => setShowRules(false)}
+                                className="mt-4 w-full py-3 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-500 transition-colors"
+                            >
+                                閉じる
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Feedback Modal */}
+            <AnimatePresence>
+                {showFeedback && (
+                    <FeedbackModal onClose={() => setShowFeedback(false)} />
+                )}
+            </AnimatePresence>
         </div>
     );
 };
