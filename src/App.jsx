@@ -11,6 +11,7 @@ import RulesContent from './components/RulesContent';
 import Legend from './components/Legend';
 import TutorialGuide from './components/TutorialGuide';
 import { PIECE_SCORES, PIECE_COLORS } from './constants/colors';
+import tryPasTheme from './assets/sounds/TRYPAS_Theme.mp3';
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -21,7 +22,7 @@ function App() {
   const [audioInitialized, setAudioInitialized] = useState(false);
 
   // Background Music (Single instance for continuous playback)
-  const bgm = useBackgroundMusic('/sounds/TRYPAS_Theme.mp3', 0.3);
+  const bgm = useBackgroundMusic(tryPasTheme, 0.3);
 
   // Initial Audio Setup
   const handleAudioSetup = (soundEnabled) => {
