@@ -288,7 +288,7 @@ function App() {
 
               {/* 2. Game Board (Center) */}
               <div className="flex-1 w-full flex items-center justify-center min-h-0">
-                <div className="w-full aspect-square" style={{ maxWidth: 'min(400px, calc(100vw - 2rem), calc(var(--vh, 1vh) * 100 - 280px))', maxHeight: 'calc(var(--vh, 1vh) * 100 - 280px)' }}>
+                <div className="w-full aspect-square" style={{ maxWidth: 'min(500px, calc(100vw - 2rem), calc(var(--vh, 1vh) * 100 - 200px))', maxHeight: 'calc(var(--vh, 1vh) * 100 - 200px)' }}>
                   <GameBoard
                     board={board}
                     onSpotClick={handleSpotClick}
