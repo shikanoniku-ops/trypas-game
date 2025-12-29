@@ -71,7 +71,8 @@ function App() {
     stopReplay,
     nextReplayStep,
     prevReplayStep,
-    jumpToReplayStep
+    jumpToReplayStep,
+    getGameHint
   } = useGameLogic(gameMode);
 
   // Tutorial Mode
@@ -517,19 +518,36 @@ function App() {
         {/* Board Overview Return Button */}
         <AnimatePresence>
           {phase === 'GAME_OVER' && !isReplaying && isBoardOverview && (
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 50, opacity: 0 }}
-              className="absolute bottom-8 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-auto"
-            >
-              <button
-                onClick={() => setIsBoardOverview(false)}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold shadow-lg border border-blue-400/50 backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-all"
+            <>
+              {/* Hint Banner */}
+              <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -20, opacity: 0 }}
+                className="absolute top-4 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-none"
               >
-                <span>↩️</span> 結果画面に戻る
-              </button>
-            </motion.div>
+                <div className="bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-white/20">
+                  <p className="text-white font-bold text-sm">
+                    💡 {getGameHint()}
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Return Button */}
+              <motion.div
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 50, opacity: 0 }}
+                className="absolute bottom-8 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-auto"
+              >
+                <button
+                  onClick={() => setIsBoardOverview(false)}
+                  className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold shadow-lg border border-blue-400/50 backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-all"
+                >
+                  <span>↩️</span> 結果画面に戻る
+                </button>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </div>
