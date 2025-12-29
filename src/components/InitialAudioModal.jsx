@@ -17,9 +17,9 @@ const InitialAudioModal = ({ onComplete, onEnableAudio }) => {
             const { skipPrompt, soundEnabled } = JSON.parse(savedSettings);
             if (skipPrompt) {
                 hasCheckedSettings.current = true;
-                // If skip prompt is set, automatically complete with saved preference
-                // Note: Auto-play might rely on click/tap elsewhere if loaded from storage
-                if (soundEnabled && onEnableAudio) onEnableAudio();
+                // IMPORTANT: Do NOT call onEnableAudio() here!
+                // Chrome's autoplay policy blocks audio playback outside of user gestures.
+                // Instead, just set the preference. Audio will be triggered on next user click.
                 onComplete(soundEnabled);
                 return;
             }
@@ -28,7 +28,7 @@ const InitialAudioModal = ({ onComplete, onEnableAudio }) => {
         // If no settings or skipPrompt is false, show the modal
         setIsVisible(true);
         hasCheckedSettings.current = true;
-    }, [onComplete, onEnableAudio]);
+    }, [onComplete]);
 
     const handleSelection = (soundEnabled) => {
         if (dontShowAgain) {

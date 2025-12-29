@@ -78,6 +78,12 @@ function App() {
   const tutorial = useTutorial();
 
   const handleStartGame = (mode) => {
+    // Trigger audio playback on user interaction (Chrome autoplay policy compliance)
+    // Only play if audio is initialized and not muted
+    if (audioInitialized && !isMuted) {
+      bgm.play().catch(e => console.log("Audio play on game start failed:", e));
+    }
+
     // Only reset if specifically requested, otherwise continue playing
     // bgm.reset(); // Removed to keep music playing seamlessly
     if (mode === 'TUTORIAL') {
