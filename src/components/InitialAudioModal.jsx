@@ -38,14 +38,17 @@ const InitialAudioModal = ({ onComplete, onEnableAudio }) => {
             }));
         }
 
-        // Trigger audio unlock immediately within the click event
+        // CRITICAL: Trigger audio unlock immediately within the click event synchronously
+        // Mobile browsers require audio.play() to be called directly in user gesture handler
         if (soundEnabled && onEnableAudio) {
             onEnableAudio();
         }
 
+        // Call onComplete immediately to maintain user interaction context
+        onComplete(soundEnabled);
+
+        // Then hide modal (visual only)
         setIsVisible(false);
-        // Add a small delay for exit animation before calling onComplete
-        setTimeout(() => onComplete(soundEnabled), 300);
     };
 
     return (

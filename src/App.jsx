@@ -28,10 +28,16 @@ function App() {
   // Initial Audio Setup
 
   // 1. Called immediately on user interaction (click) to unlock audio context in mobile browsers
+  // MUST be synchronous to maintain user gesture context on mobile
   const handleEnableAudio = () => {
     setIsMuted(false);
     bgm.setVolume(0.3);
-    bgm.play().catch(e => console.log("Audio immediate play failed:", e));
+    // Call play() synchronously - don't await or use .then() here
+    // The bgm.play() will handle retries internally if needed
+    const playResult = bgm.play();
+    if (playResult !== false) {
+      console.log("Audio playback initiated from user gesture");
+    }
   };
 
   // 2. Called after modal animation
