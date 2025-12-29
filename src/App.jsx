@@ -216,7 +216,7 @@ function App() {
                 {/* Left: Logo & Status Pill */}
                 <div className="flex flex-col items-start gap-3">
                   <img
-                    src="/trypas-logo.png"
+                    src="/trypas-logo-new.png"
                     alt="TRYPAS"
                     className="opacity-90 drop-shadow-lg"
                     style={{ width: 'clamp(90px, 25vw, 140px)' }}

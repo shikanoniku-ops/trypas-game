@@ -19,7 +19,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                 className="mb-12 text-center"
             >
                 <img
-                    src="/trypas-logo.png"
+                    src="/trypas-logo-new.png"
                     alt="TRYPAS"
                     className="w-[300px] md:w-[350px] mx-auto drop-shadow-2xl"
                 />
