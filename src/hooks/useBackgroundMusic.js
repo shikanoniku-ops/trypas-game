@@ -6,51 +6,22 @@ import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
  */
 export const useBackgroundMusic = (src, volume = 0.3) => {
     const audioRef = useRef(null);
-    const audioContextRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const wasPlayingRef = useRef(false);
 
-    // AudioContextを作成（iOS Safari対策）
-    const getAudioContext = useCallback(() => {
-        if (!audioContextRef.current) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (AudioContext) {
-                audioContextRef.current = new AudioContext();
-            }
-        }
-        return audioContextRef.current;
-    }, []);
-
-    // AudioContextを再開（ユーザー操作後に必要）
-    const resumeAudioContext = useCallback(async () => {
-        const ctx = getAudioContext();
-        if (ctx && ctx.state === 'suspended') {
-            try {
-                await ctx.resume();
-                console.log('AudioContext resumed');
-            } catch (e) {
-                console.warn('AudioContext resume failed:', e);
-            }
-        }
-    }, [getAudioContext]);
-
     // Audio要素の初期化
     useEffect(() => {
         if (!src) return;
 
-        // 既存のaudio要素があれば再利用、なければ作成
         if (!audioRef.current) {
             const audio = new Audio();
-
-            // クロスブラウザ互換性のための設定
             audio.preload = 'auto';
             audio.loop = true;
             audio.volume = volume;
-            audio.playsInline = true; // iOS Safari対策
+            // audio.playsInline = true; // new Audio()にはpropertyが存在しない場合があるが、念のため設定
 
-            // イベントリスナーで状態を同期
             audio.addEventListener('canplaythrough', () => {
                 setIsReady(true);
             });
@@ -60,30 +31,21 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
             });
 
             audio.addEventListener('pause', () => {
-                // visibility changeによる一時停止は除外
                 if (!document.hidden) {
                     setIsPlaying(false);
                 }
             });
 
-            audio.addEventListener('ended', () => {
-                // ループ設定しているが念のため
-                setIsPlaying(false);
-            });
-
             audio.addEventListener('error', (e) => {
-                console.error('Audio error:', e.target?.error?.message || 'Unknown error');
+                console.error('Audio error:', e.target?.error?.message);
                 setIsPlaying(false);
                 setIsReady(false);
             });
 
-            // ソースを設定してロード開始
             audio.src = src;
-            audio.load(); // 明示的にloadを呼ぶ（一部ブラウザで必要）
-
+            audio.load();
             audioRef.current = audio;
         } else {
-            // srcが変わった場合のみ再設定
             if (audioRef.current.src !== src && src) {
                 audioRef.current.src = src;
                 audioRef.current.load();
@@ -96,12 +58,8 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
                 audioRef.current.src = '';
                 audioRef.current = null;
             }
-            if (audioContextRef.current) {
-                audioContextRef.current.close().catch(() => { });
-                audioContextRef.current = null;
-            }
         };
-    }, [src, volume]);
+    }, [src]); // volumeは依存から外す（別で制御）
 
     // 音量の変更を反映
     useEffect(() => {
@@ -111,78 +69,32 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
     }, [volume, isMuted]);
 
     const play = useCallback(() => {
-        if (!audioRef.current) {
-            console.warn('Audio element not initialized');
-            return false;
+        if (!audioRef.current) return false;
+
+        // 非常にシンプルに play() だけを呼ぶ
+        // これによりブラウザネイティブの自動再生ポリシー判定に委ねる
+        const playPromise = audioRef.current.play();
+
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    setIsPlaying(true);
+                    console.log('Audio playback started');
+                })
+                .catch(error => {
+                    console.warn('Playback failed:', error);
+                    // ユーザーインタラクションが必要なエラーの場合、
+                    // ここで変なリトライ処理を入れず、次のクリックを待つのが最も安全
+                    setIsPlaying(false);
+                });
         }
-
-        // 1. AudioContextの再開（iOS対策）
-        // awaitせずにファイア・アンド・フォーゲットで実行する
-        // 待機するとAndroidでタッチイベントのコンテキストが切れるため
-        if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
-            audioContextRef.current.resume().catch(e => console.warn('Context resume error:', e));
-        }
-
-        // 2. 即座に再生を実行
-        // readyStateのチェックやload()待機は行わない（ブラウザに任せる）
-        try {
-            const playPromise = audioRef.current.play();
-
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                        setIsPlaying(true);
-                        console.log('Audio playback started successfully');
-                    })
-                    .catch(error => {
-                        console.warn('Playback failed:', error.name, error.message);
-
-                        // NotAllowedErrorの場合のみ、次の操作でのリトライを予約
-                        if (error.name === 'NotAllowedError') {
-                            console.log('Scheduling retry on next interaction...');
-                            const retryPlay = () => {
-                                if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
-                                    audioContextRef.current.resume();
-                                }
-                                audioRef.current?.play()
-                                    .then(() => {
-                                        setIsPlaying(true);
-                                        // 成功したらリスナー解除
-                                        document.removeEventListener('click', retryPlay);
-                                        document.removeEventListener('touchstart', retryPlay);
-                                    })
-                                    .catch(e => console.warn('Retry failed:', e));
-                            };
-
-                            // one-timeリスナーではなく、成功するまで残す戦略も考えられるが
-                            // createEventListenerの重複を防ぐため { once: true } 推奨
-                            document.addEventListener('click', retryPlay, { once: true });
-                            document.addEventListener('touchstart', retryPlay, { once: true });
-                        }
-                        setIsPlaying(false);
-                    });
-            }
-            // Promiseが返ってこない古いブラウザ向け
-            else {
-                setIsPlaying(true);
-            }
-
-            return true;
-        } catch (error) {
-            console.error('Audio synchronous play error:', error);
-            setIsPlaying(false);
-            return false;
-        }
+        return true;
     }, []);
 
     const pause = useCallback(() => {
-        if (audioRef.current && !audioRef.current.paused) {
-            try {
-                audioRef.current.pause();
-                setIsPlaying(false);
-            } catch (error) {
-                console.error('Audio pause error:', error);
-            }
+        if (audioRef.current) {
+            audioRef.current.pause();
+            setIsPlaying(false);
         }
     }, []);
 
@@ -194,11 +106,10 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
         }
     }, []);
 
-    const setVolume = useCallback((newVolume) => {
+    const setAudioVolume = useCallback((newVolume) => {
         if (audioRef.current) {
             const clampedVolume = Math.max(0, Math.min(1, newVolume));
             audioRef.current.volume = clampedVolume;
-
             if (clampedVolume === 0) {
                 audioRef.current.muted = true;
                 setIsMuted(true);
@@ -209,23 +120,25 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
         }
     }, []);
 
-    // Handle visibility change (pause when backgrounded, resume when focused)
+    const reset = useCallback(() => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+        }
+    }, []);
+
+    // Visibility handling
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (!audioRef.current) return;
-
             if (document.hidden) {
-                // バックグラウンドになったら一時停止
-                wasPlayingRef.current = !audioRef.current.paused;
-                if (wasPlayingRef.current) {
+                if (!audioRef.current.paused) {
+                    wasPlayingRef.current = true;
                     audioRef.current.pause();
                 }
             } else {
-                // フォアグラウンドに戻ったら再開
-                if (wasPlayingRef.current && isPlaying) {
-                    audioRef.current.play().catch(e => {
-                        console.warn("Resume on visibility change failed:", e.message);
-                    });
+                if (wasPlayingRef.current) {
+                    audioRef.current.play().catch(e => console.warn('Resume failed', e));
+                    wasPlayingRef.current = false;
                 }
             }
         };
@@ -234,43 +147,16 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, [isPlaying]);
-
-    // ユーザー操作でAudioContextをアンロック（iOS Safari対策）
-    useEffect(() => {
-        const unlockAudio = async () => {
-            await resumeAudioContext();
-            // 一度だけ実行
-            document.removeEventListener('touchstart', unlockAudio);
-            document.removeEventListener('touchend', unlockAudio);
-            document.removeEventListener('click', unlockAudio);
-        };
-
-        document.addEventListener('touchstart', unlockAudio, { once: true });
-        document.addEventListener('touchend', unlockAudio, { once: true });
-        document.addEventListener('click', unlockAudio, { once: true });
-
-        return () => {
-            document.removeEventListener('touchstart', unlockAudio);
-            document.removeEventListener('touchend', unlockAudio);
-            document.removeEventListener('click', unlockAudio);
-        };
-    }, [resumeAudioContext]);
-
-    const reset = useCallback(() => {
-        if (audioRef.current) {
-            audioRef.current.currentTime = 0;
-        }
     }, []);
 
     return useMemo(() => ({
         play,
         pause,
         toggleMute,
-        setVolume,
+        setVolume: setAudioVolume,
         reset,
         isPlaying,
         isMuted,
         isReady
-    }), [play, pause, toggleMute, setVolume, reset, isPlaying, isMuted, isReady]);
+    }), [play, pause, toggleMute, setAudioVolume, reset, isPlaying, isMuted, isReady]);
 };
