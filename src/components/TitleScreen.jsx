@@ -173,7 +173,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
             {/* Feedback Modal */}
             <AnimatePresence>
                 {showFeedback && (
-                    <FeedbackModal onClose={() => setShowFeedback(false)} />
+                    <FeedbackModal isOpen={showFeedback} onClose={() => setShowFeedback(false)} />
                 )}
             </AnimatePresence>
         </div>
