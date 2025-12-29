@@ -24,7 +24,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                         src="/trypas-logo-new.png"
                         alt="TRYPAS"
                         className="mx-auto drop-shadow-2xl"
-                        style={{ width: 'clamp(140px, 45vw, 350px)' }}
+                        style={{ width: 'clamp(180px, 50vw, 450px)' }}
                     />
                     <div className="mt-2 flex flex-col items-center gap-2">
                         <p className="text-gray-500 text-[10px] sm:text-sm tracking-widest uppercase opacity-80">
@@ -46,12 +46,12 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3, duration: 0.8 }}
-                    className="flex flex-col w-full max-w-[240px] sm:max-w-[256px]"
+                    className="flex flex-col w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px]"
                     style={{ gap: 'clamp(0.5rem, 1.5vh, 1rem)' }}
                 >
                     <button
                         onClick={() => onStart('SOLO')}
-                        className="group relative px-4 sm:px-8 py-2.5 sm:py-4 bg-white text-gray-900 font-bold text-base sm:text-xl rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg"
+                        className="group relative px-6 sm:px-10 py-3 sm:py-5 bg-white text-gray-900 font-bold text-lg sm:text-2xl rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg"
                     >
                         <span className="relative z-10">SOLO PLAY</span>
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-20 transition-opacity" />
@@ -59,7 +59,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
 
                     <button
                         onClick={() => onStart('TUTORIAL')}
-                        className="group relative px-4 sm:px-8 py-2 sm:py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs sm:text-base rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg border border-emerald-400/30"
+                        className="group relative px-5 sm:px-10 py-2.5 sm:py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm sm:text-lg rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg border border-emerald-400/30"
                     >
                         <span className="relative z-10 flex items-center justify-center gap-2">
                             <span className="text-base sm:text-lg">📖</span>
@@ -70,21 +70,21 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
 
                     <button
                         disabled
-                        className="px-4 sm:px-8 py-2 sm:py-3 bg-gray-800/50 text-gray-500 font-bold text-xs sm:text-base rounded-full border border-gray-700/50 cursor-not-allowed"
+                        className="px-5 sm:px-10 py-2.5 sm:py-4 bg-gray-800/50 text-gray-500 font-bold text-sm sm:text-lg rounded-full border border-gray-700/50 cursor-not-allowed"
                     >
                         VS CPU
                     </button>
 
                     <button
                         disabled
-                        className="px-4 sm:px-8 py-2 sm:py-3 bg-gray-800/50 text-gray-500 font-bold text-xs sm:text-base rounded-full border border-gray-700/50 cursor-not-allowed"
+                        className="px-5 sm:px-10 py-2.5 sm:py-4 bg-gray-800/50 text-gray-500 font-bold text-sm sm:text-lg rounded-full border border-gray-700/50 cursor-not-allowed"
                     >
                         2 PLAYERS
                     </button>
 
                     <button
                         onClick={() => setShowRules(true)}
-                        className="px-4 sm:px-8 py-2 sm:py-3 bg-blue-600 text-white font-bold text-xs sm:text-base rounded-full shadow-lg hover:bg-blue-500 hover:scale-105 transition-all"
+                        className="px-5 sm:px-10 py-2.5 sm:py-4 bg-blue-600 text-white font-bold text-sm sm:text-lg rounded-full shadow-lg hover:bg-blue-500 hover:scale-105 transition-all"
                     >
                         ルール説明
                     </button>
@@ -92,7 +92,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     <div className="flex justify-center mt-0.5 sm:mt-2">
                         <button
                             onClick={onToggleAudio}
-                            className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] flex items-center justify-center bg-gray-800 text-white rounded-full border border-gray-600 hover:bg-gray-700 transition-all shadow-lg"
+                            className="w-[48px] h-[48px] sm:w-[60px] sm:h-[60px] flex items-center justify-center bg-gray-800 text-white rounded-full border border-gray-600 hover:bg-gray-700 transition-all shadow-lg"
                         >
                             <span className="text-base sm:text-xl">{isMuted ? '🔇' : '🔊'}</span>
                         </button>
