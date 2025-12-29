@@ -25,12 +25,18 @@ function App() {
   const bgm = useBackgroundMusic(tryPasTheme, 0.3);
 
   // Initial Audio Setup
-  const handleAudioSetup = (soundEnabled) => {
-    if (soundEnabled) {
-      setIsMuted(false);
-      bgm.setVolume(0.3);
-      bgm.play();
-    } else {
+  // Initial Audio Setup
+
+  // 1. Called immediately on user interaction (click) to unlock audio context in mobile browsers
+  const handleEnableAudio = () => {
+    setIsMuted(false);
+    bgm.setVolume(0.3);
+    bgm.play().catch(e => console.log("Audio immediate play failed:", e));
+  };
+
+  // 2. Called after modal animation
+  const handleAudioSetupComplete = (soundEnabled) => {
+    if (!soundEnabled) {
       setIsMuted(true);
       bgm.setVolume(0);
     }
@@ -107,7 +113,7 @@ function App() {
   return (
     <div className="app-container bg-gray-900 text-white font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center">
       {/* Music Control Button and Menu */}
-      <InitialAudioModal onComplete={handleAudioSetup} />
+      <InitialAudioModal onComplete={handleAudioSetupComplete} onEnableAudio={handleEnableAudio} />
 
 
 

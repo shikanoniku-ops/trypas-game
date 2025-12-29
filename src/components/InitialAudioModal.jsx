@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const InitialAudioModal = ({ onComplete }) => {
+const InitialAudioModal = ({ onComplete, onEnableAudio }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [dontShowAgain, setDontShowAgain] = useState(false);
 
@@ -18,6 +18,8 @@ const InitialAudioModal = ({ onComplete }) => {
             if (skipPrompt) {
                 hasCheckedSettings.current = true;
                 // If skip prompt is set, automatically complete with saved preference
+                // Note: Auto-play might rely on click/tap elsewhere if loaded from storage
+                if (soundEnabled && onEnableAudio) onEnableAudio();
                 onComplete(soundEnabled);
                 return;
             }
@@ -26,7 +28,7 @@ const InitialAudioModal = ({ onComplete }) => {
         // If no settings or skipPrompt is false, show the modal
         setIsVisible(true);
         hasCheckedSettings.current = true;
-    }, [onComplete]);
+    }, [onComplete, onEnableAudio]);
 
     const handleSelection = (soundEnabled) => {
         if (dontShowAgain) {
@@ -34,6 +36,11 @@ const InitialAudioModal = ({ onComplete }) => {
                 skipPrompt: true,
                 soundEnabled: soundEnabled
             }));
+        }
+
+        // Trigger audio unlock immediately within the click event
+        if (soundEnabled && onEnableAudio) {
+            onEnableAudio();
         }
 
         setIsVisible(false);
