@@ -11,18 +11,20 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
     const [showFeedback, setShowFeedback] = useState(false);
 
     return (
-        <div className="relative flex flex-col items-center justify-center min-h-full w-full bg-gray-900 overflow-y-auto overflow-x-hidden px-4 py-8 supports-[height:100dvh]:h-[100dvh]">
-            <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto my-auto py-4">
+        <div className="relative flex flex-col items-center justify-center h-full w-full bg-gray-900 overflow-hidden px-2 py-2 sm:px-4 sm:py-4">
+            <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto my-auto" style={{ gap: 'clamp(0.5rem, 2vh, 1.5rem)' }}>
                 <motion.div
                     initial={{ y: -50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="mb-6 sm:mb-8 md:mb-12 text-center"
+                    className="text-center"
+                    style={{ marginBottom: 'clamp(0.5rem, 2vh, 1.5rem)' }}
                 >
                     <img
                         src="/trypas-logo-new.png"
                         alt="TRYPAS"
-                        className="w-[180px] sm:w-[280px] md:w-[350px] mx-auto drop-shadow-2xl"
+                        className="mx-auto drop-shadow-2xl"
+                        style={{ width: 'clamp(140px, 45vw, 350px)' }}
                     />
                     <div className="mt-2 flex flex-col items-center gap-2">
                         <p className="text-gray-500 text-[10px] sm:text-sm tracking-widest uppercase opacity-80">
@@ -44,20 +46,20 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3, duration: 0.8 }}
-                    className="flex flex-col gap-3 sm:gap-4 w-56 sm:w-64"
+                    className="flex flex-col w-full max-w-[240px] sm:max-w-[256px]"
+                    style={{ gap: 'clamp(0.5rem, 1.5vh, 1rem)' }}
                 >
                     <button
                         onClick={() => onStart('SOLO')}
-                        className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-white text-gray-900 font-bold text-lg sm:text-xl rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg"
+                        className="group relative px-4 sm:px-8 py-2.5 sm:py-4 bg-white text-gray-900 font-bold text-base sm:text-xl rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg"
                     >
                         <span className="relative z-10">SOLO PLAY</span>
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-20 transition-opacity" />
                     </button>
 
-                    {/* Tutorial Button */}
                     <button
                         onClick={() => onStart('TUTORIAL')}
-                        className="group relative px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm sm:text-base rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg border border-emerald-400/30"
+                        className="group relative px-4 sm:px-8 py-2 sm:py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs sm:text-base rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg border border-emerald-400/30"
                     >
                         <span className="relative z-10 flex items-center justify-center gap-2">
                             <span className="text-base sm:text-lg">📖</span>
@@ -68,42 +70,41 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
 
                     <button
                         disabled
-                        className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gray-800/50 text-gray-500 font-bold text-sm sm:text-base rounded-full border border-gray-700/50 cursor-not-allowed"
+                        className="px-4 sm:px-8 py-2 sm:py-3 bg-gray-800/50 text-gray-500 font-bold text-xs sm:text-base rounded-full border border-gray-700/50 cursor-not-allowed"
                     >
                         VS CPU
                     </button>
 
                     <button
                         disabled
-                        className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gray-800/50 text-gray-500 font-bold text-sm sm:text-base rounded-full border border-gray-700/50 cursor-not-allowed"
+                        className="px-4 sm:px-8 py-2 sm:py-3 bg-gray-800/50 text-gray-500 font-bold text-xs sm:text-base rounded-full border border-gray-700/50 cursor-not-allowed"
                     >
                         2 PLAYERS
                     </button>
 
                     <button
                         onClick={() => setShowRules(true)}
-                        className="px-6 sm:px-8 py-2.5 sm:py-3 bg-blue-600 text-white font-bold text-sm sm:text-base rounded-full shadow-lg hover:bg-blue-500 hover:scale-105 transition-all"
+                        className="px-4 sm:px-8 py-2 sm:py-3 bg-blue-600 text-white font-bold text-xs sm:text-base rounded-full shadow-lg hover:bg-blue-500 hover:scale-105 transition-all"
                     >
                         ルール説明
                     </button>
 
-                    {/* Audio Toggle Button - Added to match Game Screen placement style (in the flow) */}
-                    <div className="flex justify-center mt-1 sm:mt-2">
+                    <div className="flex justify-center mt-0.5 sm:mt-2">
                         <button
                             onClick={onToggleAudio}
-                            className="w-[45px] h-[45px] sm:w-[50px] sm:h-[50px] flex items-center justify-center bg-gray-800 text-white rounded-full border border-gray-600 hover:bg-gray-700 transition-all shadow-lg"
+                            className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] flex items-center justify-center bg-gray-800 text-white rounded-full border border-gray-600 hover:bg-gray-700 transition-all shadow-lg"
                         >
-                            <span className="text-lg sm:text-xl">{isMuted ? '🔇' : '🔊'}</span>
+                            <span className="text-base sm:text-xl">{isMuted ? '🔇' : '🔊'}</span>
                         </button>
                     </div>
                 </motion.div>
 
-                {/* Creator Credit & Version */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6, duration: 0.8 }}
-                    className="mt-6 sm:mt-8 text-center space-y-1"
+                    className="text-center space-y-0.5 sm:space-y-1"
+                    style={{ marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)' }}
                 >
                     <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">
                         Game Design: <span className="text-xs sm:text-sm text-gray-400 font-semibold normal-case">Dr. Q</span>

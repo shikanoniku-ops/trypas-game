@@ -128,9 +128,7 @@ function App() {
       {/* Music Control Button and Menu */}
       <InitialAudioModal onComplete={handleAudioSetupComplete} onEnableAudio={handleEnableAudio} />
 
-
-
-      <div className="relative w-full max-w-[480px] h-full flex flex-col items-center justify-between py-4 px-2 md:p-4 overflow-hidden text-sm md:text-base safe-area-inset-bottom">
+      <div className="relative w-full h-full flex flex-col items-center justify-between overflow-hidden text-sm md:text-base" style={{ padding: 'clamp(0.25rem, 1vh, 1rem) clamp(0.25rem, 1vw, 0.5rem)', maxWidth: 'min(480px, 100vw)' }}>
 
         <AnimatePresence mode="wait">
           {!gameStarted ? (
@@ -159,7 +157,7 @@ function App() {
               <div className="w-full flex-shrink-0 flex flex-row items-start justify-between px-2" style={{ marginBottom: 'clamp(0.25rem, 1vh, 0.5rem)' }}>
                 <div className="flex flex-col items-start gap-2">
                   <img
-                    src="/trypas-logo.png"
+                    src="/trypas-logo-new.png"
                     alt="TRYPAS"
                     className="opacity-90 drop-shadow-lg"
                     style={{ width: 'clamp(90px, 25vw, 120px)' }}
