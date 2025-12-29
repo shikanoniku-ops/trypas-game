@@ -60,8 +60,8 @@ body {
   position: fixed;
   width: 100%;
 
-  /* Safe Area対応（ノッチ付きデバイス） */
-  padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+  /* Safe Area対応（ノッチ付きデバイス） - 一時無効化 */
+  /* padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); */
 
   /* タッチ最適化 */
   touch-action: manipulation;
@@ -97,7 +97,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  /* 中央配置を解除 */
 }
 
 /* ========================================
@@ -146,6 +147,7 @@ body {
   }
 
   /* iOS Safari でのスクロールバウンス防止 */
+  /* fixed指定がSafe Areaと干渉する可能性があるため、必要に応じて解除 */
   body {
     position: fixed;
     left: 0;
