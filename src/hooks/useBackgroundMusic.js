@@ -127,13 +127,42 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
                     return true;
                 }
 
+                // Mobile対策: 音声ファイルが読み込まれていない場合は強制的にロード
+                if (audioRef.current.readyState < 2) { // HAVE_CURRENT_DATA未満
+                    console.log('Audio not ready, forcing load...');
+                    audioRef.current.load();
+                    // ロード完了を待つ（最大2秒）
+                    await new Promise((resolve, reject) => {
+                        const timeout = setTimeout(() => {
+                            reject(new Error('Audio load timeout'));
+                        }, 2000);
+
+                        const onCanPlay = () => {
+                            clearTimeout(timeout);
+                            audioRef.current.removeEventListener('canplay', onCanPlay);
+                            audioRef.current.removeEventListener('error', onError);
+                            resolve();
+                        };
+
+                        const onError = (e) => {
+                            clearTimeout(timeout);
+                            audioRef.current.removeEventListener('canplay', onCanPlay);
+                            audioRef.current.removeEventListener('error', onError);
+                            reject(e);
+                        };
+
+                        audioRef.current.addEventListener('canplay', onCanPlay);
+                        audioRef.current.addEventListener('error', onError);
+                    });
+                }
+
                 // 再生を試行
                 const playPromise = audioRef.current.play();
 
                 if (playPromise !== undefined) {
                     await playPromise;
                     setIsPlaying(true);
-                    console.log('Audio playback started');
+                    console.log('Audio playback started successfully');
                     return true;
                 }
                 return true;
@@ -163,11 +192,6 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
                 document.addEventListener('click', retryPlay, { once: true });
                 document.addEventListener('touchstart', retryPlay, { once: true });
 
-                // UI上は再生中として扱っておく（次回のタップで鳴るため）
-                // ただし、完全に無音であることを示すためにfalseのままにする選択肢もあるが、
-                // ユーザーが「ON」にしたという意図を汲んでtrueにするか、
-                // あるいは「待機中」状態が必要。ここではシンプルにエラー扱いせずハンドリングする。
-                // 今回は setIsPlaying(false) のままにしておき、実際に鳴ったときに true になるようにする。
                 return false;
             } else if (error.name === 'AbortError') {
                 // 再生が中断された（別のplay/pauseが呼ばれた）
