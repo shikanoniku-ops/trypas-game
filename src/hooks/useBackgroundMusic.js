@@ -1,80 +1,27 @@
+```javascript
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 
 /**
- * クロスブラウザ対応のバックグラウンドミュージックフック
- * iOS Safari, Chrome, Firefox等での音声再生問題を解決
+ * ReactコンポーネントとしてのAudio要素を使用するフック
+ * DOMに確実にマウントさせることでモバイル互換性を向上
  */
 export const useBackgroundMusic = (src, volume = 0.3) => {
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
-    const [isReady, setIsReady] = useState(false);
-    const wasPlayingRef = useRef(false);
-
-    // Audio要素の初期化
-    useEffect(() => {
-        if (!src) return;
-
-        if (!audioRef.current) {
-            const audio = new Audio();
-            audio.preload = 'auto';
-            audio.loop = true;
-            audio.volume = volume;
-            // audio.playsInline = true; // new Audio()にはpropertyが存在しない場合があるが、念のため設定
-
-            audio.addEventListener('canplaythrough', () => {
-                setIsReady(true);
-            });
-
-            audio.addEventListener('play', () => {
-                setIsPlaying(true);
-            });
-
-            audio.addEventListener('pause', () => {
-                if (!document.hidden) {
-                    setIsPlaying(false);
-                }
-            });
-
-            audio.addEventListener('error', (e) => {
-                console.error('Audio error:', e.target?.error?.message);
-                setIsPlaying(false);
-                setIsReady(false);
-            });
-
-            audio.src = src;
-            audio.load();
-            audioRef.current = audio;
-        } else {
-            if (audioRef.current.src !== src && src) {
-                audioRef.current.src = src;
-                audioRef.current.load();
-            }
-        }
-
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.pause();
-                audioRef.current.src = '';
-                audioRef.current = null;
-            }
-        };
-    }, [src]); // volumeは依存から外す（別で制御）
-
-    // 音量の変更を反映
-    useEffect(() => {
-        if (audioRef.current) {
-            audioRef.current.volume = isMuted ? 0 : volume;
-        }
-    }, [volume, isMuted]);
-
+    
+    // play/pause制御
     const play = useCallback(() => {
-        if (!audioRef.current) return false;
+        const audio = audioRef.current;
+        if (!audio) return false;
 
-        // 非常にシンプルに play() だけを呼ぶ
-        // これによりブラウザネイティブの自動再生ポリシー判定に委ねる
-        const playPromise = audioRef.current.play();
+        // モバイルChrome対策: ユーザー操作時に必ずloadを呼んで準備させる
+        // readyStateが低い場合、playだけだと失敗することがある
+        if (audio.readyState < 2) { 
+            audio.load();
+        }
 
+        const playPromise = audio.play();
         if (playPromise !== undefined) {
             playPromise
                 .then(() => {
@@ -83,8 +30,6 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
                 })
                 .catch(error => {
                     console.warn('Playback failed:', error);
-                    // ユーザーインタラクションが必要なエラーの場合、
-                    // ここで変なリトライ処理を入れず、次のクリックを待つのが最も安全
                     setIsPlaying(false);
                 });
         }
@@ -92,29 +37,31 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
     }, []);
 
     const pause = useCallback(() => {
-        if (audioRef.current) {
-            audioRef.current.pause();
+        const audio = audioRef.current;
+        if (audio) {
+            audio.pause();
             setIsPlaying(false);
         }
     }, []);
 
     const toggleMute = useCallback(() => {
-        if (audioRef.current) {
-            const newMuted = !audioRef.current.muted;
-            audioRef.current.muted = newMuted;
-            setIsMuted(newMuted);
+        const audio = audioRef.current;
+        if (audio) {
+            audio.muted = !audio.muted;
+            setIsMuted(audio.muted);
         }
     }, []);
 
-    const setAudioVolume = useCallback((newVolume) => {
-        if (audioRef.current) {
+    const setVolume = useCallback((newVolume) => {
+        const audio = audioRef.current;
+        if (audio) {
             const clampedVolume = Math.max(0, Math.min(1, newVolume));
-            audioRef.current.volume = clampedVolume;
+            audio.volume = clampedVolume;
             if (clampedVolume === 0) {
-                audioRef.current.muted = true;
+                audio.muted = true;
                 setIsMuted(true);
             } else {
-                audioRef.current.muted = false;
+                audio.muted = false;
                 setIsMuted(false);
             }
         }
@@ -126,19 +73,33 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
         }
     }, []);
 
-    // Visibility handling
+    // 初期設定とボリューム同期
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (audio) {
+            audio.volume = isMuted ? 0 : volume;
+            // 初期ミュート状態を同期
+            setIsMuted(audio.muted);
+            // 初期再生状態を同期
+            setIsPlaying(!audio.paused);
+        }
+    }, [volume, isMuted]);
+
+    // Visibility change handling
     useEffect(() => {
         const handleVisibilityChange = () => {
-            if (!audioRef.current) return;
+            const audio = audioRef.current;
+            if (!audio) return;
+
             if (document.hidden) {
-                if (!audioRef.current.paused) {
-                    wasPlayingRef.current = true;
-                    audioRef.current.pause();
+                if (!audio.paused) {
+                    audio.pause();
                 }
             } else {
-                if (wasPlayingRef.current) {
-                    audioRef.current.play().catch(e => console.warn('Resume failed', e));
-                    wasPlayingRef.current = false;
+                // 自動再開はユーザー体験を損なう場合があるが、
+                // ゲームのBGMとしては戻ってきたら鳴るのが自然
+                if (isPlaying) {
+                    audio.play().catch(e => console.warn('Resume failed', e));
                 }
             }
         };
@@ -147,16 +108,31 @@ export const useBackgroundMusic = (src, volume = 0.3) => {
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, []);
+    }, [isPlaying]);
 
-    return useMemo(() => ({
+    // Render用コンポーネント
+    const AudioElement = useMemo(() => {
+        return (
+            <audio
+                ref={audioRef}
+                src={src}
+                preload="auto"
+                loop
+                playsInline
+                style={{ display: 'none' }}
+            />
+        );
+    }, [src]);
+
+    return {
+        AudioElement,
         play,
         pause,
         toggleMute,
-        setVolume: setAudioVolume,
+        setVolume,
         reset,
         isPlaying,
-        isMuted,
-        isReady
-    }), [play, pause, toggleMute, setAudioVolume, reset, isPlaying, isMuted, isReady]);
+        isMuted
+    };
 };
+```

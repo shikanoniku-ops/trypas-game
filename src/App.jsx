@@ -118,6 +118,9 @@ function App() {
 
   return (
     <div className="app-container bg-gray-900 text-white font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center">
+      {/* Background Music Element (must be rendered in DOM) */}
+      {bgm.AudioElement}
+
       {/* Music Control Button and Menu */}
       <InitialAudioModal onComplete={handleAudioSetupComplete} onEnableAudio={handleEnableAudio} />
 
