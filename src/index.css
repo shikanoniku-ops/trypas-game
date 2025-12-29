@@ -135,7 +135,8 @@ body {
    Browser-Specific Fixes
    ======================================== */
 
-/* iOS Safari 専用 */
+/* iOS Safari 専用設定 - 古い回避策が現在のレイアウトと競合するため一時無効化 */
+/* 
 @supports (-webkit-touch-callout: none) {
 
   html,
@@ -146,8 +147,6 @@ body {
     min-height: -webkit-fill-available;
   }
 
-  /* iOS Safari でのスクロールバウンス防止 */
-  /* fixed指定がSafe Areaと干渉する可能性があるため、必要に応じて解除 */
   body {
     position: fixed;
     left: 0;
@@ -156,6 +155,7 @@ body {
     bottom: 0;
   }
 }
+*/
 
 /* Android Chrome 専用 */
 @media screen and (max-width: 768px) {
