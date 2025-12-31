@@ -128,20 +128,7 @@ const TutorialGuide = ({
                             </div>
                         )}
 
-                        {/* Complete Actions */}
-                        {stepData.type === 'COMPLETE' && (
-                            <div className="mt-4 flex gap-3">
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onExit();
-                                    }}
-                                    className="flex-1 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
-                                >
-                                    タイトルへ
-                                </button>
-                            </div>
-                        )}
+
                     </div>
 
                     {/* Pulse Effect for Action Steps */}
