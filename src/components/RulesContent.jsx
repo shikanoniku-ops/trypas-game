@@ -30,9 +30,6 @@ const RulesContent = () => {
                 <p className="text-sm text-gray-300 leading-relaxed">
                     対戦ゲームTRYPASの練習モード。高得点を目指すパズルです。
                 </p>
-                <p className="text-xs text-gray-500 mt-2">
-                    ※対戦ゲームは2026年にリリース予定です。
-                </p>
             </section>
 
             {/* 遊び方 */}
@@ -50,7 +47,7 @@ const RulesContent = () => {
                     </h4>
                     <div className="bg-gray-700/20 p-4 rounded-xl border border-gray-700">
                         <p className="text-sm text-white">
-                            好きなコマを1つ取り除きます（赤以外）
+                            好きなコマを1つ、タップして取り除きます（赤以外）
                         </p>
                     </div>
                 </div>
@@ -63,7 +60,7 @@ const RulesContent = () => {
                     </h4>
                     <div className="bg-gray-700/20 p-4 rounded-xl border border-gray-700 space-y-3">
                         <p className="text-sm text-gray-300 leading-relaxed">
-                            コマを選び、直線上の他のコマ（1〜3個）を飛び越えて<strong className="text-yellow-400">空きスポット</strong>へ移動。飛び越えた最後の1個を取得します。
+                            移動したいコマをタップして選び、直線上の他のコマ（1〜3個）を飛び越えて<strong className="text-yellow-400">空きスポット</strong>をタップしてコマを移動。飛び越えた最後の1個を取得します。
                         </p>
 
                         {/* 移動のポイント */}
