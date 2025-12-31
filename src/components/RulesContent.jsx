@@ -140,12 +140,12 @@ const RulesContent = () => {
                 <div className="space-y-2">
                     <div className="flex items-start gap-2">
                         <span className="text-red-400 font-bold">•</span>
-                        <p className="text-sm text-gray-300">最初に取れない</p>
+                        <p className="text-sm text-gray-300">最初に赤コマは取れない</p>
                     </div>
                     <div className="flex items-start gap-2">
                         <span className="text-red-400 font-bold">•</span>
                         <p className="text-sm text-gray-300">
-                            <strong className="text-red-400">最後に取ると0点</strong>
+                            最後に赤コマは取れるが、<strong className="text-red-400">最後に赤コマを取ると負け＝0点</strong>
                         </p>
                     </div>
                 </div>

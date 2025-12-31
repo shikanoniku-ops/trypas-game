@@ -155,13 +155,25 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-gray-900 border border-gray-700 rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6"
-                            onClick={(e) => e.stopPropagation()}
                         >
-                            <RulesContent />
+                            <div className="bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-700 max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                                <h2 className="text-2xl md:text-3xl font-black mb-6 text-white border-b border-gray-700 pb-4 flex items-center gap-3 flex-wrap">
+                                    <div className="flex flex-col md:flex-row items-baseline gap-1 md:gap-3">
+                                        <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-black tracking-wider">
+                                            TRYPAS SOLOPLAY
+                                        </span>
+                                        <span className="text-lg md:text-xl text-gray-300 font-bold">
+                                            の遊び方
+                                        </span>
+                                    </div>
+                                </h2>
+
+                                <RulesContent />
+                            </div>
+
                             <button
                                 onClick={() => setShowRules(false)}
-                                className="mt-4 w-full py-3 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-500 transition-colors"
+                                className="mt-8 w-full py-3 bg-gray-700 text-white font-bold rounded-xl hover:bg-gray-600 transition-colors"
                             >
                                 閉じる
                             </button>
