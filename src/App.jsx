@@ -192,9 +192,31 @@ function App() {
                 />
               </div>
 
+              {/* Navigation Buttons - Above the board */}
+              <div className="w-full flex-shrink-0 flex justify-center gap-4 px-4" style={{ marginBottom: 'clamp(0.25rem, 1vh, 0.5rem)' }}>
+                <button
+                  onClick={handleBackToTitle}
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-lg sm:rounded-xl transition-all shadow-lg border border-orange-400/50"
+                  style={{ fontSize: 'clamp(0.65rem, 2.5vw, 0.8rem)' }}
+                >
+                  TOPに戻る
+                </button>
+                <button
+                  onClick={() => {
+                    tutorial.exitTutorial();
+                    setGameMode('SOLO');
+                    resetGame();
+                  }}
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 bg-green-500 hover:bg-green-400 text-white font-bold rounded-lg sm:rounded-xl transition-all shadow-lg border border-green-400/50"
+                  style={{ fontSize: 'clamp(0.65rem, 2.5vw, 0.8rem)' }}
+                >
+                  ゲームを始める
+                </button>
+              </div>
+
               {/* Tutorial Game Board */}
               <div className="flex-1 w-full flex items-center justify-center min-h-0">
-                <div className="w-full aspect-square" style={{ maxWidth: 'min(350px, calc(100vw - 2rem), calc(var(--vh, 1vh) * 100 - 280px))', maxHeight: 'calc(var(--vh, 1vh) * 100 - 280px)' }}>
+                <div className="w-full aspect-square" style={{ maxWidth: 'min(380px, calc(100vw - 2rem), calc(var(--vh, 1vh) * 100 - 320px))', maxHeight: 'calc(var(--vh, 1vh) * 100 - 320px)' }}>
                   <GameBoard
                     board={tutorial.board}
                     onSpotClick={tutorial.handleTutorialSpotClick}

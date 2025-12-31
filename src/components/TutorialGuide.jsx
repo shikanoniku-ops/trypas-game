@@ -154,18 +154,7 @@ const TutorialGuide = ({
                     )}
                 </div>
 
-                {/* Exit Button (小さく控えめに) */}
-                {!isComplete && stepData.type !== 'COMPLETE' && (
-                    <div className="mt-2 text-center">
-                        <button
-                            onClick={onExit}
-                            className="text-xs text-gray-500 hover:text-gray-300 transition-colors underline"
-                            style={{ fontSize: 'clamp(0.65rem, 2vw, 0.75rem)' }}
-                        >
-                            チュートリアルをスキップ
-                        </button>
-                    </div>
-                )}
+
             </motion.div>
         </AnimatePresence>
     );
