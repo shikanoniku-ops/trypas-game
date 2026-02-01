@@ -337,8 +337,8 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
             if (board[index] !== null) {
                 const removedColor = board[index];
 
-                // SOLO MODE RULE: Cannot remove red piece at the start
-                if (isSoloMode && removedColor === 'RED') {
+                // ALL MODES RULE: Cannot remove red piece at the start
+                if (removedColor === 'RED') {
                     setLastActionMessage('赤コマは最初に取ることはできません');
                     setTimeout(() => setLastActionMessage(''), 2000);
                     return;
