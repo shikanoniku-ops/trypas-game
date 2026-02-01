@@ -270,13 +270,16 @@ function GameOverModal({
 
         {/* Buttons */}
         <div className="flex flex-col gap-3 relative z-10">
-          <CyberButton
-            onClick={() => setIsBoardOverview(true)}
-            variant="primary"
-            icon="🔍"
-          >
-            盤面を確認する
-          </CyberButton>
+          {/* 盤面確認ボタン - ソロモードのみ表示 */}
+          {isSoloMode && (
+            <CyberButton
+              onClick={() => setIsBoardOverview(true)}
+              variant="primary"
+              icon="🔍"
+            >
+              盤面を確認する
+            </CyberButton>
+          )}
 
           <CyberButton
             onClick={() => resetGame()}
