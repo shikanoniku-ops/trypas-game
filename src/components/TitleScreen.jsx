@@ -360,26 +360,31 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
 
                                 <div className="w-full flex flex-col gap-4">
                                     {/* VS CPU */}
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                         <p className="text-xs text-gray-500 font-mono tracking-wider px-1 flex items-center gap-2">
                                             <span className="text-base">🤖</span> VS CPU
                                         </p>
                                         <div className="grid grid-cols-3 gap-2">
                                             {[
-                                                { level: 'EASY', bg: 'from-green-500 to-emerald-600', mode: 'CPU_EASY' },
-                                                { level: 'NORMAL', bg: 'from-yellow-500 to-amber-600', mode: 'CPU_NORMAL' },
-                                                { level: 'HARD', bg: 'from-red-500 to-rose-600', mode: 'CPU_HARD' }
+                                                { level: 'EASY', border: 'border-green-400/60', bg: 'bg-green-500/10', text: 'text-green-400', shadow: 'shadow-[0_0_15px_rgba(34,197,94,0.2)]', hoverShadow: 'hover:shadow-[0_0_25px_rgba(34,197,94,0.4)]', mode: 'CPU_EASY' },
+                                                { level: 'NORMAL', border: 'border-yellow-400/60', bg: 'bg-yellow-500/10', text: 'text-yellow-400', shadow: 'shadow-[0_0_15px_rgba(234,179,8,0.2)]', hoverShadow: 'hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]', mode: 'CPU_NORMAL' },
+                                                { level: 'HARD', border: 'border-red-400/60', bg: 'bg-red-500/10', text: 'text-red-400', shadow: 'shadow-[0_0_15px_rgba(239,68,68,0.2)]', hoverShadow: 'hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]', mode: 'CPU_HARD' }
                                             ].map((item, i) => (
                                                 <motion.button
                                                     key={item.level}
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     transition={{ delay: 0.1 + i * 0.08 }}
-                                                    whileHover={{ scale: 1.05, y: -2 }}
+                                                    whileHover={{ scale: 1.05, y: -3 }}
                                                     whileTap={{ scale: 0.95 }}
                                                     onClick={() => onStart(item.mode)}
-                                                    className={`bg-gradient-to-br ${item.bg} text-white font-bold text-xs sm:text-sm py-3.5 sm:py-4 rounded-lg shadow-lg hover:shadow-xl transition-all`}
+                                                    className={`relative ${item.bg} ${item.text} font-bold text-xs sm:text-sm py-3.5 sm:py-4 rounded-lg border ${item.border} ${item.shadow} ${item.hoverShadow} backdrop-blur-sm transition-all duration-300 overflow-hidden`}
                                                 >
+                                                    {/* Tech corners */}
+                                                    <div className={`absolute top-0 left-0 w-2 h-2 border-t border-l ${item.border}`} />
+                                                    <div className={`absolute top-0 right-0 w-2 h-2 border-t border-r ${item.border}`} />
+                                                    <div className={`absolute bottom-0 left-0 w-2 h-2 border-b border-l ${item.border}`} />
+                                                    <div className={`absolute bottom-0 right-0 w-2 h-2 border-b border-r ${item.border}`} />
                                                     {item.level}
                                                 </motion.button>
                                             ))}

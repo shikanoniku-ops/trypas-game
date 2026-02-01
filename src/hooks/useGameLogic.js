@@ -315,21 +315,16 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
                 // ただし、最後に赤を取った場合は負け
                 let winnerPlayer;
                 if (hasRed) {
-                    // 最後に赤を取った場合は負け
+                    // 最後に赤を取った場合は負け（自爆ルール）
                     winnerPlayer = turn === 1 ? 2 : 1;
+                    setLastActionMessage('最後に赤コマを取ったため負けです');
                 } else {
                     // 通常は手詰まりになった方（次のターンのプレイヤー）が負け
                     winnerPlayer = turn;
                 }
 
                 setWinner(winnerPlayer);
-
-                // 敗者のスコアを0点にする
-                const loserPlayer = winnerPlayer === 1 ? 'p2' : 'p1';
-                setScores(prev => ({
-                    ...prev,
-                    [loserPlayer]: 0
-                }));
+                // VS MODEではスコアはそのまま記録として残る（0にしない）
             }
         }
     };
