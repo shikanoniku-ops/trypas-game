@@ -29,6 +29,11 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
     const [moveHistory, setMoveHistory] = useState([]); // 手順履歴
     const [isReplaying, setIsReplaying] = useState(false); // リプレイ中かどうか
     const [replayStep, setReplayStep] = useState(0); // リプレイの現在のステップ
+    const [replayScores, setReplayScores] = useState({ p1: 0, p2: 0 }); // リプレイ時のスコア
+    const [replayTurn, setReplayTurn] = useState(1); // リプレイ時のターン
+
+    // TRYPAS notification state
+    const [showTrypas, setShowTrypas] = useState(false); // 赤コマを取った時の通知
 
     const isCPUMode = gameMode.startsWith('CPU_');
     const isSoloMode = gameMode === 'SOLO';
@@ -229,6 +234,11 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
         setBoard(newBoard);
 
         // Record move history for replay
+        const currentPlayer = turn === 1 ? 'p1' : 'p2';
+        const newScores = {
+            ...scores,
+            [currentPlayer]: scores[currentPlayer] + moveScore
+        };
         const historyEntry = {
             boardBefore: [...board],
             boardAfter: [...newBoard],
@@ -236,17 +246,14 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
             player: turn,
             capturedColor: capturedColor,
             score: moveScore,
+            totalScores: newScores, // 累積スコアを記録
             timestamp: Date.now(),
             thinkingTime: turnTime
         };
         setMoveHistory(prev => [...prev, historyEntry]);
 
         // Update score
-        const currentPlayer = turn === 1 ? 'p1' : 'p2';
-        setScores(prev => ({
-            ...prev,
-            [currentPlayer]: prev[currentPlayer] + moveScore
-        }));
+        setScores(newScores);
 
         // Record captured piece
         setCapturedPieces(prev => ({
@@ -262,9 +269,20 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
             }));
         }
 
-        // Check Red Bonus
+        setSelectedSpot(null);
+        setValidMoves([]);
+
+        // Check Game Over FIRST (before TRYPAS notification)
+        const isGameOver = !checkAnyMovePossible(newBoard);
+
+        // Check Red Bonus (only show TRYPAS if game is NOT over and NOT solo mode)
         if (hasRed) {
-            setLastActionMessage(`${isCPUMode && turn === 2 ? 'CPU' : `Player ${turn}`} gets EXTRA TURN! (Red Piece)`);
+            if (!isGameOver && !isSoloMode) {
+                setLastActionMessage(`${isCPUMode && turn === 2 ? 'CPU' : `Player ${turn}`} gets EXTRA TURN! (Red Piece)`);
+                // Show TRYPAS notification only if game continues and not solo
+                setShowTrypas(true);
+                setTimeout(() => setShowTrypas(false), 1500);
+            }
             // Turn does not change, but reset turn timer
             setTurnStartTime(Date.now());
             setTurnTime(0);
@@ -277,11 +295,8 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
             }
         }
 
-        setSelectedSpot(null);
-        setValidMoves([]);
-
-        // Check Game Over
-        if (!checkAnyMovePossible(newBoard)) {
+        // Handle Game Over
+        if (isGameOver) {
             setPhase('GAME_OVER');
 
             const finalP1 = currentPlayer === 'p1' ? scores.p1 + moveScore : scores.p1;
@@ -417,10 +432,13 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
     };
 
     // Replay functions
+    // replayStep: 表示済みの手数（0 = 初期状態、1 = 1手目の結果表示済み、...）
     const startReplay = () => {
         if (moveHistory.length === 0) return;
         setIsReplaying(true);
-        setReplayStep(0);
+        setReplayStep(0); // 0手表示済み = 初期状態
+        setReplayScores({ p1: 0, p2: 0 }); // 開始時はスコア0
+        setReplayTurn(1); // 最初はプレイヤー1のターン
         // Reset board to initial state (before first move)
         if (moveHistory[0]) {
             setBoard(moveHistory[0].boardBefore);
@@ -436,27 +454,66 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
     };
 
     const nextReplayStep = () => {
-        if (replayStep < moveHistory.length - 1) {
-            const nextStep = replayStep + 1;
-            setReplayStep(nextStep);
-            setBoard(moveHistory[nextStep].boardAfter);
+        // replayStepは現在表示済みの手数。次のmoveHistory[replayStep]を表示する
+        if (replayStep < moveHistory.length) {
+            const currentMoveIndex = replayStep; // これから表示する手
+            const move = moveHistory[currentMoveIndex];
+
+            // まず盤面を更新（コマの移動）
+            setBoard(move.boardAfter);
+
+            // 現在動いているプレイヤーのターンを表示
+            setReplayTurn(move.player);
+
+            // 表示済み手数を増やす
+            setReplayStep(replayStep + 1);
+
+            // スコアを少し遅延して更新（コマ移動後に反映）
+            setTimeout(() => {
+                if (move.totalScores) {
+                    setReplayScores(move.totalScores);
+                }
+            }, 300);
         }
     };
 
     const prevReplayStep = () => {
-        if (replayStep > 0) {
-            const prevStep = replayStep - 1;
-            setReplayStep(prevStep);
-            setBoard(moveHistory[prevStep].boardAfter);
-        } else if (replayStep === 0 && moveHistory[0]) {
+        if (replayStep > 1) {
+            // 1手前の状態を表示
+            const prevMoveIndex = replayStep - 2; // 1つ前の手
+            const move = moveHistory[prevMoveIndex];
+
+            setBoard(move.boardAfter);
+            setReplayTurn(move.player);
+            if (move.totalScores) {
+                setReplayScores(move.totalScores);
+            }
+            setReplayStep(replayStep - 1);
+        } else if (replayStep === 1) {
+            // 初期状態に戻る
             setBoard(moveHistory[0].boardBefore);
+            setReplayScores({ p1: 0, p2: 0 });
+            setReplayTurn(1);
+            setReplayStep(0);
         }
     };
 
     const jumpToReplayStep = (step) => {
-        if (step >= 0 && step < moveHistory.length) {
+        if (step === 0) {
+            // 初期状態
+            setBoard(moveHistory[0].boardBefore);
+            setReplayScores({ p1: 0, p2: 0 });
+            setReplayTurn(1);
+            setReplayStep(0);
+        } else if (step > 0 && step <= moveHistory.length) {
+            const moveIndex = step - 1;
+            const move = moveHistory[moveIndex];
+            setBoard(move.boardAfter);
+            setReplayTurn(move.player);
+            if (move.totalScores) {
+                setReplayScores(move.totalScores);
+            }
             setReplayStep(step);
-            setBoard(moveHistory[step].boardAfter);
         }
     };
 
@@ -501,11 +558,15 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
         moveHistory,
         isReplaying,
         replayStep,
+        replayScores,
+        replayTurn,
         startReplay,
         stopReplay,
         nextReplayStep,
         prevReplayStep,
         jumpToReplayStep,
+        // TRYPAS notification
+        showTrypas,
         // Hint generation
         getGameHint
     };

@@ -57,6 +57,51 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-20 transition-opacity" />
                     </button>
 
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowCPUMenu(!showCPUMenu)}
+                            className="w-full px-5 sm:px-10 py-2.5 sm:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold text-sm sm:text-lg rounded-full border border-orange-400/30 hover:scale-105 transition-all shadow-lg"
+                        >
+                            VS CPU
+                        </button>
+                        <AnimatePresence>
+                            {showCPUMenu && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className="absolute top-full left-0 right-0 mt-2 flex flex-col gap-1 bg-gray-800/95 backdrop-blur-md rounded-xl border border-gray-600/50 p-2 shadow-xl z-50"
+                                >
+                                    <button
+                                        onClick={() => { onStart('CPU_EASY'); setShowCPUMenu(false); }}
+                                        className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white font-bold text-sm rounded-lg transition-all"
+                                    >
+                                        🟢 EASY
+                                    </button>
+                                    <button
+                                        onClick={() => { onStart('CPU_NORMAL'); setShowCPUMenu(false); }}
+                                        className="px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-white font-bold text-sm rounded-lg transition-all"
+                                    >
+                                        🟡 NORMAL
+                                    </button>
+                                    <button
+                                        onClick={() => { onStart('CPU_HARD'); setShowCPUMenu(false); }}
+                                        className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-sm rounded-lg transition-all"
+                                    >
+                                        🔴 HARD
+                                    </button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
+                    <button
+                        onClick={() => onStart('LOCAL')}
+                        className="px-5 sm:px-10 py-2.5 sm:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-sm sm:text-lg rounded-full border border-indigo-400/30 hover:scale-105 transition-all shadow-lg"
+                    >
+                        2 PLAYERS
+                    </button>
+
                     <button
                         onClick={() => onStart('TUTORIAL')}
                         className="group relative px-5 sm:px-10 py-2.5 sm:py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm sm:text-lg rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg border border-emerald-400/30"
@@ -66,20 +111,6 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                             TUTORIAL
                         </span>
                         <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity" />
-                    </button>
-
-                    <button
-                        disabled
-                        className="px-5 sm:px-10 py-2.5 sm:py-4 bg-gray-800/50 text-gray-500 font-bold text-sm sm:text-lg rounded-full border border-gray-700/50 cursor-not-allowed"
-                    >
-                        VS CPU
-                    </button>
-
-                    <button
-                        disabled
-                        className="px-5 sm:px-10 py-2.5 sm:py-4 bg-gray-800/50 text-gray-500 font-bold text-sm sm:text-lg rounded-full border border-gray-700/50 cursor-not-allowed"
-                    >
-                        2 PLAYERS
                     </button>
 
                     <button

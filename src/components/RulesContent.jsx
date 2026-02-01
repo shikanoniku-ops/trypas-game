@@ -146,6 +146,7 @@ const RulesContent = () => {
                         <span className="text-red-400 font-bold">•</span>
                         <p className="text-sm text-gray-300">
                             最後に赤コマは取れるが、<strong className="text-red-400">最後に赤コマを取ると負け＝0点</strong>
+
                         </p>
                     </div>
                 </div>

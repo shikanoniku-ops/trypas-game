@@ -10,6 +10,7 @@ import InitialAudioModal from './components/InitialAudioModal';
 import RulesContent from './components/RulesContent';
 import Legend from './components/Legend';
 import TutorialGuide from './components/TutorialGuide';
+import GameOverModal from './components/GameOverModal';
 import { PIECE_SCORES, PIECE_COLORS } from './constants/colors';
 import tryPasTheme from './assets/sounds/TRYPAS_Theme.mp3';
 
@@ -24,7 +25,6 @@ function App() {
   // Background Music (Single instance for continuous playback)
   const bgm = useBackgroundMusic(tryPasTheme, 0.3);
 
-  // Initial Audio Setup
   // Initial Audio Setup
 
   // 1. Called immediately on user interaction (click) to unlock audio context in mobile browsers
@@ -67,11 +67,14 @@ function App() {
     moveHistory,
     isReplaying,
     replayStep,
+    replayScores,
+    replayTurn,
     startReplay,
     stopReplay,
     nextReplayStep,
     prevReplayStep,
     jumpToReplayStep,
+    showTrypas,
     getGameHint
   } = useGameLogic(gameMode);
 
@@ -84,6 +87,9 @@ function App() {
     if (audioInitialized && !isMuted) {
       bgm.play().catch(e => console.log("Audio play on game start failed:", e));
     }
+
+    // Reset board overview state
+    setIsBoardOverview(false);
 
     // Only reset if specifically requested, otherwise continue playing
     // bgm.reset(); // Removed to keep music playing seamlessly
@@ -280,8 +286,8 @@ function App() {
                 {/* Right: ScoreBoard */}
                 <div className="flex-shrink-0 mt-2">
                   <ScoreBoard
-                    scores={scores}
-                    turn={turn}
+                    scores={isReplaying ? replayScores : scores}
+                    turn={isReplaying ? replayTurn : turn}
                     phase={phase}
                     lastActionMessage={lastActionMessage}
                     gameMode={gameMode}
@@ -309,22 +315,81 @@ function App() {
               )}
 
               {/* 2. Game Board (Center) */}
-              <div className="flex-1 w-full flex items-center justify-center min-h-0">
-                <div className="w-full aspect-square" style={{ maxWidth: 'min(90vw, calc(var(--vh, 1vh) * 100 - 180px))', maxHeight: 'calc(var(--vh, 1vh) * 100 - 180px)' }}>
+              <div className="flex-1 w-full flex items-center justify-center min-h-0 relative">
+                <div className="w-full aspect-square relative" style={{ maxWidth: 'min(90vw, calc(var(--vh, 1vh) * 100 - 180px))', maxHeight: 'calc(var(--vh, 1vh) * 100 - 180px)' }}>
                   <GameBoard
                     board={board}
                     onSpotClick={handleSpotClick}
                     selectedSpot={selectedSpot}
                     validMoves={validMoves}
                   />
+                  {/* TRYPAS! Notification Animation */}
+                  <AnimatePresence>
+                    {showTrypas && (
+                      <motion.div
+                        initial={{ scale: 0.3, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 1.2, opacity: 0, y: -20 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 15,
+                          exit: { duration: 0.5, ease: "easeOut" }
+                        }}
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none z-50"
+                      >
+                        <div className="relative">
+                          {/* Glow effect */}
+                          <div className="absolute inset-0 blur-xl bg-gradient-to-r from-red-500 via-pink-500 to-red-500 opacity-60 animate-pulse" style={{ transform: 'scale(1.5)' }} />
+                          {/* Main text */}
+                          <motion.span
+                            animate={{
+                              textShadow: [
+                                "0 0 20px #ff0000, 0 0 40px #ff0000, 0 0 60px #ff0000",
+                                "0 0 40px #ff4444, 0 0 80px #ff4444, 0 0 120px #ff4444",
+                                "0 0 20px #ff0000, 0 0 40px #ff0000, 0 0 60px #ff0000"
+                              ]
+                            }}
+                            transition={{ duration: 0.5, repeat: Infinity }}
+                            className="relative text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-wider drop-shadow-2xl"
+                            style={{
+                              fontFamily: '"Inter", sans-serif',
+                              WebkitTextStroke: '2px #ff0000'
+                            }}
+                          >
+                            TRYPAS!
+                          </motion.span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
               {/* 3. Footer Info (Timer, Legend, Buttons) */}
               <div className="w-full flex-shrink-0 flex flex-col items-center mb-2" style={{ gap: 'clamp(0.25rem, 0.5vh, 0.75rem)' }}>
 
-                {/* Timer */}
-                {!isReplaying && (
+                {/* Timer or Board Overview Button */}
+                {phase === 'GAME_OVER' && isBoardOverview ? (
+                  <div className="flex flex-col items-center gap-2">
+                    {/* ヒントバナー */}
+                    {getGameHint() && (
+                      <div className="bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-white/20">
+                        <p className="text-white font-bold text-sm">
+                          💡 {getGameHint()}
+                        </p>
+                      </div>
+                    )}
+                    {/* 戻るボタン */}
+                    <button
+                      onClick={() => setIsBoardOverview(false)}
+                      className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg border border-blue-400/50 backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-all"
+                      style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)' }}
+                    >
+                      <span>↩️</span> 結果画面に戻る
+                    </button>
+                  </div>
+                ) : phase !== 'GAME_OVER' && !isReplaying && (
                   <div className="text-center">
                     <div className="font-black font-mono tracking-widest text-blue-300 drop-shadow-[0_0_10px_rgba(96,165,250,0.6)] bg-gray-900/50 px-6 py-1 rounded-full border border-gray-700/50" style={{ fontSize: 'clamp(1.125rem, 4vw, 1.75rem)' }}>
                       {phase === 'REMOVING' ? '00:00' : (isSoloMode ?
@@ -353,14 +418,14 @@ function App() {
                   {isReplaying && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="w-full overflow-hidden">
                       <div className="flex gap-2 justify-center items-center bg-gray-800/90 p-3 rounded-xl border border-purple-500/50">
-                        <span className="text-sm font-bold text-purple-300 mr-2">リプレイ {replayStep + 1}/{moveHistory.length}</span>
+                        <span className="text-sm font-bold text-purple-300 mr-2">リプレイ {replayStep}/{moveHistory.length}</span>
                         <button onClick={prevReplayStep} disabled={replayStep === 0} className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 text-sm font-bold transition-colors">
                           <span>⏮️</span> 戻る
                         </button>
                         <button onClick={stopReplay} className="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-500 flex items-center gap-1 text-sm font-bold transition-colors">
                           <span>⏹️</span> 終了
                         </button>
-                        <button onClick={nextReplayStep} disabled={replayStep >= moveHistory.length - 1} className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 text-sm font-bold transition-colors">
+                        <button onClick={nextReplayStep} disabled={replayStep >= moveHistory.length} className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 text-sm font-bold transition-colors">
                           <span>⏭️</span> 送る
                         </button>
                       </div>
@@ -420,151 +485,22 @@ function App() {
 
         {/* Game Over Modal */}
         <AnimatePresence>
-          {phase === 'GAME_OVER' && !isReplaying && !isBoardOverview && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[100] p-4"
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{ type: "spring", damping: 20 }}
-                className="bg-[#1a1a2e] backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 shadow-2xl max-w-sm w-full text-center relative overflow-hidden"
-              >
-                {/* Top Gradient Line */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500" />
-
-                {/* Title */}
-                <h2 className="text-2xl font-bold text-white mb-6 mt-2">
-                  ゲーム終了
-                </h2>
-
-                {/* Result Display */}
-                <div className="mb-6 text-gray-300">
-                  {gameMode === 'SOLO' ? (
-                    <div className="flex flex-row items-center justify-center gap-4">
-                      {/* Score Card */}
-                      <div className="flex flex-col items-center bg-black/20 p-4 rounded-2xl border border-white/10 min-w-[130px]">
-                        <span className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-bold">Score</span>
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-4xl font-black text-yellow-400 leading-none drop-shadow-md">
-                            {scores.p1}
-                          </span>
-                          <span className="text-[10px] text-gray-500 font-bold">PTS</span>
-                        </div>
-                      </div>
-
-                      {/* Time Card */}
-                      <div className="flex flex-col items-center bg-black/20 p-4 rounded-2xl border border-white/10 min-w-[130px]">
-                        <span className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-bold">Time</span>
-                        <span className="text-2xl font-mono font-black text-white shadow-purple-500/50 drop-shadow-sm leading-none">
-                          {formatTime(elapsedTime)}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {/* Time Display for VS */}
-                      <div className="text-center mb-1">
-                        <span className="text-gray-500 text-xs mr-2 uppercase tracking-wider">Total Time</span>
-                        <span className="font-mono font-bold text-white">{formatTime(elapsedTime)}</span>
-                      </div>
-
-                      <div className="text-lg text-white">
-                        <span className="text-gray-400">勝者: </span>
-                        <span className={winner === 1 ? 'text-blue-400' : 'text-rose-400'}>
-                          {winner === 1 ? 'プレイヤー1' : (gameMode.startsWith('CPU') ? 'CPU' : 'プレイヤー2')}
-                        </span>
-                      </div>
-                      <div className="flex justify-center gap-4">
-                        <div className="flex flex-col bg-gray-800/50 px-6 py-3 rounded-xl">
-                          <span className="text-blue-400 font-medium text-sm">P1</span>
-                          <span className="text-2xl font-bold text-white">{scores.p1}</span>
-                        </div>
-                        <div className="flex flex-col bg-gray-800/50 px-6 py-3 rounded-xl">
-                          <span className="text-rose-400 font-medium text-sm">{gameMode.startsWith('CPU') ? 'CPU' : 'P2'}</span>
-                          <span className="text-2xl font-bold text-white">{scores.p2}</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Buttons */}
-                <div className="flex flex-col gap-3">
-                  {/* Check Board Button */}
-                  <button
-                    onClick={() => setIsBoardOverview(true)}
-                    className="w-full py-3 bg-gray-600/50 hover:bg-gray-500/50 text-white font-medium rounded-lg border border-gray-500/30 transition-all flex items-center justify-center gap-2 mb-1 group"
-                  >
-                    <span className="group-hover:scale-110 transition-transform">🔍</span>
-                    盤面を確認する
-                  </button>
-                  <button
-                    onClick={() => resetGame()}
-                    className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-bold rounded-lg transition-all"
-                  >
-                    次のプレイ
-                  </button>
-                  <button
-                    onClick={() => resetGame(true)}
-                    className="w-full py-3 bg-gray-700/80 hover:bg-gray-600 text-white font-medium rounded-lg border border-gray-600/50 transition-all"
-                  >
-                    同じ盤でプレイ
-                  </button>
-                  {moveHistory && moveHistory.length > 0 && (
-                    <button
-                      onClick={startReplay}
-                      className="w-full py-3 bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white font-medium rounded-lg border border-gray-600/50 transition-all"
-                    >
-                      リプレイを見る
-                    </button>
-                  )}
-                  <div className="border-t border-gray-700/50 my-1" />
-                  <button
-                    onClick={() => { resetGame(); handleBackToTitle(); }}
-                    className="w-full py-3 text-gray-400 hover:text-white font-medium transition-all"
-                  >
-                    タイトルへ戻る
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Board Overview Return Button and Hint */}
-        <AnimatePresence>
-          {phase === 'GAME_OVER' && !isReplaying && isBoardOverview && (
-            <>
-              {/* Return Button */}
-              <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 50, opacity: 0 }}
-                className="absolute bottom-8 left-0 right-0 z-[100] flex flex-col items-center gap-3 px-4 pointer-events-auto"
-              >
-                {/* Hint Banner */}
-                {getGameHint() && (
-                  <div className="bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-white/20">
-                    <p className="text-white font-bold text-sm">
-                      💡 {getGameHint()}
-                    </p>
-                  </div>
-                )}
-
-                {/* Return Button */}
-                <button
-                  onClick={() => setIsBoardOverview(false)}
-                  className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold shadow-lg border border-blue-400/50 backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-all"
-                >
-                  <span>↩️</span> 結果画面に戻る
-                </button>
-              </motion.div>
-            </>
-          )}
+          <GameOverModal
+            phase={phase}
+            isReplaying={isReplaying}
+            isBoardOverview={isBoardOverview}
+            setIsBoardOverview={setIsBoardOverview}
+            gameMode={gameMode}
+            scores={scores}
+            winner={winner}
+            elapsedTime={elapsedTime}
+            moveHistory={moveHistory}
+            formatTime={formatTime}
+            resetGame={resetGame}
+            startReplay={startReplay}
+            handleBackToTitle={handleBackToTitle}
+            getGameHint={getGameHint}
+          />
         </AnimatePresence>
       </div>
     </div>

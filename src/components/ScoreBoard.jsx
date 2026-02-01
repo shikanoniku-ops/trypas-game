@@ -59,13 +59,7 @@ const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, b
                 <span className={`${compact ? 'text-[8px]' : 'text-[10px]'} font-bold text-gray-500 tracking-wider transform translate-y-[-2px]`}>PTS</span>
             </div>
 
-            {/* Time (for VS modes) */}
-            {totalTime !== undefined && (
-                <div className={`mt-1 flex items-center gap-1 ${compact ? 'text-[9px]' : 'text-[10px]'} font-mono ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>
-                    <span>TIME:</span>
-                    <span>{totalTime}</span>
-                </div>
-            )}
+
         </motion.div>
     );
 };
@@ -138,19 +132,18 @@ const ScoreBoard = ({
                     label="P1"
                     score={scores.p1}
                     isActive={turn === 1 || isSoloMode}
-                    totalTime={!isSoloMode ? formatTime(totalThinkingTime.p1) : undefined}
                     colorClass="text-blue-400"
                     borderClass="#60A5FA" // blue-400
                     align="left"
                     compact={compactMode}
                 />
 
-                {/* VS Badge (Center) - Hidden in Solo, Simplified */}
+                {/* VS Badge (Center) - Hidden in Solo */}
                 {!isSoloMode && (
-                    <div className="flex flex-col justify-center items-center px-1">
-                        <div className="w-[1px] h-6 bg-gray-700/50 mb-1"></div>
-                        <span className="text-xs font-black text-gray-600 italic">VS</span>
-                        <div className="w-[1px] h-6 bg-gray-700/50 mt-1"></div>
+                    <div className="flex flex-col justify-center items-center px-2">
+                        <div className="w-[1px] h-5 bg-white/60 mb-1"></div>
+                        <span className="text-xs font-black text-white italic">VS</span>
+                        <div className="w-[1px] h-5 bg-white/60 mt-1"></div>
                     </div>
                 )}
 
@@ -160,7 +153,6 @@ const ScoreBoard = ({
                         label={isCPUMode ? "CPU" : "P2"}
                         score={scores.p2}
                         isActive={turn === 2}
-                        totalTime={formatTime(totalThinkingTime.p2)}
                         colorClass="text-rose-400"
                         borderClass="#FB7185" // rose-400
                         align="right"
@@ -172,7 +164,7 @@ const ScoreBoard = ({
             {/* Last Action Message Toast - Compact */}
             <div className="h-6 mt-2 flex justify-center pointer-events-none">
                 <AnimatePresence mode="wait">
-                    {!isSoloMode && lastActionMessage && (
+                    {!isSoloMode && !isReplaying && lastActionMessage && (
                         <motion.div
                             key={lastActionMessage}
                             initial={{ opacity: 0, y: 5, scale: 0.9 }}
