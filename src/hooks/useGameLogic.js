@@ -462,18 +462,36 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
             // まず盤面を更新（コマの移動）
             setBoard(move.boardAfter);
 
-            // 現在動いているプレイヤーのターンを表示
+            // コマ移動中は、その手を打ったプレイヤーを表示（移動のエフェクト中はまだその人のターン）
             setReplayTurn(move.player);
 
             // 表示済み手数を増やす
             setReplayStep(replayStep + 1);
 
-            // スコアを少し遅延して更新（コマ移動後に反映）
+            // スコアを遅延して更新（コマ移動後にスコア加算）
             setTimeout(() => {
+                // スコア更新
                 if (move.totalScores) {
                     setReplayScores(move.totalScores);
+                } else {
+                    // 古い履歴などでtotalScoresがない場合のフォールバック
+                    // 最低限、その手で獲得したスコアを加算するように試みる（完全ではないが、直前のスコアがわかれば足せる）
+                    const playerKey = move.player === 1 ? 'p1' : 'p2';
+                    setReplayScores(prev => ({
+                        ...prev,
+                        [playerKey]: prev[playerKey] + move.score
+                    }));
                 }
-            }, 300);
+
+                // スコア加算と同時にターンを次に回す（移動完了）
+                // ただし赤コマ獲得時（連続手番）はそのまま
+                const capturedColor = move.capturedColor;
+                const hasRed = capturedColor === 'RED';
+                // 次のターンのプレイヤー：赤を取ったら同じ人、そうでなければ交代
+                const nextTurnPlayer = hasRed ? move.player : (move.player === 1 ? 2 : 1);
+                setReplayTurn(nextTurnPlayer);
+
+            }, 500); // 500ms遅延（アニメーション完了待ち）
         }
     };
 
