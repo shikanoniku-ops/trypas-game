@@ -1,10 +1,134 @@
 import React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 /**
- * ゲーム終了時に表示されるモーダルコンポーネント
+ * ゲーム終了時に表示されるモーダルコンポーネント（サイバーパンクスタイル）
  * スコア表示、リプレイ、次のゲームへの遷移などを提供
  */
+
+// ネオンボタンコンポーネント
+const CyberButton = ({ children, onClick, variant = "primary", icon = null }) => {
+  const variants = {
+    primary: {
+      bg: "bg-gradient-to-r from-cyan-500/20 to-purple-500/20",
+      border: "border-cyan-400/50",
+      text: "text-cyan-300",
+      shadow: "shadow-[0_0_20px_rgba(0,255,255,0.2)]",
+      hoverShadow: "hover:shadow-[0_0_30px_rgba(0,255,255,0.4)]",
+      hoverBorder: "hover:border-cyan-400/80"
+    },
+    accent: {
+      bg: "bg-gradient-to-r from-purple-500/30 to-pink-500/30",
+      border: "border-purple-400/60",
+      text: "text-white",
+      shadow: "shadow-[0_0_25px_rgba(168,85,247,0.3)]",
+      hoverShadow: "hover:shadow-[0_0_40px_rgba(168,85,247,0.5)]",
+      hoverBorder: "hover:border-purple-400"
+    },
+    secondary: {
+      bg: "bg-gray-900/60",
+      border: "border-gray-600/50",
+      text: "text-gray-300",
+      shadow: "shadow-none",
+      hoverShadow: "hover:shadow-[0_0_15px_rgba(100,100,100,0.2)]",
+      hoverBorder: "hover:border-gray-500"
+    },
+    ghost: {
+      bg: "bg-transparent",
+      border: "border-transparent",
+      text: "text-gray-500 hover:text-cyan-400",
+      shadow: "shadow-none",
+      hoverShadow: "",
+      hoverBorder: ""
+    }
+  };
+
+  const style = variants[variant];
+
+  return (
+    <motion.button
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className={`
+        w-full py-3.5 rounded-lg font-bold tracking-wide
+        ${style.bg} ${style.border} ${style.text}
+        ${style.shadow} ${style.hoverShadow} ${style.hoverBorder}
+        border backdrop-blur-sm transition-all duration-300
+        flex items-center justify-center gap-2
+        relative overflow-hidden
+      `}
+    >
+      {/* Tech corners for primary/accent */}
+      {(variant === 'primary' || variant === 'accent') && (
+        <>
+          <div className={`absolute top-0 left-0 w-3 h-3 border-t border-l ${style.border}`} />
+          <div className={`absolute top-0 right-0 w-3 h-3 border-t border-r ${style.border}`} />
+          <div className={`absolute bottom-0 left-0 w-3 h-3 border-b border-l ${style.border}`} />
+          <div className={`absolute bottom-0 right-0 w-3 h-3 border-b border-r ${style.border}`} />
+        </>
+      )}
+      {icon && <span className="text-lg">{icon}</span>}
+      {children}
+    </motion.button>
+  );
+};
+
+// スコアカードコンポーネント
+const ScoreCard = ({ label, value, isWinner = false, color = "cyan" }) => {
+  const colorStyles = {
+    cyan: {
+      border: isWinner ? "border-cyan-400/80" : "border-cyan-400/30",
+      text: "text-cyan-400",
+      shadow: isWinner ? "shadow-[0_0_25px_rgba(0,255,255,0.3)]" : "",
+      bg: isWinner ? "bg-cyan-500/10" : "bg-gray-900/50"
+    },
+    red: {
+      border: isWinner ? "border-red-400/80" : "border-red-400/30",
+      text: "text-red-400",
+      shadow: isWinner ? "shadow-[0_0_25px_rgba(255,100,100,0.3)]" : "",
+      bg: isWinner ? "bg-red-500/10" : "bg-gray-900/50"
+    },
+    yellow: {
+      border: "border-yellow-400/50",
+      text: "text-yellow-400",
+      shadow: "shadow-[0_0_20px_rgba(234,179,8,0.2)]",
+      bg: "bg-yellow-500/10"
+    }
+  };
+
+  const style = colorStyles[color];
+
+  return (
+    <motion.div
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      className={`
+        flex flex-col items-center px-6 py-4 rounded-lg
+        ${style.bg} border ${style.border} ${style.shadow}
+        backdrop-blur-sm min-w-[100px] relative
+      `}
+    >
+      {/* Winner indicator */}
+      {isWinner && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-xs"
+        >
+          👑
+        </motion.div>
+      )}
+      <span className={`${style.text} text-xs font-bold uppercase tracking-wider mb-1`}>
+        {label}
+      </span>
+      <span className="text-3xl font-black text-white leading-none">
+        {value}
+      </span>
+    </motion.div>
+  );
+};
+
 function GameOverModal({
   phase,
   isReplaying,
@@ -27,7 +151,7 @@ function GameOverModal({
   const isSoloMode = gameMode === 'SOLO';
   const isCPUMode = gameMode.startsWith('CPU_');
 
-  // 盤面確認モードの場合は何も表示しない（App.jsx側で表示を制御）
+  // 盤面確認モードの場合は何も表示しない
   if (isBoardOverview) {
     return null;
   }
@@ -38,110 +162,153 @@ function GameOverModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="absolute inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[100] p-4"
+      className="absolute inset-0 bg-black/85 backdrop-blur-lg flex items-center justify-center z-[100] p-4"
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        initial={{ scale: 0.9, opacity: 0, y: 30 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{ type: "spring", damping: 20 }}
-        className="bg-[#1a1a2e] backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 shadow-2xl max-w-sm w-full text-center relative overflow-hidden"
+        transition={{ type: "spring", damping: 20, stiffness: 200 }}
+        className="bg-[#0a0a12] backdrop-blur-xl p-8 rounded-xl border border-cyan-400/20 max-w-sm w-full text-center relative overflow-hidden"
+        style={{ boxShadow: '0 0 60px rgba(0,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.05)' }}
       >
-        {/* トップグラデーションライン */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500" />
+        {/* Animated border glow */}
+        <div className="absolute inset-0 rounded-xl" style={{
+          background: 'linear-gradient(135deg, rgba(0,255,255,0.1), transparent, rgba(168,85,247,0.1))',
+          pointerEvents: 'none'
+        }} />
 
-        {/* タイトル */}
-        <h2 className="text-2xl font-bold text-white mb-6 mt-2">
-          ゲーム終了
-        </h2>
+        {/* Tech corners */}
+        <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-cyan-400/60 rounded-tl-xl" />
+        <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-cyan-400/60 rounded-tr-xl" />
+        <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-purple-400/60 rounded-bl-xl" />
+        <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-purple-400/60 rounded-br-xl" />
 
-        {/* 結果表示 */}
-        <div className="mb-6 text-gray-300">
+        {/* Scan line animation */}
+        <motion.div
+          className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent"
+          initial={{ top: 0, opacity: 0 }}
+          animate={{ top: '100%', opacity: [0, 1, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1 }}
+        />
+
+        {/* Title */}
+        <motion.h2
+          initial={{ y: -10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-6 tracking-wider"
+        >
+          GAME OVER
+        </motion.h2>
+
+        {/* Results */}
+        <div className="mb-6 relative z-10">
           {isSoloMode ? (
             <div className="flex flex-row items-center justify-center gap-4">
-              {/* スコアカード */}
-              <div className="flex flex-col items-center bg-black/20 p-4 rounded-2xl border border-white/10 min-w-[130px]">
-                <span className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-bold">Score</span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-black text-yellow-400 leading-none drop-shadow-md">
-                    {scores.p1}
-                  </span>
-                  <span className="text-[10px] text-gray-500 font-bold">PTS</span>
-                </div>
-              </div>
+              {/* Score Card */}
+              <ScoreCard label="SCORE" value={scores.p1} color="yellow" />
 
-              {/* タイムカード */}
-              <div className="flex flex-col items-center bg-black/20 p-4 rounded-2xl border border-white/10 min-w-[130px]">
-                <span className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-bold">Time</span>
-                <span className="text-2xl font-mono font-black text-white shadow-purple-500/50 drop-shadow-sm leading-none">
+              {/* Time Card */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex flex-col items-center px-6 py-4 rounded-lg bg-gray-900/50 border border-gray-600/30 backdrop-blur-sm min-w-[100px]"
+              >
+                <span className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">
+                  TIME
+                </span>
+                <span className="text-2xl font-mono font-black text-white leading-none">
                   {formatTime(elapsedTime)}
                 </span>
-              </div>
+              </motion.div>
             </div>
           ) : (
             <div className="space-y-4">
-              {/* 対戦モードの時間表示 */}
-              <div className="text-center mb-1">
-                <span className="text-gray-500 text-xs mr-2 uppercase tracking-wider">Total Time</span>
-                <span className="font-mono font-bold text-white">{formatTime(elapsedTime)}</span>
-              </div>
+              {/* Time display */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center mb-2"
+              >
+                <span className="text-gray-500 text-xs mr-2 uppercase tracking-widest font-mono">TOTAL TIME</span>
+                <span className="font-mono font-bold text-cyan-400">{formatTime(elapsedTime)}</span>
+              </motion.div>
 
-              <div className="text-lg text-white">
-                <span className="text-gray-400">勝者: </span>
-                <span className={winner === 1 ? 'text-blue-400' : 'text-rose-400'}>
+              {/* Winner announcement */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-lg"
+              >
+                <span className="text-gray-500">勝者: </span>
+                <span className={`font-bold ${winner === 1 ? 'text-cyan-400' : 'text-red-400'}`}
+                  style={{ textShadow: winner === 1 ? '0 0 10px rgba(0,255,255,0.5)' : '0 0 10px rgba(255,100,100,0.5)' }}
+                >
                   {winner === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2')}
                 </span>
-              </div>
-              <div className="flex justify-center gap-4">
-                <div className="flex flex-col items-center bg-gray-800/50 px-6 py-3 rounded-xl min-w-[80px]">
-                  <span className="text-blue-400 font-medium text-sm">P1</span>
-                  <span className="text-2xl font-bold text-white">{scores.p1}</span>
-                </div>
-                <div className="flex flex-col items-center bg-gray-800/50 px-6 py-3 rounded-xl min-w-[80px]">
-                  <span className="text-rose-400 font-medium text-sm">{isCPUMode ? 'CPU' : 'P2'}</span>
-                  <span className="text-2xl font-bold text-white">{scores.p2}</span>
-                </div>
+              </motion.div>
+
+              {/* Score cards */}
+              <div className="flex justify-center gap-4 mt-4">
+                <ScoreCard
+                  label="P1"
+                  value={scores.p1}
+                  color="cyan"
+                  isWinner={winner === 1}
+                />
+                <ScoreCard
+                  label={isCPUMode ? 'CPU' : 'P2'}
+                  value={scores.p2}
+                  color="red"
+                  isWinner={winner === 2}
+                />
               </div>
             </div>
           )}
         </div>
 
-        {/* ボタン群 */}
-        <div className="flex flex-col gap-3">
-          {/* 盤面確認ボタン */}
-          <button
+        {/* Buttons */}
+        <div className="flex flex-col gap-3 relative z-10">
+          <CyberButton
             onClick={() => setIsBoardOverview(true)}
-            className="w-full py-3 bg-gray-600/50 hover:bg-gray-500/50 text-white font-medium rounded-lg border border-gray-500/30 transition-all flex items-center justify-center gap-2 mb-1 group"
+            variant="primary"
+            icon="🔍"
           >
-            <span className="group-hover:scale-110 transition-transform">🔍</span>
             盤面を確認する
-          </button>
-          <button
+          </CyberButton>
+
+          <CyberButton
             onClick={() => resetGame()}
-            className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-bold rounded-lg transition-all"
+            variant="accent"
           >
             次のプレイ
-          </button>
-          <button
+          </CyberButton>
+
+          <CyberButton
             onClick={() => resetGame(true)}
-            className="w-full py-3 bg-gray-700/80 hover:bg-gray-600 text-white font-medium rounded-lg border border-gray-600/50 transition-all"
+            variant="secondary"
           >
             同じ盤でプレイ
-          </button>
+          </CyberButton>
+
           {moveHistory && moveHistory.length > 0 && (
-            <button
+            <CyberButton
               onClick={startReplay}
-              className="w-full py-3 bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white font-medium rounded-lg border border-gray-600/50 transition-all"
+              variant="secondary"
             >
               リプレイを見る
-            </button>
+            </CyberButton>
           )}
-          <div className="border-t border-gray-700/50 my-1" />
-          <button
+
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-700/50 to-transparent my-1" />
+
+          <CyberButton
             onClick={() => { resetGame(); handleBackToTitle(); }}
-            className="w-full py-3 text-gray-400 hover:text-white font-medium transition-all"
+            variant="ghost"
           >
             タイトルへ戻る
-          </button>
+          </CyberButton>
         </div>
       </motion.div>
     </motion.div>
