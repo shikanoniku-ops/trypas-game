@@ -309,12 +309,10 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                 {/* Menu Buttons */}
                                 <div className="w-full max-w-[320px] sm:max-w-[360px] flex flex-col gap-3 sm:gap-4">
                                     <NeonButton onClick={() => setMenuState('vs')} variant="danger" delay={0.1}>
-                                        <span className="text-2xl sm:text-3xl">🧠</span>
                                         VS MODE
                                     </NeonButton>
 
                                     <NeonButton onClick={() => setMenuState('solo')} variant="primary" delay={0.2}>
-                                        <span className="text-2xl sm:text-3xl">🎯</span>
                                         SOLO PLAY
                                     </NeonButton>
 
@@ -352,7 +350,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                         <PageTransition key="vs">
                             <div className="flex flex-col items-center gap-5 w-full max-w-[340px]">
                                 <SectionHeader
-                                    icon="🧠"
+                                    icon=""
                                     title="VS MODE"
                                     subtitle="Challenge Your Mind"
                                     color="orange"
@@ -362,7 +360,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                     {/* VS CPU */}
                                     <div className="space-y-3">
                                         <p className="text-xs text-gray-500 font-mono tracking-wider px-1 flex items-center gap-2">
-                                            <span className="text-base">🤖</span> VS CPU
+                                            VS CPU
                                         </p>
                                         <div className="grid grid-cols-3 gap-2">
                                             {[
@@ -400,13 +398,11 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
 
                                     {/* 2 Players */}
                                     <NeonButton onClick={() => onStart('LOCAL')} variant="secondary" delay={0.25} size="medium">
-                                        <span className="text-xl sm:text-2xl">👥</span>
                                         2 PLAYERS
                                     </NeonButton>
 
                                     {/* Back */}
                                     <NeonButton onClick={() => setMenuState('main')} variant="ghost" delay={0.3} size="medium">
-                                        <span className="text-lg">←</span>
                                         BACK
                                     </NeonButton>
                                 </div>
@@ -419,7 +415,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                         <PageTransition key="solo">
                             <div className="flex flex-col items-center gap-5 w-full max-w-[340px]">
                                 <SectionHeader
-                                    icon="🎯"
+                                    icon=""
                                     title="SOLO PLAY"
                                     subtitle="Train Your Mind"
                                     color="cyan"
@@ -427,17 +423,14 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
 
                                 <div className="w-full flex flex-col gap-3 sm:gap-4">
                                     <NeonButton onClick={() => onStart('SOLO')} variant="primary" delay={0.1}>
-                                        <span className="text-2xl sm:text-3xl">▶️</span>
                                         START GAME
                                     </NeonButton>
 
                                     <NeonButton onClick={() => onStart('TUTORIAL')} variant="secondary" delay={0.2}>
-                                        <span className="text-xl sm:text-2xl">📚</span>
                                         TUTORIAL
                                     </NeonButton>
 
                                     <NeonButton onClick={() => setMenuState('main')} variant="ghost" delay={0.3} size="medium">
-                                        <span className="text-lg">←</span>
                                         BACK
                                     </NeonButton>
                                 </div>
