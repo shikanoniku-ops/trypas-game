@@ -275,6 +275,9 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
         // Check Game Over FIRST (before TRYPAS notification)
         const isGameOver = !checkAnyMovePossible(newBoard);
 
+        // 重要: ターン変更前に「最後の一手を打ったプレイヤー」を保存
+        const playerWhoMadeLastMove = turn;
+
         // Check Red Bonus (only show TRYPAS if game is NOT over and NOT solo mode)
         if (hasRed) {
             if (!isGameOver && !isSoloMode) {
@@ -318,14 +321,14 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
 
                 if (hasRed) {
                     // 最後に赤を取った場合は負け（自爆ルール）
-                    winnerPlayer = turn === 1 ? 2 : 1;
-                    loserPlayer = turn;
+                    winnerPlayer = playerWhoMadeLastMove === 1 ? 2 : 1;
+                    loserPlayer = playerWhoMadeLastMove;
                     setLastActionMessage('最後に赤コマを取ったため負けです');
                 } else {
                     // 通常は最後に手を打った方（現在のプレイヤー）が勝ち
                     // 相手は詰まりで負け
-                    winnerPlayer = turn;
-                    loserPlayer = turn === 1 ? 2 : 1;
+                    winnerPlayer = playerWhoMadeLastMove;
+                    loserPlayer = playerWhoMadeLastMove === 1 ? 2 : 1;
                 }
 
                 setWinner(winnerPlayer);
