@@ -263,7 +263,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                 >
                                     <div className="relative">
                                         <img
-                                            src="/trypas-logo-new.png"
+                                            src={`${import.meta.env.BASE_URL}trypas-logo-new.png`}
                                             alt="TRYPAS"
                                             className="mx-auto"
                                             style={{

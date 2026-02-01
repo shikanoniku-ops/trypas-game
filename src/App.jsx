@@ -167,7 +167,7 @@ function App() {
               <div className="w-full flex-shrink-0 flex flex-row items-start justify-between px-2" style={{ marginBottom: 'clamp(0.25rem, 1vh, 0.5rem)' }}>
                 <div className="flex flex-col items-start gap-2">
                   <img
-                    src="/trypas-logo-new.png"
+                    src={`${import.meta.env.BASE_URL}trypas-logo-new.png`}
                     alt="TRYPAS"
                     className="opacity-95"
                     style={{ width: 'clamp(90px, 25vw, 120px)', filter: 'drop-shadow(0 0 15px rgba(0,255,255,0.3))' }}
@@ -259,7 +259,7 @@ function App() {
                 {/* Left: Logo & Status Pill */}
                 <div className="flex flex-col items-start gap-3">
                   <img
-                    src="/trypas-logo-new.png"
+                    src={`${import.meta.env.BASE_URL}trypas-logo-new.png`}
                     alt="TRYPAS"
                     className="opacity-95"
                     style={{ width: 'clamp(90px, 25vw, 140px)', filter: 'drop-shadow(0 0 20px rgba(0,255,255,0.3))' }}
