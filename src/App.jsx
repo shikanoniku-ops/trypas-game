@@ -11,6 +11,7 @@ import RulesContent from './components/RulesContent';
 import Legend from './components/Legend';
 import TutorialGuide from './components/TutorialGuide';
 import GameOverModal from './components/GameOverModal';
+import CyberpunkBackground from './components/CyberpunkBackground';
 import { PIECE_SCORES, PIECE_COLORS } from './constants/colors';
 import tryPasTheme from './assets/sounds/TRYPAS_Theme.mp3';
 
@@ -130,7 +131,10 @@ function App() {
   };
 
   return (
-    <div className="app-container bg-gray-900 text-white font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center">
+    <div className="app-container bg-[#080810] text-white font-sans selection:bg-cyan-500 selection:text-white flex flex-col items-center justify-center">
+      {/* Unified Cyberpunk Background for all screens */}
+      <CyberpunkBackground />
+
       {/* Music Control Button and Menu */}
       <InitialAudioModal onComplete={handleAudioSetupComplete} onEnableAudio={handleEnableAudio} />
 
@@ -165,8 +169,8 @@ function App() {
                   <img
                     src="/trypas-logo-new.png"
                     alt="TRYPAS"
-                    className="opacity-90 drop-shadow-lg"
-                    style={{ width: 'clamp(90px, 25vw, 120px)' }}
+                    className="opacity-95"
+                    style={{ width: 'clamp(90px, 25vw, 120px)', filter: 'drop-shadow(0 0 15px rgba(0,255,255,0.3))' }}
                   />
                   <div className="relative group">
                     <div className="absolute inset-0 bg-emerald-900/90 backdrop-blur-xl rounded-full border border-emerald-500/50" />
@@ -257,25 +261,28 @@ function App() {
                   <img
                     src="/trypas-logo-new.png"
                     alt="TRYPAS"
-                    className="opacity-90 drop-shadow-lg"
-                    style={{ width: 'clamp(90px, 25vw, 140px)' }}
+                    className="opacity-95"
+                    style={{ width: 'clamp(90px, 25vw, 140px)', filter: 'drop-shadow(0 0 20px rgba(0,255,255,0.3))' }}
                   />
 
-                  {/* Status Pill (Setup/Turn) */}
+                  {/* Status Pill (Cyberpunk Style) */}
                   <div className="relative group">
                     <div
-                      className="absolute inset-0 bg-gray-900/90 backdrop-blur-xl rounded-full border border-gray-600"
+                      className="absolute inset-0 bg-gray-950/80 backdrop-blur-xl rounded-lg"
                       style={{
-                        borderColor: phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.5)' : (turn === 1 ? 'rgba(96, 165, 250, 0.5)' : 'rgba(251, 113, 133, 0.5)'),
-                        boxShadow: `0 0 15px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.2)' : (turn === 1 ? 'rgba(96, 165, 250, 0.2)' : 'rgba(251, 113, 133, 0.2)')}`
+                        borderWidth: '1px',
+                        borderStyle: 'solid',
+                        borderColor: phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.4)' : (turn === 1 ? 'rgba(0, 220, 255, 0.4)' : 'rgba(255, 100, 100, 0.4)'),
+                        boxShadow: `0 0 20px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.15)' : (turn === 1 ? 'rgba(0, 220, 255, 0.15)' : 'rgba(255, 100, 100, 0.15)')}`
                       }}
                     />
-                    <div className="relative px-5 py-1.5 flex items-center gap-2">
+                    <div className="relative px-4 py-1.5 flex items-center gap-2">
                       <div
-                        className={`w-2 h-2 rounded-full ${phase === 'REMOVING' ? 'bg-yellow-400 animate-pulse' : (turn === 1 ? 'bg-blue-400' : 'bg-rose-400')}`}
+                        className={`w-2 h-2 rounded-full ${phase === 'REMOVING' ? 'bg-yellow-400' : (turn === 1 ? 'bg-cyan-400' : 'bg-red-400')}`}
+                        style={{ boxShadow: `0 0 8px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.8)' : (turn === 1 ? 'rgba(0, 220, 255, 0.8)' : 'rgba(255, 100, 100, 0.8)')}` }}
                       />
                       <span
-                        className={`text-xs font-bold tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-blue-400' : 'text-rose-400')}`}
+                        className={`text-xs font-bold tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-cyan-400' : 'text-red-400')}`}
                       >
                         {phase === 'REMOVING' ? 'セットアップ' : (isReplaying ? 'リプレイ' : (isSoloMode ? 'SOLO PLAY' : (turn === 1 ? 'P1 ターン' : (isCPUMode ? 'CPU ターン' : 'P2 ターン'))))}
                       </span>
@@ -323,42 +330,83 @@ function App() {
                     selectedSpot={selectedSpot}
                     validMoves={validMoves}
                   />
-                  {/* TRYPAS! Notification Animation */}
+                  {/* TRYPAS! Notification Animation (Cyberpunk Style) */}
                   <AnimatePresence>
                     {showTrypas && (
                       <motion.div
-                        initial={{ scale: 0.3, opacity: 0, y: 20 }}
-                        animate={{ scale: 1, opacity: 1, y: 0 }}
-                        exit={{ scale: 1.2, opacity: 0, y: -20 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 15,
-                          exit: { duration: 0.5, ease: "easeOut" }
-                        }}
-                        className="absolute inset-0 flex items-center justify-center pointer-events-none z-50"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-hidden"
                       >
+                        {/* Cyber Glitch Text Container */}
                         <div className="relative">
-                          {/* Glow effect */}
-                          <div className="absolute inset-0 blur-xl bg-gradient-to-r from-red-500 via-pink-500 to-red-500 opacity-60 animate-pulse" style={{ transform: 'scale(1.5)' }} />
-                          {/* Main text */}
+                          {/* Glitch Layer 1 */}
                           <motion.span
+                            initial={{ x: -2, opacity: 0 }}
                             animate={{
-                              textShadow: [
-                                "0 0 20px #ff0000, 0 0 40px #ff0000, 0 0 60px #ff0000",
-                                "0 0 40px #ff4444, 0 0 80px #ff4444, 0 0 120px #ff4444",
-                                "0 0 20px #ff0000, 0 0 40px #ff0000, 0 0 60px #ff0000"
-                              ]
+                              x: [-2, 2, -1, 3, 0],
+                              opacity: [0, 0.8, 0]
                             }}
-                            transition={{ duration: 0.5, repeat: Infinity }}
-                            className="relative text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-wider drop-shadow-2xl"
-                            style={{
-                              fontFamily: '"Inter", sans-serif',
-                              WebkitTextStroke: '2px #ff0000'
-                            }}
+                            transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 3 }}
+                            className={`absolute inset-0 text-5xl sm:text-6xl md:text-7xl font-black italic tracking-tighter select-none blur-[1px] ${turn === 2 ? 'text-red-500' : 'text-blue-500'}`}
+                            style={{ clipPath: 'inset(40% 0 60% 0)' }}
                           >
                             TRYPAS!
                           </motion.span>
+
+                          {/* Glitch Layer 2 */}
+                          <motion.span
+                            initial={{ x: 2, opacity: 0 }}
+                            animate={{
+                              x: [2, -2, 1, -3, 0],
+                              opacity: [0, 0.8, 0]
+                            }}
+                            transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 2 }}
+                            className={`absolute inset-0 text-5xl sm:text-6xl md:text-7xl font-black italic tracking-tighter select-none blur-[1px] ${turn === 2 ? 'text-orange-400' : 'text-cyan-400'}`}
+                            style={{ clipPath: 'inset(10% 0 40% 0)' }}
+                          >
+                            TRYPAS!
+                          </motion.span>
+
+                          {/* Main Text */}
+                          <motion.h1
+                            initial={{ scale: 0.5, opacity: 0, filter: 'blur(10px)' }}
+                            animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+                            exit={{ scale: 1.5, opacity: 0, filter: 'blur(20px)' }}
+                            transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                            className="relative text-5xl sm:text-6xl md:text-7xl font-black italic tracking-tighter text-white z-10"
+                            style={{
+                              textShadow: turn === 2
+                                ? "0 0 10px rgba(255,50,50,0.8), 0 0 20px rgba(255,50,50,0.5), 0 0 40px rgba(255,50,50,0.3)"
+                                : "0 0 10px rgba(0,170,255,0.8), 0 0 20px rgba(0,170,255,0.5), 0 0 40px rgba(0,170,255,0.3)"
+                            }}
+                          >
+                            <span className={`bg-gradient-to-b bg-clip-text text-transparent ${turn === 2 ? 'from-white via-red-100 to-orange-200' : 'from-white via-cyan-100 to-blue-200'}`}>
+                              TRYPAS!
+                            </span>
+
+                            {/* Neon Glow Outline */}
+                            <span className={`absolute inset-0 blur-sm select-none ${turn === 2 ? 'text-red-400/40' : 'text-cyan-400/40'}`} aria-hidden="true">
+                              TRYPAS!
+                            </span>
+                          </motion.h1>
+
+                          {/* Horizontal Scan Line */}
+                          <motion.div
+                            initial={{ top: '0%', opacity: 0 }}
+                            animate={{ top: '100%', opacity: [0, 1, 0] }}
+                            transition={{ duration: 1, ease: "linear", repeat: Infinity }}
+                            className={`absolute left-0 right-0 h-[2px] z-20 ${turn === 2 ? 'bg-red-400/70 shadow-[0_0_10px_#ff4444]' : 'bg-cyan-400/70 shadow-[0_0_10px_#00ffff]'}`}
+                          />
+
+                          {/* Flash Effect */}
+                          <motion.div
+                            initial={{ opacity: 1 }}
+                            animate={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="absolute inset-0 bg-white mix-blend-overlay rounded-lg"
+                          />
                         </div>
                       </motion.div>
                     )}

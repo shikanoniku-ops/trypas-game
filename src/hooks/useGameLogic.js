@@ -281,7 +281,7 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
                 setLastActionMessage(`${isCPUMode && turn === 2 ? 'CPU' : `Player ${turn}`} gets EXTRA TURN! (Red Piece)`);
                 // Show TRYPAS notification only if game continues and not solo
                 setShowTrypas(true);
-                setTimeout(() => setShowTrypas(false), 1500);
+                setTimeout(() => setShowTrypas(false), 750);
             }
             // Turn does not change, but reset turn timer
             setTurnStartTime(Date.now());
