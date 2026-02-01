@@ -299,6 +299,7 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
         if (isGameOver) {
             setPhase('GAME_OVER');
 
+            // 現在の手番で得たスコアを含めた最終スコアを計算
             const finalP1 = currentPlayer === 'p1' ? scores.p1 + moveScore : scores.p1;
             const finalP2 = currentPlayer === 'p2' ? scores.p2 + moveScore : scores.p2;
 
@@ -310,21 +311,31 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
                 }
                 setWinner('SOLO'); // Special case for solo mode
             } else {
-                // 手詰まりになった方が負け（最後に手を打ったプレイヤーの相手が負け）
-                // つまり、現在のプレイヤーが勝ち
-                // ただし、最後に赤を取った場合は負け
+                // VS MODE (CPU / 2PLAYERS) ルール
+                // ※引き分けはない - 必ず勝敗が決まる
                 let winnerPlayer;
+                let loserPlayer;
+
                 if (hasRed) {
                     // 最後に赤を取った場合は負け（自爆ルール）
                     winnerPlayer = turn === 1 ? 2 : 1;
+                    loserPlayer = turn;
                     setLastActionMessage('最後に赤コマを取ったため負けです');
                 } else {
-                    // 通常は手詰まりになった方（次のターンのプレイヤー）が負け
+                    // 通常は最後に手を打った方（現在のプレイヤー）が勝ち
+                    // 相手は詰まりで負け
                     winnerPlayer = turn;
+                    loserPlayer = turn === 1 ? 2 : 1;
                 }
 
                 setWinner(winnerPlayer);
-                // VS MODEではスコアはそのまま記録として残る（0にしない）
+
+                // 敗者のスコアを0点にする（勝者のスコアはそのまま保持）
+                if (loserPlayer === 1) {
+                    setScores({ p1: 0, p2: finalP2 });
+                } else {
+                    setScores({ p1: finalP1, p2: 0 });
+                }
             }
         }
     };
