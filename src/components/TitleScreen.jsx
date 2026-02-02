@@ -117,13 +117,7 @@ const NeonButton = ({ children, onClick, variant = "primary", delay = 0, size = 
                 style={{ filter: 'blur(30px)' }}
             />
 
-            {/* Scan line effect */}
-            <motion.div
-                className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent"
-                initial={{ top: '-5%', opacity: 0 }}
-                animate={{ top: '105%', opacity: [0, 0.8, 0] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}
-            />
+
 
             {/* Tech corners */}
             <div className="absolute top-0 left-0 w-5 h-5">
@@ -208,8 +202,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                 {/* Hexagon pattern */}
                 <HexagonPattern />
 
-                {/* Neural network lines */}
-                <NeuralLines />
+
 
                 {/* Floating orbs */}
                 <motion.div
@@ -270,12 +263,6 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                                 width: 'clamp(200px, 55vw, 380px)',
                                                 filter: 'drop-shadow(0 0 35px rgba(0,255,255,0.25))'
                                             }}
-                                        />
-                                        <motion.div
-                                            initial={{ scaleX: 0 }}
-                                            animate={{ scaleX: 1 }}
-                                            transition={{ delay: 0.5, duration: 0.7 }}
-                                            className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3/4 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/80 to-transparent"
                                         />
                                     </div>
 
