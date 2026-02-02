@@ -333,6 +333,14 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
 
                 setWinner(winnerPlayer);
 
+                // デバッグログ
+                console.log('=== GAME OVER DEBUG ===');
+                console.log('playerWhoMadeLastMove:', playerWhoMadeLastMove);
+                console.log('hasRed:', hasRed);
+                console.log('winnerPlayer:', winnerPlayer);
+                console.log('loserPlayer:', loserPlayer);
+                console.log('finalP1:', finalP1, 'finalP2:', finalP2);
+
                 // 敗者のスコアを0点にする（勝者のスコアはそのまま保持）
                 if (loserPlayer === 1) {
                     setScores({ p1: 0, p2: finalP2 });
@@ -478,19 +486,45 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
             setReplayStep(replayStep + 1);
 
             // スコアを遅延して更新（コマ移動後にスコア加算）
+            const isLastMove = currentMoveIndex === moveHistory.length - 1;
+
             setTimeout(() => {
                 // スコア更新
+                let newScores;
                 if (move.totalScores) {
-                    setReplayScores(move.totalScores);
+                    newScores = { ...move.totalScores };
                 } else {
                     // 古い履歴などでtotalScoresがない場合のフォールバック
-                    // 最低限、その手で獲得したスコアを加算するように試みる（完全ではないが、直前のスコアがわかれば足せる）
                     const playerKey = move.player === 1 ? 'p1' : 'p2';
-                    setReplayScores(prev => ({
-                        ...prev,
-                        [playerKey]: prev[playerKey] + move.score
-                    }));
+                    newScores = {
+                        p1: move.player === 1 ? move.score : 0,
+                        p2: move.player === 2 ? move.score : 0
+                    };
                 }
+
+                // 最後の手の場合、敗者のスコアを0にする（ゲーム結果と一致させる）
+                if (isLastMove && !isSoloMode) {
+                    const capturedColor = move.capturedColor;
+                    const hasRed = capturedColor === 'RED';
+
+                    let loserPlayer;
+                    if (hasRed) {
+                        // 最後に赤を取ったプレイヤーが敗者
+                        loserPlayer = move.player;
+                    } else {
+                        // 最後に手を打ったプレイヤーが勝者、相手が敗者
+                        loserPlayer = move.player === 1 ? 2 : 1;
+                    }
+
+                    // 敗者のスコアを0にする
+                    if (loserPlayer === 1) {
+                        newScores.p1 = 0;
+                    } else {
+                        newScores.p2 = 0;
+                    }
+                }
+
+                setReplayScores(newScores);
 
                 // スコア加算と同時にターンを次に回す（移動完了）
                 // ただし赤コマ獲得時（連続手番）はそのまま
@@ -500,7 +534,7 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
                 const nextTurnPlayer = hasRed ? move.player : (move.player === 1 ? 2 : 1);
                 setReplayTurn(nextTurnPlayer);
 
-            }, 500); // 500ms遅延（アニメーション完了待ち）
+            }, 300); // 300ms遅延（アニメーション完了待ち）
         }
     };
 

@@ -105,7 +105,7 @@ const NeonButton = ({ children, onClick, variant = "primary", delay = 0, size = 
                 border ${style.border}
                 rounded-xl
                 ${style.glow} ${style.hoverGlow}
-                transition-all duration-400
+                transition-all duration-100
                 overflow-hidden
             `}
         >
@@ -287,7 +287,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                         className="mt-4 flex flex-col items-center gap-2.5"
                                     >
                                         <p className="text-cyan-400/40 text-[10px] sm:text-xs tracking-[0.35em] uppercase font-mono">
-                                            Strategic Puzzle Game
+                                            Abstract Strategy Game
                                         </p>
                                         <div className="flex items-center gap-2 sm:gap-3 px-4 py-1.5 bg-cyan-500/5 border border-cyan-400/20 rounded-full backdrop-blur-sm">
                                             <motion.div
@@ -325,7 +325,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                     >
                                         <button
                                             onClick={onToggleAudio}
-                                            className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-gray-900/40 rounded-full border border-cyan-400/20 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(0,255,255,0.15)] transition-all duration-300 backdrop-blur-sm"
+                                            className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-gray-900/40 rounded-full border border-cyan-400/20 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(0,255,255,0.15)] transition-all duration-100 backdrop-blur-sm"
                                         >
                                             <span className="text-xl sm:text-2xl">{isMuted ? '🔇' : '🔊'}</span>
                                         </button>
@@ -376,7 +376,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                                     whileHover={{ scale: 1.05, y: -3 }}
                                                     whileTap={{ scale: 0.95 }}
                                                     onClick={() => onStart(item.mode)}
-                                                    className={`relative ${item.bg} ${item.text} font-bold text-xs sm:text-sm py-3.5 sm:py-4 rounded-lg border ${item.border} ${item.shadow} ${item.hoverShadow} backdrop-blur-sm transition-all duration-300 overflow-hidden`}
+                                                    className={`relative ${item.bg} ${item.text} font-bold text-xs sm:text-sm py-3.5 sm:py-4 rounded-lg border ${item.border} ${item.shadow} ${item.hoverShadow} backdrop-blur-sm transition-all duration-100 overflow-hidden`}
                                                 >
                                                     {/* Tech corners */}
                                                     <div className={`absolute top-0 left-0 w-2 h-2 border-t border-l ${item.border}`} />
@@ -449,7 +449,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
             >
                 <button
                     onClick={() => setShowFeedback(true)}
-                    className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-950/60 hover:bg-gray-900/80 backdrop-blur-md rounded-lg border border-gray-700/40 hover:border-cyan-400/30 text-gray-500 hover:text-cyan-400 transition-all duration-300 text-[10px] sm:text-xs font-mono"
+                    className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-950/60 hover:bg-gray-900/80 backdrop-blur-md rounded-lg border border-gray-700/40 hover:border-cyan-400/30 text-gray-500 hover:text-cyan-400 transition-all duration-100 text-[10px] sm:text-xs font-mono"
                 >
                     📮 FEEDBACK
                 </button>
