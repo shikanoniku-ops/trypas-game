@@ -137,7 +137,7 @@ const RulesContentNew = () => {
                             {/* 勝者 */}
                             <div className="flex items-center gap-3 bg-cyan-900/10 p-2.5 rounded-lg border border-cyan-500/10">
                                 <span className="flex-shrink-0 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded tracking-wider border border-cyan-500/20">WINNER</span>
-                                <span className="text-sm text-white font-bold">獲得スコアを<span className="text-cyan-400 mx-1">そのまま</span>獲得</span>
+                                <span className="text-sm text-white font-bold">獲得スコアを<span className="text-cyan-400 mx-1">そのまま</span>表示</span>
                             </div>
                             {/* 敗者 */}
                             <div className="flex items-center gap-3 bg-pink-900/10 p-2.5 rounded-lg border border-pink-500/10">
