@@ -463,13 +463,13 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                             className="w-full max-w-lg"
                         >
                             <div className="bg-gray-950 p-5 sm:p-8 rounded-2xl border border-cyan-400/25 w-full max-h-[85vh] overflow-y-auto shadow-[0_0_50px_rgba(0,255,255,0.1)] scrollbar-thin scrollbar-thumb-cyan-500/20 scrollbar-track-transparent" onClick={(e) => e.stopPropagation()}>
-                                <h2 className="text-xl sm:text-3xl font-black mb-4 text-cyan-400 border-b border-cyan-400/20 pb-3 tracking-wider sticky top-0 bg-gray-950/95 backdrop-blur z-20">
-                                    RULES
+                                <h2 className="text-xl sm:text-3xl font-black mb-4 text-cyan-400 border-b border-cyan-400/20 pb-3 tracking-wider">
+                                    Official Rulebook
                                 </h2>
                                 <RulesContentNew />
                                 <button
                                     onClick={() => setShowRules(false)}
-                                    className="mt-6 w-full py-3.5 bg-cyan-500/10 text-cyan-400 font-bold rounded-xl border border-cyan-400/35 hover:bg-cyan-500/20 hover:border-cyan-400/50 transition-all sticky bottom-0 backdrop-blur-md shadow-lg"
+                                    className="mt-6 w-full py-3.5 bg-cyan-500/10 text-cyan-400 font-bold rounded-xl border border-cyan-400/35 hover:bg-cyan-500/20 hover:border-cyan-400/50 transition-all"
                                 >
                                     CLOSE
                                 </button>

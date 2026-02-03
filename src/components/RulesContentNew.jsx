@@ -28,11 +28,6 @@ const RulesContentNew = () => {
                     />
                     <div className="absolute inset-0 bg-cyan-400/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
                 </div>
-                <div className="mt-2 inline-block bg-blue-950/60 border border-cyan-500/30 px-3 py-1 rounded-full backdrop-blur-sm">
-                    <p className="text-[10px] text-cyan-300 font-bold tracking-widest uppercase">
-                        Official Rulebook
-                    </p>
-                </div>
             </div>
 
             {/* ゲーム概要 */}
@@ -54,11 +49,11 @@ const RulesContentNew = () => {
                 </div>
             </section>
 
-            {/* 遊び方の流れ */}
+            {/* 対戦の流れ */}
             <section className="space-y-4">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2 pb-2 border-b border-blue-800">
                     <span className="w-8 h-8 rounded-lg bg-cyan-500 text-blue-950 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(6,182,212,0.5)]">▶</span>
-                    遊び方の流れ
+                    対戦の流れ
                 </h3>
 
                 <div className="grid gap-4">
