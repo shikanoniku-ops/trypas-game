@@ -267,11 +267,11 @@ const RulesContentNew = () => {
             </section>
 
             {/* モード別ルール - ポップデザイン */}
-            <section className="space-y-6">
+            <section className="space-y-4">
                 {/* 対戦ルール */}
                 <div className="bg-gradient-to-br from-purple-900/20 to-slate-900/50 rounded-2xl border border-purple-500/30 p-1 overflow-hidden">
-                    <div className="bg-slate-900/40 rounded-xl p-5 backdrop-blur-sm">
-                        <div className="flex items-center gap-3 mb-4 border-b border-white/5 pb-3">
+                    <div className="bg-slate-900/40 rounded-xl p-4 backdrop-blur-sm">
+                        <div className="flex items-center gap-3 mb-3 border-b border-white/5 pb-2">
                             <div className="w-10 h-10 rounded-lg bg-purple-500 text-white flex items-center justify-center text-xl shadow-lg shadow-purple-500/30 flex-shrink-0">
                                 ⚔️
                             </div>
@@ -281,28 +281,28 @@ const RulesContentNew = () => {
                             </div>
                         </div>
 
-                        <div className="grid gap-3">
-                            <div className="bg-purple-500/10 p-3 rounded-lg border border-purple-500/20">
+                        <div className="grid gap-2">
+                            <div className="bg-purple-500/10 p-2.5 rounded-lg border border-purple-500/20">
                                 <h4 className="flex items-center gap-2 text-xs font-bold text-purple-200 mb-1">
                                     🏆 勝利条件
                                 </h4>
-                                <ul className="text-xs text-purple-100/80 space-y-1 pl-4">
+                                <ul className="text-sm text-purple-100/90 space-y-0.5 pl-4">
                                     <li>• 相手より後に最後の一手を打つ</li>
                                     <li>• 相手を「手詰まり」にさせる</li>
                                 </ul>
                             </div>
-                            <div className="bg-pink-500/10 p-3 rounded-lg border border-pink-500/20">
+                            <div className="bg-pink-500/10 p-2.5 rounded-lg border border-pink-500/20">
                                 <h4 className="flex items-center gap-2 text-xs font-bold text-pink-200 mb-1">
                                     💀 敗北条件
                                 </h4>
-                                <ul className="text-xs text-pink-100/80 space-y-1 pl-4">
+                                <ul className="text-sm text-pink-100/90 space-y-0.5 pl-4">
                                     <li>• 自分の番で動かせる場所がない</li>
                                     <li>• <span className="text-pink-300 font-bold">最後の一手</span>で赤コマを取る</li>
                                 </ul>
                             </div>
                         </div>
 
-                        <div className="mt-4 text-center">
+                        <div className="mt-3 text-center">
                             <span className="text-[10px] text-white/50 font-bold bg-white/5 px-3 py-1 rounded-full">
                                 完全決着（引き分けなし）
                             </span>
@@ -312,8 +312,8 @@ const RulesContentNew = () => {
 
                 {/* ソロルール */}
                 <div className="bg-gradient-to-br from-yellow-900/20 to-slate-900/50 rounded-2xl border border-yellow-500/30 p-1 overflow-hidden">
-                    <div className="bg-slate-900/40 rounded-xl p-5 backdrop-blur-sm">
-                        <div className="flex items-center gap-3 mb-4 border-b border-white/5 pb-3">
+                    <div className="bg-slate-900/40 rounded-xl p-4 backdrop-blur-sm">
+                        <div className="flex items-center gap-3 mb-3 border-b border-white/5 pb-2">
                             <div className="w-10 h-10 rounded-lg bg-yellow-500 text-yellow-950 flex items-center justify-center text-xl shadow-lg shadow-yellow-500/30 flex-shrink-0">
                                 🧘
                             </div>
@@ -323,20 +323,19 @@ const RulesContentNew = () => {
                             </div>
                         </div>
 
-                        <div className="space-y-4">
-                            <p className="text-xs text-yellow-100/80 leading-relaxed bg-yellow-500/5 p-3 rounded-lg border border-yellow-500/10">
-                                ひとりでじっくり練習できるモード。<br />
-                                獲得したコマの点数がそのままスコアになります。
+                        <div className="space-y-3">
+                            <p className="text-sm text-yellow-100/90 leading-relaxed bg-yellow-500/5 p-2.5 rounded-lg border border-yellow-500/10">
+                                ひとりでじっくり練習できるモード。獲得したコマの点数がそのままスコアになります。
                             </p>
 
-                            <div className="bg-gradient-to-r from-yellow-500/20 to-transparent p-4 rounded-xl border border-yellow-400/30 flex flex-col items-center text-center relative overflow-hidden">
+                            <div className="bg-gradient-to-r from-yellow-500/20 to-transparent p-3 rounded-xl border border-yellow-400/30 flex flex-col items-center text-center relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-400/20 blur-xl rounded-full"></div>
 
                                 <div className="text-xs font-bold text-yellow-300 mb-1 uppercase tracking-wider">High Score Goal</div>
                                 <div className="text-4xl font-black text-white mb-2 tabular-nums tracking-tighter text-shadow-yellow">
                                     440<span className="text-sm font-bold text-yellow-500/80 ml-1">pts</span>
                                 </div>
-                                <div className="bg-slate-900/60 px-3 py-1.5 rounded-full text-[10px] text-slate-300 border border-yellow-500/20 shadow-sm">
+                                <div className="bg-slate-900/60 px-3 py-1 text-[10px] text-slate-300 border border-yellow-500/20 shadow-sm rounded-full">
                                     <span className="text-yellow-400 font-bold mr-1">MISSION:</span>
                                     赤コマ1個だけを残して終了
                                 </div>
