@@ -2,29 +2,25 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PIECE_COLORS } from '../constants/colors';
 
+// プレイヤーカードコンポーネント（固定サイズ）
 const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, borderClass, align = 'left', compact = false }) => {
     return (
-        <motion.div
-            animate={{
-                scale: isActive ? (compact ? 1.02 : 1.05) : 1,
-                opacity: isActive ? 1 : 0.7,
-                y: isActive ? -2 : 0
-            }}
+        <div
             className={`
                 relative flex flex-col ${align === 'right' ? 'items-end' : 'items-start'} 
-                ${compact ? 'p-2 min-w-[100px] max-w-[120px]' : 'p-4 w-full max-w-[160px]'}
+                ${compact ? 'p-2 w-[100px]' : 'p-4 w-[160px]'}
                 rounded-xl bg-gray-900/60 backdrop-blur-xl border 
-                transition-all duration-300 overflow-hidden shadow-lg
+                transition-colors duration-300 overflow-hidden shadow-lg
             `}
             style={{
                 borderColor: isActive ? borderClass : 'rgba(255,255,255,0.05)',
                 boxShadow: isActive
                     ? `0 0 15px ${borderClass}30, inset 0 0 5px ${borderClass}10`
                     : '0 2px 4px -1px rgba(0, 0, 0, 0.1)',
-                '--glow-color': borderClass
+                opacity: isActive ? 1 : 0.7
             }}
         >
-            {/* Active Glow Background */}
+            {/* アクティブ時の背景グロー */}
             {isActive && (
                 <>
                     <div
@@ -35,7 +31,7 @@ const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, b
                 </>
             )}
 
-            {/* Label */}
+            {/* ラベル */}
             <span
                 className={`font-bold tracking-[0.15em] uppercase mb-0.5 ${compact ? 'text-[8px]' : 'text-[10px]'} ${isActive ? 'text-white' : 'text-gray-500'}`}
                 style={{ textShadow: isActive ? `0 0 8px ${borderClass}` : 'none' }}
@@ -43,7 +39,7 @@ const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, b
                 {label}
             </span>
 
-            {/* Score - Compact Neon Effect */}
+            {/* スコア表示 */}
             <div className="flex items-baseline gap-1">
                 <span
                     className={`${compact ? 'text-2xl' : 'text-4xl'} font-black text-white leading-none`}
@@ -56,11 +52,9 @@ const PlayerCard = ({ label, score, isActive, isWinner, totalTime, colorClass, b
                 >
                     {score}
                 </span>
-                <span className={`${compact ? 'text-[8px]' : 'text-[10px]'} font-bold text-gray-500 tracking-wider transform translate-y-[-2px]`}>PTS</span>
+                <span className={`${compact ? 'text-[8px]' : 'text-[10px]'} font-bold text-gray-500 tracking-wider`}>PTS</span>
             </div>
-
-
-        </motion.div>
+        </div>
     );
 };
 
@@ -77,12 +71,6 @@ const ScoreBoard = ({
     const isCPUMode = gameMode?.startsWith('CPU_');
     const isSoloMode = gameMode === 'SOLO';
 
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    };
-
     const getStatusMessage = () => {
         if (phase === 'REMOVING') return 'セットアップ';
         if (isReplaying) return 'リプレイ';
@@ -97,8 +85,9 @@ const ScoreBoard = ({
     };
 
     return (
+        // 固定サイズのコンテナ（レイアウトシフト防止）
         <div className={`w-full ${compactMode ? '' : 'max-w-lg'} mx-auto mb-2 ${compactMode ? 'px-0' : 'px-2'}`}>
-            {/* Status Bar / Notification - Compact */}
+            {/* ステータスバー */}
             {!compactMode && (
                 <div className="flex justify-center mb-3">
                     <div className="relative group">
@@ -125,61 +114,69 @@ const ScoreBoard = ({
                 </div>
             )}
 
-            {/* Main Score Area - Compact Layout */}
-            <div className="flex justify-center items-stretch gap-3">
-                {/* Player 1 Card */}
-                <PlayerCard
-                    label="P1"
-                    score={scores.p1}
-                    isActive={turn === 1 || isSoloMode}
-                    colorClass="text-blue-400"
-                    borderClass="#60A5FA" // blue-400
-                    align="left"
-                    compact={compactMode}
-                />
-
-                {/* VS Badge (Center) - Hidden in Solo */}
-                {!isSoloMode && (
-                    <div className="flex flex-col justify-center items-center px-2">
-                        <div className="w-[1px] h-5 bg-white/60 mb-1"></div>
-                        <span className="text-xs font-black text-white italic">VS</span>
-                        <div className="w-[1px] h-5 bg-white/60 mt-1"></div>
-                    </div>
-                )}
-
-                {/* Player 2 / CPU Card - Hidden in Solo */}
-                {!isSoloMode && (
+            {/* スコアエリア（メッセージ用のパディングを確保） */}
+            <div className="relative pb-14">
+                {/* スコアカード行 */}
+                <div className="flex justify-center items-center gap-3">
+                    {/* プレイヤー1カード */}
                     <PlayerCard
-                        label={isCPUMode ? "CPU" : "P2"}
-                        score={scores.p2}
-                        isActive={turn === 2}
-                        colorClass="text-rose-400"
-                        borderClass="#FB7185" // rose-400
-                        align="right"
+                        label="P1"
+                        score={scores.p1}
+                        isActive={turn === 1 || isSoloMode}
+                        colorClass="text-blue-400"
+                        borderClass="#60A5FA"
+                        align="left"
                         compact={compactMode}
                     />
-                )}
-            </div>
 
-            {/* Last Action Message Toast - Compact */}
-            <div className="h-6 mt-2 flex justify-center pointer-events-none">
-                <AnimatePresence mode="wait">
-                    {!isSoloMode && !isReplaying && lastActionMessage && (
-                        <motion.div
-                            key={lastActionMessage}
-                            initial={{ opacity: 0, y: 5, scale: 0.9 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: -5, scale: 0.9 }}
-                            className="bg-gray-800/90 text-white px-3 py-1 rounded-md text-[10px] font-medium border border-gray-700 shadow-lg flex items-center gap-1.5"
-                        >
-                            <span className="text-yellow-400 text-xs">ℹ️</span>
-                            {lastActionMessage}
-                        </motion.div>
+                    {/* VS表示（ソロモード以外） */}
+                    {!isSoloMode && (
+                        <div className="flex flex-col justify-center items-center w-[40px]">
+                            <div className="w-[1px] h-4 bg-white/60"></div>
+                            <span className="text-xs font-black text-white italic my-1">VS</span>
+                            <div className="w-[1px] h-4 bg-white/60"></div>
+                        </div>
                     )}
-                </AnimatePresence>
+
+                    {/* プレイヤー2/CPUカード（ソロモード以外） */}
+                    {!isSoloMode && (
+                        <PlayerCard
+                            label={isCPUMode ? "CPU" : "P2"}
+                            score={scores.p2}
+                            isActive={turn === 2}
+                            colorClass="text-rose-400"
+                            borderClass="#FB7185"
+                            align="right"
+                            compact={compactMode}
+                        />
+                    )}
+                </div>
+
+                {/* メッセージエリア（絶対位置でレイアウトに影響しない） */}
+                <div className="absolute bottom-0 left-0 right-0 h-12 flex justify-center items-center">
+                    <AnimatePresence mode="wait">
+                        {lastActionMessage && (
+                            <motion.div
+                                key={lastActionMessage}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className={`text-white px-4 py-2 rounded-lg text-sm font-bold border-2 shadow-xl flex items-center gap-2 ${isReplaying
+                                    ? 'bg-cyan-900/95 border-cyan-400 shadow-cyan-500/30'
+                                    : 'bg-gray-800/95 border-gray-600'
+                                    }`}
+                            >
+                                <span className="text-base">{isReplaying ? '🏆' : 'ℹ️'}</span>
+                                {lastActionMessage}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
         </div>
     );
 };
 
 export default ScoreBoard;
+

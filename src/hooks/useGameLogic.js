@@ -35,6 +35,11 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
     // TRYPAS notification state
     const [showTrypas, setShowTrypas] = useState(false); // 赤コマを取った時の通知
 
+    // Game over delay and reason states
+    const [isGameOverPending, setIsGameOverPending] = useState(false); // 遅延表示中
+    const [gameOverReason, setGameOverReason] = useState(''); // 勝敗理由
+    const [lastMoveHighlight, setLastMoveHighlight] = useState(null); // 最後の手のハイライト
+
     const isCPUMode = gameMode.startsWith('CPU_');
     const isSoloMode = gameMode === 'SOLO';
 
@@ -76,6 +81,9 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
         setMoveHistory([]);
         setIsReplaying(false);
         setReplayStep(0);
+        setIsGameOverPending(false);
+        setGameOverReason('');
+        setLastMoveHighlight(null);
     }, []);
 
     useEffect(() => {
@@ -278,15 +286,16 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
         // 重要: ターン変更前に「最後の一手を打ったプレイヤー」を保存
         const playerWhoMadeLastMove = turn;
 
-        // Check Red Bonus (only show TRYPAS if game is NOT over and NOT solo mode)
+        // 赤コマボーナスの処理（ゲーム終了でなく、ソロモードでない場合のみTRYPAS通知を表示）
         if (hasRed) {
             if (!isGameOver && !isSoloMode) {
-                setLastActionMessage(`${isCPUMode && turn === 2 ? 'CPU' : `Player ${turn}`} gets EXTRA TURN! (Red Piece)`);
-                // Show TRYPAS notification only if game continues and not solo
+                const playerName = isCPUMode && turn === 2 ? 'CPU' : `プレイヤー${turn}`;
+                setLastActionMessage(`${playerName} - 追加ターン獲得！`);
+                // ゲーム継続中かつソロモードでない場合のみTRYPAS通知を表示
                 setShowTrypas(true);
                 setTimeout(() => setShowTrypas(false), 750);
             }
-            // Turn does not change, but reset turn timer
+            // ターンは変わらないが、ターンタイマーはリセット
             setTurnStartTime(Date.now());
             setTurnTime(0);
         } else {
@@ -300,22 +309,33 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
 
         // Handle Game Over
         if (isGameOver) {
-            setPhase('GAME_OVER');
+            // 最後の手をハイライト
+            setLastMoveHighlight(move.end);
+
+            // 遅延表示開始
+            setIsGameOverPending(true);
 
             // 現在の手番で得たスコアを含めた最終スコアを計算
             const finalP1 = currentPlayer === 'p1' ? scores.p1 + moveScore : scores.p1;
             const finalP2 = currentPlayer === 'p2' ? scores.p2 + moveScore : scores.p2;
 
+            // 勝敗判定と理由の設定（遅延なしで即座に計算）
+            let pendingWinner;
+            let pendingScores;
+            let reason;
+
             if (isSoloMode) {
                 // SOLO MODE RULE: Ending with red piece = 0 points
                 if (hasRed) {
-                    setScores({ p1: 0, p2: 0 });
-                    setLastActionMessage('最後に赤コマを取ったため、スコアは0点です');
+                    pendingScores = { p1: 0, p2: 0 };
+                    reason = '最後に赤コマを取ったため、スコアは0点です';
+                } else {
+                    pendingScores = { p1: finalP1, p2: finalP2 };
+                    reason = 'これ以上動かせるコマがありません';
                 }
-                setWinner('SOLO'); // Special case for solo mode
+                pendingWinner = 'SOLO';
             } else {
                 // VS MODE (CPU / 2PLAYERS) ルール
-                // ※引き分けはない - 必ず勝敗が決まる
                 let winnerPlayer;
                 let loserPlayer;
 
@@ -323,31 +343,40 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
                     // 最後に赤を取った場合は負け（自爆ルール）
                     winnerPlayer = playerWhoMadeLastMove === 1 ? 2 : 1;
                     loserPlayer = playerWhoMadeLastMove;
-                    setLastActionMessage('最後に赤コマを取ったため負けです');
+                    const loserName = loserPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                    const winnerName = winnerPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                    reason = `${loserName}が赤コマを取ったため、${winnerName}の勝ち！`;
                 } else {
-                    // 通常は最後に手を打った方（現在のプレイヤー）が勝ち
-                    // 相手は詰まりで負け
+                    // 通常は最後に手を打った方が勝ち
                     winnerPlayer = playerWhoMadeLastMove;
                     loserPlayer = playerWhoMadeLastMove === 1 ? 2 : 1;
+                    const loserName = loserPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                    const winnerName = winnerPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                    reason = `${loserName}が詰まり、${winnerName}の勝ち！`;
                 }
 
-                setWinner(winnerPlayer);
+                pendingWinner = winnerPlayer;
 
-                // デバッグログ
-                console.log('=== GAME OVER DEBUG ===');
-                console.log('playerWhoMadeLastMove:', playerWhoMadeLastMove);
-                console.log('hasRed:', hasRed);
-                console.log('winnerPlayer:', winnerPlayer);
-                console.log('loserPlayer:', loserPlayer);
-                console.log('finalP1:', finalP1, 'finalP2:', finalP2);
-
-                // 敗者のスコアを0点にする（勝者のスコアはそのまま保持）
+                // 敗者のスコアを0点にする
                 if (loserPlayer === 1) {
-                    setScores({ p1: 0, p2: finalP2 });
+                    pendingScores = { p1: 0, p2: finalP2 };
                 } else {
-                    setScores({ p1: finalP1, p2: 0 });
+                    pendingScores = { p1: finalP1, p2: 0 };
                 }
             }
+
+            // 勝敗理由を即座に表示
+            setGameOverReason(reason);
+            setLastActionMessage(reason);
+
+            // 1.5秒後に結果画面を表示
+            setTimeout(() => {
+                setScores(pendingScores);
+                setWinner(pendingWinner);
+                setPhase('GAME_OVER');
+                setIsGameOverPending(false);
+                setLastMoveHighlight(null);
+            }, 1500);
         }
     };
 
@@ -460,6 +489,41 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
         if (moveHistory[0]) {
             setBoard(moveHistory[0].boardBefore);
         }
+
+        // リプレイ開始時に勝敗理由を計算して表示
+        const lastMove = moveHistory[moveHistory.length - 1];
+        if (lastMove) {
+            const capturedColor = lastMove.capturedColor;
+            const hasRed = capturedColor === 'RED';
+            let reason;
+
+            if (isSoloMode) {
+                if (hasRed) {
+                    reason = '最後に赤コマを取ったため、スコアは0点です';
+                } else {
+                    reason = 'これ以上動かせるコマがありません';
+                }
+            } else {
+                let loserPlayer;
+                let winnerPlayer;
+                if (hasRed) {
+                    loserPlayer = lastMove.player;
+                    winnerPlayer = lastMove.player === 1 ? 2 : 1;
+                } else {
+                    winnerPlayer = lastMove.player;
+                    loserPlayer = lastMove.player === 1 ? 2 : 1;
+                }
+                const loserName = loserPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                const winnerName = winnerPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                if (hasRed) {
+                    reason = `${loserName}が赤コマを取ったため、${winnerName}の勝ち！`;
+                } else {
+                    reason = `${loserName}が詰まり、${winnerName}の勝ち！`;
+                }
+            }
+            setGameOverReason(reason);
+            setLastActionMessage(reason);
+        }
     };
 
     const stopReplay = () => {
@@ -502,25 +566,52 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
                     };
                 }
 
-                // 最後の手の場合、敗者のスコアを0にする（ゲーム結果と一致させる）
-                if (isLastMove && !isSoloMode) {
+                // 最後の手の場合、敗者のスコアを0にし、勝敗理由を表示する
+                if (isLastMove) {
                     const capturedColor = move.capturedColor;
                     const hasRed = capturedColor === 'RED';
 
-                    let loserPlayer;
-                    if (hasRed) {
-                        // 最後に赤を取ったプレイヤーが敗者
-                        loserPlayer = move.player;
+                    if (isSoloMode) {
+                        // ソロモードの勝敗理由
+                        if (hasRed) {
+                            newScores.p1 = 0;
+                            newScores.p2 = 0;
+                            setLastActionMessage('最後に赤コマを取ったため、スコアは0点です');
+                            setGameOverReason('最後に赤コマを取ったため、スコアは0点です');
+                        } else {
+                            setLastActionMessage('これ以上動かせるコマがありません');
+                            setGameOverReason('これ以上動かせるコマがありません');
+                        }
                     } else {
-                        // 最後に手を打ったプレイヤーが勝者、相手が敗者
-                        loserPlayer = move.player === 1 ? 2 : 1;
-                    }
+                        // VSモードの勝敗理由
+                        let loserPlayer;
+                        let winnerPlayer;
+                        if (hasRed) {
+                            loserPlayer = move.player;
+                            winnerPlayer = move.player === 1 ? 2 : 1;
+                        } else {
+                            winnerPlayer = move.player;
+                            loserPlayer = move.player === 1 ? 2 : 1;
+                        }
 
-                    // 敗者のスコアを0にする
-                    if (loserPlayer === 1) {
-                        newScores.p1 = 0;
-                    } else {
-                        newScores.p2 = 0;
+                        // 敗者のスコアを0にする
+                        if (loserPlayer === 1) {
+                            newScores.p1 = 0;
+                        } else {
+                            newScores.p2 = 0;
+                        }
+
+                        // 勝敗理由のメッセージを設定
+                        const loserName = loserPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                        const winnerName = winnerPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                        let reason;
+                        if (hasRed) {
+                            reason = `${loserName}が赤コマを取ったため、${winnerName}の勝ち！`;
+                        } else {
+                            reason = `${loserName}が詰まり、${winnerName}の勝ち！`;
+                        }
+                        setLastActionMessage(reason);
+                        setGameOverReason(reason);
                     }
                 }
 
@@ -628,6 +719,10 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
         jumpToReplayStep,
         // TRYPAS notification
         showTrypas,
+        // Game over delay and reason
+        isGameOverPending,
+        gameOverReason,
+        lastMoveHighlight,
         // Hint generation
         getGameHint
     };
