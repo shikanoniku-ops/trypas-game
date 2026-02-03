@@ -282,7 +282,6 @@ const RulesContentNew = () => {
                                     🏆 勝利条件
                                 </h4>
                                 <ul className="text-sm text-purple-100/90 space-y-0.5 pl-4">
-                                    <li>• 相手より後に最後の一手を打つ</li>
                                     <li>• 相手を「手詰まり」にさせる</li>
                                 </ul>
                             </div>
@@ -293,6 +292,7 @@ const RulesContentNew = () => {
                                 <ul className="text-sm text-pink-100/90 space-y-0.5 pl-4">
                                     <li>• 自分の番で動かせる場所がない</li>
                                     <li>• <span className="text-pink-300 font-bold">最後の一手</span>で赤コマを取る</li>
+                                    <li className="text-xs text-pink-300/80 mt-1">※負け＝０点となる</li>
                                 </ul>
                             </div>
                         </div>
