@@ -339,7 +339,8 @@ const RulesContentNew = () => {
 
                         <div className="space-y-3">
                             <p className="text-sm text-yellow-100/90 leading-relaxed bg-yellow-500/5 p-2.5 rounded-lg border border-yellow-500/10">
-                                ひとりでじっくり練習できるモード。獲得したコマの点数がそのままスコアになります。
+                                ひとりでじっくり練習できるモード。獲得したコマの点数がそのままスコアになります。<br />
+                                <span className="text-xs text-red-300 font-bold mt-1 block">※赤コマを最後に取った場合は0点になります</span>
                             </p>
 
                             <div className="bg-gradient-to-r from-yellow-500/20 to-transparent p-3 rounded-xl border border-yellow-400/30 flex flex-col items-center text-center relative overflow-hidden">
