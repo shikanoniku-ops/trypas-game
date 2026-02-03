@@ -127,6 +127,30 @@ const RulesContentNew = () => {
                             </div>
                         </div>
                     </div>
+
+                    {/* スコア表示ルール */}
+                    <div className="mt-2 bg-gradient-to-r from-blue-900/40 to-slate-900/40 p-4 rounded-xl border border-cyan-500/20 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+                        <h4 className="text-cyan-400 font-bold text-sm mb-3 flex items-center gap-2">
+                            <span>📊</span> スコア表示
+                        </h4>
+                        <div className="grid grid-cols-2 gap-3">
+                            {/* 勝者 */}
+                            <div className="bg-slate-800/50 p-3 rounded-lg border border-cyan-500/10 text-center relative group hover:border-cyan-500/30 transition-colors">
+                                <span className="block text-[10px] text-cyan-200/70 tracking-widest mb-1">WINNER</span>
+                                <div className="text-white font-bold text-sm">
+                                    獲得スコア<br /><span className="text-cyan-400 text-xs">そのまま表示</span>
+                                </div>
+                            </div>
+                            {/* 敗者 */}
+                            <div className="bg-slate-800/50 p-3 rounded-lg border border-pink-500/10 text-center relative group hover:border-pink-500/30 transition-colors">
+                                <span className="block text-[10px] text-pink-200/70 tracking-widest mb-1">LOSER</span>
+                                <div className="text-white font-bold text-sm">
+                                    スコア<br /><span className="text-pink-400 text-xs text-shadow-pink">0点になる</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
