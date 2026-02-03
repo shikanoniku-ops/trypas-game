@@ -245,14 +245,14 @@ function GameOverModal({
                 <span className={`font-bold ${winner === 1 ? 'text-cyan-400' : 'text-red-400'}`}
                   style={{ textShadow: winner === 1 ? '0 0 10px rgba(0,255,255,0.5)' : '0 0 10px rgba(255,100,100,0.5)' }}
                 >
-                  {winner === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2')}
+                  {winner === 1 ? (isCPUMode ? 'YOU' : 'P1') : (isCPUMode ? 'CPU' : 'P2')}
                 </span>
               </motion.div>
 
               {/* Score cards */}
               <div className="flex justify-center gap-4 mt-4">
                 <ScoreCard
-                  label="P1"
+                  label={isCPUMode ? "YOU" : "P1"}
                   value={scores.p1}
                   color="cyan"
                   isWinner={winner === 1}
