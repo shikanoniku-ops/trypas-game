@@ -7,7 +7,7 @@ import TitleScreen from './components/TitleScreen';
 import GameBoard from './components/GameBoard';
 import ScoreBoard from './components/ScoreBoard';
 import InitialAudioModal from './components/InitialAudioModal';
-import RulesContent from './components/RulesContent';
+import RulesContentNew from './components/RulesContentNew';
 import Legend from './components/Legend';
 import TutorialGuide from './components/TutorialGuide';
 import GameOverModal from './components/GameOverModal';
@@ -499,28 +499,15 @@ function App() {
                       animate={{ scale: 1, y: 0 }}
                       exit={{ scale: 0.9, y: 20 }}
                     >
-                      <div className="bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-700 max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
-                        <h2 className="text-2xl md:text-3xl font-black mb-6 text-white border-b border-gray-700 pb-4 flex items-center gap-3 flex-wrap">
-                          <div className="flex flex-col md:flex-row items-baseline gap-1 md:gap-3">
-                            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-black tracking-wider">
-                              TRYPAS SOLOPLAY
-                            </span>
-                            <span className="text-lg md:text-xl text-gray-300 font-bold">
-                              の遊び方
-                            </span>
-                          </div>
-                        </h2>
-
-                        {/* Unified Rules Content Component */}
-                        <RulesContent />
+                      <div className="bg-gray-950 p-6 sm:p-8 rounded-2xl border border-cyan-400/25 max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-[0_0_50px_rgba(0,255,255,0.1)] scrollable-content text-left" onClick={e => e.stopPropagation()}>
+                        <RulesContentNew />
+                        <button
+                          onClick={() => setShowRulesInGame(false)}
+                          className="mt-6 w-full py-3.5 bg-cyan-500/10 text-cyan-400 font-bold rounded-xl border border-cyan-400/35 hover:bg-cyan-500/20 hover:border-cyan-400/50 transition-all"
+                        >
+                          CLOSE
+                        </button>
                       </div>
-
-                      <button
-                        onClick={() => setShowRulesInGame(false)}
-                        className="mt-8 w-full py-3 bg-gray-700 text-white font-bold rounded-xl hover:bg-gray-600 transition-colors"
-                      >
-                        閉じる
-                      </button>
 
                     </motion.div>
                   </motion.div>

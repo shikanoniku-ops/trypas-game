@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PIECE_SCORES } from '../constants/colors';
-import RulesContent from './RulesContent';
+import RulesContentNew from './RulesContentNew';
 import FeedbackModal from './FeedbackModal';
 import packageJson from '../../package.json';
 
@@ -303,6 +303,10 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                         SOLO PLAY
                                     </NeonButton>
 
+                                    <NeonButton onClick={() => setShowRules(true)} variant="secondary" delay={0.3}>
+                                        HOW TO PLAY
+                                    </NeonButton>
+
                                     {/* Audio Button */}
                                     <motion.div
                                         initial={{ opacity: 0 }}
@@ -461,7 +465,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                 <h2 className="text-2xl sm:text-3xl font-black mb-5 text-cyan-400 border-b border-cyan-400/20 pb-4 tracking-wider">
                                     RULES
                                 </h2>
-                                <RulesContent pieceScores={PIECE_SCORES} />
+                                <RulesContentNew />
                                 <button
                                     onClick={() => setShowRules(false)}
                                     className="mt-6 w-full py-3.5 bg-cyan-500/10 text-cyan-400 font-bold rounded-xl border border-cyan-400/35 hover:bg-cyan-500/20 hover:border-cyan-400/50 transition-all"
