@@ -282,9 +282,9 @@ function App() {
                         style={{ boxShadow: `0 0 8px ${phase === 'REMOVING' ? 'rgba(250, 204, 21, 0.8)' : (turn === 1 ? 'rgba(0, 220, 255, 0.8)' : 'rgba(255, 100, 100, 0.8)')}` }}
                       />
                       <span
-                        className={`text-xs font-bold tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-cyan-400' : 'text-red-400')}`}
+                        className={`text-xs font-bold font-mono tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-cyan-400' : 'text-red-400')}`}
                       >
-                        {phase === 'REMOVING' ? 'セットアップ' : (isReplaying ? 'リプレイ' : (isSoloMode ? 'SOLO PLAY' : (turn === 1 ? 'P1 ターン' : (isCPUMode ? 'CPU ターン' : 'P2 ターン'))))}
+                        {phase === 'REMOVING' ? 'SETUP' : (isReplaying ? 'REPLAY' : (isSoloMode ? 'SOLO PLAY' : (turn === 1 ? (isCPUMode ? 'YOU' : 'PLAYER 1') : (isCPUMode ? 'CPU' : 'PLAYER 2'))))}
                       </span>
                     </div>
                   </div>
