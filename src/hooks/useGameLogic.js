@@ -43,6 +43,13 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
     const isCPUMode = gameMode.startsWith('CPU_');
     const isSoloMode = gameMode === 'SOLO';
 
+    const getPlayerLabel = useCallback((playerNum) => {
+        if (isCPUMode) {
+            return playerNum === 1 ? 'YOU' : 'CPU';
+        }
+        return playerNum === 1 ? 'P1' : 'P2';
+    }, [isCPUMode]);
+
     // Initialize board
     const initializeBoard = useCallback((preservedBoard = null) => {
         let pieces;
@@ -289,7 +296,7 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
         // 赤コマボーナスの処理（ゲーム終了でなく、ソロモードでない場合のみTRYPAS通知を表示）
         if (hasRed) {
             if (!isGameOver && !isSoloMode) {
-                const playerName = isCPUMode && turn === 2 ? 'CPU' : `プレイヤー${turn}`;
+                const playerName = getPlayerLabel(turn);
                 setLastActionMessage(`${playerName} - 追加ターン獲得！`);
                 // ゲーム継続中かつソロモードでない場合のみTRYPAS通知を表示
                 setShowTrypas(true);
@@ -343,15 +350,15 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
                     // 最後に赤を取った場合は負け（自爆ルール）
                     winnerPlayer = playerWhoMadeLastMove === 1 ? 2 : 1;
                     loserPlayer = playerWhoMadeLastMove;
-                    const loserName = loserPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
-                    const winnerName = winnerPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                    const loserName = getPlayerLabel(loserPlayer);
+                    const winnerName = getPlayerLabel(winnerPlayer);
                     reason = `${loserName}が赤コマを取ったため、${winnerName}の勝ち！`;
                 } else {
                     // 通常は最後に手を打った方が勝ち
                     winnerPlayer = playerWhoMadeLastMove;
                     loserPlayer = playerWhoMadeLastMove === 1 ? 2 : 1;
-                    const loserName = loserPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
-                    const winnerName = winnerPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                    const loserName = getPlayerLabel(loserPlayer);
+                    const winnerName = getPlayerLabel(winnerPlayer);
                     reason = `${loserName}が詰まり、${winnerName}の勝ち！`;
                 }
 
@@ -513,8 +520,8 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
                     winnerPlayer = lastMove.player;
                     loserPlayer = lastMove.player === 1 ? 2 : 1;
                 }
-                const loserName = loserPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
-                const winnerName = winnerPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                const loserName = getPlayerLabel(loserPlayer);
+                const winnerName = getPlayerLabel(winnerPlayer);
                 if (hasRed) {
                     reason = `${loserName}が赤コマを取ったため、${winnerName}の勝ち！`;
                 } else {
@@ -602,8 +609,8 @@ export const useGameLogic = (gameMode = 'LOCAL') => {
                         }
 
                         // 勝敗理由のメッセージを設定
-                        const loserName = loserPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
-                        const winnerName = winnerPlayer === 1 ? 'プレイヤー1' : (isCPUMode ? 'CPU' : 'プレイヤー2');
+                        const loserName = getPlayerLabel(loserPlayer);
+                        const winnerName = getPlayerLabel(winnerPlayer);
                         let reason;
                         if (hasRed) {
                             reason = `${loserName}が赤コマを取ったため、${winnerName}の勝ち！`;
