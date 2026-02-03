@@ -129,25 +129,20 @@ const RulesContentNew = () => {
                     </div>
 
                     {/* スコア表示ルール */}
-                    <div className="mt-2 bg-gradient-to-r from-blue-900/40 to-slate-900/40 p-4 rounded-xl border border-cyan-500/20 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
-                        <h4 className="text-cyan-400 font-bold text-sm mb-3 flex items-center gap-2">
-                            <span>📊</span> スコア表示
+                    <div className="mt-3 bg-slate-800/60 p-4 rounded-xl border border-slate-700/50 hover:border-cyan-500/30 transition-all">
+                        <h4 className="flex items-center gap-2 text-sm font-bold text-slate-300 mb-3">
+                            <span className="text-cyan-400 text-lg">📊</span> スコア表示
                         </h4>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
                             {/* 勝者 */}
-                            <div className="bg-slate-800/50 p-3 rounded-lg border border-cyan-500/10 text-center relative group hover:border-cyan-500/30 transition-colors">
-                                <span className="block text-[10px] text-cyan-200/70 tracking-widest mb-1">WINNER</span>
-                                <div className="text-white font-bold text-sm">
-                                    獲得スコア<br /><span className="text-cyan-400 text-xs">そのまま表示</span>
-                                </div>
+                            <div className="flex items-center gap-3 bg-cyan-900/10 p-2.5 rounded-lg border border-cyan-500/10">
+                                <span className="flex-shrink-0 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded tracking-wider border border-cyan-500/20">WINNER</span>
+                                <span className="text-sm text-white font-bold">獲得スコアを<span className="text-cyan-400 mx-1">そのまま</span>獲得</span>
                             </div>
                             {/* 敗者 */}
-                            <div className="bg-slate-800/50 p-3 rounded-lg border border-pink-500/10 text-center relative group hover:border-pink-500/30 transition-colors">
-                                <span className="block text-[10px] text-pink-200/70 tracking-widest mb-1">LOSER</span>
-                                <div className="text-white font-bold text-sm">
-                                    スコア<br /><span className="text-pink-400 text-xs text-shadow-pink">0点になる</span>
-                                </div>
+                            <div className="flex items-center gap-3 bg-pink-900/10 p-2.5 rounded-lg border border-pink-500/10">
+                                <span className="flex-shrink-0 text-[10px] font-bold bg-pink-500/20 text-pink-300 px-2 py-1 rounded tracking-wider border border-pink-500/20">LOSER</span>
+                                <span className="text-sm text-white font-bold">スコアは <strong className="text-pink-400 text-shadow-pink mx-1">0点</strong> になる</span>
                             </div>
                         </div>
                     </div>
