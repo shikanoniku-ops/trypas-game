@@ -181,7 +181,7 @@ const PageTransition = ({ children }) => (
         animate={{ opacity: 1, x: 0, scale: 1 }}
         exit={{ opacity: 0, x: -80, scale: 0.97 }}
         transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-        className="w-full flex flex-col items-center"
+        className="w-full flex flex-col items-center justify-center text-center"
     >
         {children}
     </motion.div>
@@ -294,7 +294,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                 </motion.div>
 
                                 {/* Menu Buttons */}
-                                <div className="w-full max-w-[320px] sm:max-w-[360px] flex flex-col gap-3 sm:gap-4 mx-auto">
+                                <div className="w-[90%] max-w-[360px] flex flex-col gap-3 sm:gap-4 mx-auto">
                                     <NeonButton onClick={() => setMenuState('vs')} variant="danger" delay={0.1}>
                                         VS MODE
                                     </NeonButton>
@@ -339,7 +339,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     {/* ===== VS MODE SCREEN ===== */}
                     {menuState === 'vs' && (
                         <PageTransition key="vs">
-                            <div className="flex flex-col items-center gap-5 w-full max-w-[340px] mx-auto">
+                            <div className="flex flex-col items-center gap-5 w-[90%] max-w-[340px] mx-auto">
                                 <SectionHeader
                                     icon=""
                                     title="VS MODE"
@@ -404,7 +404,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     {/* ===== SOLO PLAY SCREEN ===== */}
                     {menuState === 'solo' && (
                         <PageTransition key="solo">
-                            <div className="flex flex-col items-center gap-5 w-full max-w-[340px] mx-auto">
+                            <div className="flex flex-col items-center gap-5 w-[90%] max-w-[340px] mx-auto">
                                 <SectionHeader
                                     icon=""
                                     title="SOLO PLAY"
