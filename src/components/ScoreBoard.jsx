@@ -75,7 +75,11 @@ const ScoreBoard = ({
         if (phase === 'REMOVING') return 'セットアップ';
         if (isReplaying) return 'リプレイ';
         if (isSoloMode) return 'SOLO PLAY';
-        return turn === 1 ? 'P1 ターン' : (isCPUMode ? 'CPU ターン' : 'P2 ターン');
+
+        if (isCPUMode) {
+            return turn === 1 ? 'YOU' : 'CPU';
+        }
+        return turn === 1 ? 'P1' : 'P2';
     };
 
     const getStatusColor = () => {

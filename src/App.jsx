@@ -284,7 +284,7 @@ function App() {
                       <span
                         className={`text-xs font-bold font-mono tracking-widest uppercase ${phase === 'REMOVING' ? 'text-yellow-400' : (isSoloMode || turn === 1 ? 'text-cyan-400' : 'text-red-400')}`}
                       >
-                        {phase === 'REMOVING' ? 'SETUP' : (isReplaying ? 'REPLAY' : (isSoloMode ? 'SOLO PLAY' : (turn === 1 ? (isCPUMode ? 'YOU' : 'PLAYER 1') : (isCPUMode ? 'CPU' : 'PLAYER 2'))))}
+                        {phase === 'REMOVING' ? 'SETUP' : (isReplaying ? 'REPLAY' : (isSoloMode ? 'SOLO PLAY' : (turn === 1 ? (isCPUMode ? 'YOU' : 'P1') : (isCPUMode ? 'CPU' : 'P2'))))}
                       </span>
                     </div>
                   </div>
