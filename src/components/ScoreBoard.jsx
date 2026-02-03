@@ -124,7 +124,7 @@ const ScoreBoard = ({
                 <div className="flex justify-center items-center gap-3">
                     {/* プレイヤー1カード */}
                     <PlayerCard
-                        label="P1"
+                        label={isCPUMode ? "YOU" : "P1"}
                         score={scores.p1}
                         isActive={turn === 1 || isSoloMode}
                         colorClass="text-blue-400"
