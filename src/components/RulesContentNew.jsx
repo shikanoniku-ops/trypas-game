@@ -95,15 +95,15 @@ const RulesContentNew = () => {
                                     </li>
                                     <li className="flex items-center gap-2">
                                         <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
-                                        <span>間のコマを <strong className="text-white">1〜3個</strong> 飛び越える</span>
+                                        <span>間のコマを <strong className="text-white">1～3個</strong> 飛び越える</span>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full"></span>
-                                        <span>必ず <strong className="text-yellow-300">空いている穴</strong> に着地する</span>
+                                        <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
+                                        <span>必ず <strong className="text-white">空いている穴</strong> に着地する</span>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 bg-pink-400 rounded-full"></span>
-                                        <span><strong className="text-pink-300">着地した手前</strong>のコマが得点になる</span>
+                                        <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
+                                        <span><strong className="text-white">着地した手前</strong>のコマが得点になる</span>
                                     </li>
                                 </ul>
                             </div>
