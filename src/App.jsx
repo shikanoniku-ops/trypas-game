@@ -471,10 +471,9 @@ function App() {
                       <div className="absolute right-1 h-3/5 w-[2px] bg-cyan-500/50 rounded-full" />
 
                       <span className="font-mono font-black tracking-[0.2em] text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]" style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)' }}>
-                        {phase === 'REMOVING' ? '00:00' : (isSoloMode ?
-                          `${Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:${(elapsedTime % 60).toString().padStart(2, '0')}` :
-                          `${Math.floor(turnTime / 60).toString().padStart(2, '0')}:${(turnTime % 60).toString().padStart(2, '0')}`
-                        )}
+                        {phase === 'REMOVING' ? '00:00' :
+                          `${Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:${(elapsedTime % 60).toString().padStart(2, '0')}`
+                        }
                       </span>
                     </div>
                   </div>
