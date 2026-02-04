@@ -18,6 +18,7 @@ import { PIECE_SCORES, PIECE_COLORS } from './constants/colors';
 import tryPasTheme from './assets/sounds/TRYPAS_Theme.mp3';
 
 function App() {
+  console.log('VERSION 0.3.5 LOADED');
   const [gameStarted, setGameStarted] = useState(false);
   const [gameMode, setGameMode] = useState('LOCAL');
   const [showRulesInGame, setShowRulesInGame] = useState(false);
