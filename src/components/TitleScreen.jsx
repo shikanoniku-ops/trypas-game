@@ -167,6 +167,10 @@ const SectionHeader = ({ icon, title, subtitle, color = "cyan" }) => {
                     {title}
                 </h2>
             </div>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-900/30 border border-cyan-500/30 backdrop-blur-sm">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span className="text-xs font-mono text-cyan-400 tracking-wider">PROTOTYPE | v0.3.4</span>
+            </div>
             <p className="text-gray-500 text-xs font-mono tracking-[0.2em] uppercase mt-1">
                 {subtitle}
             </p>
