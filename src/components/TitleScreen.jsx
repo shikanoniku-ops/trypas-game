@@ -339,7 +339,7 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                     {/* ===== VS MODE SCREEN ===== */}
                     {menuState === 'vs' && (
                         <PageTransition key="vs">
-                            <div className="flex flex-col items-center gap-5 w-[90%] max-w-[340px] mx-auto">
+                            <div className="flex flex-col items-center gap-6 w-[90%] max-w-[420px] mx-auto">
                                 <SectionHeader
                                     icon=""
                                     title="VS MODE"
@@ -347,44 +347,96 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                     color="orange"
                                 />
 
-                                <div className="w-full flex flex-col gap-4">
-                                    {/* VS CPU */}
-                                    <div className="space-y-3">
-                                        <p className="text-xs text-gray-500 font-mono tracking-wider px-1 flex items-center gap-2">
-                                            VS CPU
-                                        </p>
-                                        <div className="grid grid-cols-3 gap-2">
+                                <div className="w-full flex flex-col gap-6">
+                                    {/* VS CPU Section */}
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-3 px-2">
+                                            <div className="h-2 w-2 bg-cyan-400 rotate-45 shadow-[0_0_10px_rgba(0,255,255,0.8)]" />
+                                            <p className="text-lg sm:text-xl text-cyan-300 font-bold font-mono tracking-widest drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">
+                                                VS CPU
+                                            </p>
+                                            <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/50 to-transparent" />
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                             {[
-                                                { level: 'EASY', border: 'border-green-400/60', bg: 'bg-green-500/10', text: 'text-green-400', shadow: 'shadow-[0_0_15px_rgba(34,197,94,0.2)]', hoverShadow: 'hover:shadow-[0_0_25px_rgba(34,197,94,0.4)]', mode: 'CPU_EASY' },
-                                                { level: 'NORMAL', border: 'border-yellow-400/60', bg: 'bg-yellow-500/10', text: 'text-yellow-400', shadow: 'shadow-[0_0_15px_rgba(234,179,8,0.2)]', hoverShadow: 'hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]', mode: 'CPU_NORMAL' },
-                                                { level: 'HARD', border: 'border-red-400/60', bg: 'bg-red-500/10', text: 'text-red-400', shadow: 'shadow-[0_0_15px_rgba(239,68,68,0.2)]', hoverShadow: 'hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]', mode: 'CPU_HARD' }
+                                                {
+                                                    level: 'EASY',
+                                                    sub: 'Beginner',
+                                                    border: 'border-green-400/60',
+                                                    bg: 'bg-gradient-to-br from-green-500/10 via-green-500/5 to-green-900/20',
+                                                    text: 'text-green-400',
+                                                    shadow: 'shadow-[0_0_15px_rgba(34,197,94,0.15)]',
+                                                    hoverShadow: 'hover:shadow-[0_0_30px_rgba(34,197,94,0.3)]',
+                                                    mode: 'CPU_EASY',
+                                                    accent: 'from-green-400 to-emerald-400'
+                                                },
+                                                {
+                                                    level: 'NORMAL',
+                                                    sub: 'Standard',
+                                                    border: 'border-yellow-400/60',
+                                                    bg: 'bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-yellow-900/20',
+                                                    text: 'text-yellow-400',
+                                                    shadow: 'shadow-[0_0_15px_rgba(234,179,8,0.15)]',
+                                                    hoverShadow: 'hover:shadow-[0_0_30px_rgba(234,179,8,0.3)]',
+                                                    mode: 'CPU_NORMAL',
+                                                    accent: 'from-yellow-400 to-amber-400'
+                                                },
+                                                {
+                                                    level: 'HARD',
+                                                    sub: 'Expert',
+                                                    border: 'border-red-400/60',
+                                                    bg: 'bg-gradient-to-br from-red-500/10 via-red-500/5 to-red-900/20',
+                                                    text: 'text-red-400',
+                                                    shadow: 'shadow-[0_0_15px_rgba(239,68,68,0.15)]',
+                                                    hoverShadow: 'hover:shadow-[0_0_30px_rgba(239,68,68,0.3)]',
+                                                    mode: 'CPU_HARD',
+                                                    accent: 'from-red-400 to-rose-400'
+                                                }
                                             ].map((item, i) => (
                                                 <motion.button
                                                     key={item.level}
-                                                    initial={{ opacity: 0, y: 20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: 0.1 + i * 0.08 }}
-                                                    whileHover={{ scale: 1.05, y: -3 }}
+                                                    initial={{ opacity: 0, scale: 0.9 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    transition={{ delay: 0.1 + i * 0.1 }}
+                                                    whileHover={{ scale: 1.05, y: -4 }}
                                                     whileTap={{ scale: 0.95 }}
                                                     onClick={() => onStart(item.mode)}
-                                                    className={`relative ${item.bg} ${item.text} font-bold text-xs sm:text-sm py-3.5 sm:py-4 rounded-lg border ${item.border} ${item.shadow} ${item.hoverShadow} backdrop-blur-sm transition-all duration-100 overflow-hidden`}
+                                                    className={`
+                                                        relative group h-20 sm:h-auto sm:aspect-square flex flex-col items-center justify-center gap-1
+                                                        ${item.bg} ${item.border} border rounded-xl 
+                                                        ${item.shadow} ${item.hoverShadow} 
+                                                        backdrop-blur-md transition-all duration-200
+                                                    `}
                                                 >
+                                                    {/* Internal Glow Effect */}
+                                                    <div className={`absolute inset-0 bg-gradient-radial ${item.accent} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+
+                                                    {/* Scanline Effect */}
+                                                    <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(transparent_50%,rgba(0,0,0,1)_50%)] bg-[length:100%_4px] pointer-events-none" />
+
                                                     {/* Tech corners */}
-                                                    <div className={`absolute top-0 left-0 w-2 h-2 border-t border-l ${item.border}`} />
-                                                    <div className={`absolute top-0 right-0 w-2 h-2 border-t border-r ${item.border}`} />
-                                                    <div className={`absolute bottom-0 left-0 w-2 h-2 border-b border-l ${item.border}`} />
-                                                    <div className={`absolute bottom-0 right-0 w-2 h-2 border-b border-r ${item.border}`} />
-                                                    {item.level}
+                                                    <div className={`absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 ${item.border}`} />
+                                                    <div className={`absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 ${item.border}`} />
+                                                    <div className={`absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 ${item.border}`} />
+                                                    <div className={`absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 ${item.border}`} />
+
+                                                    <span className={`text-lg sm:text-xl font-black tracking-wider ${item.text} drop-shadow-md`}>
+                                                        {item.level}
+                                                    </span>
+                                                    <span className={`text-[10px] sm:text-xs font-mono opacity-70 ${item.text} tracking-widest uppercase`}>
+                                                        {item.sub}
+                                                    </span>
                                                 </motion.button>
                                             ))}
                                         </div>
                                     </div>
 
                                     {/* Divider */}
-                                    <div className="flex items-center gap-3 py-1">
-                                        <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gray-700/50" />
-                                        <span className="text-gray-600 text-[10px] font-mono tracking-widest">OR</span>
-                                        <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gray-700/50" />
+                                    <div className="flex items-center gap-4 py-2 opacity-60">
+                                        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent" />
+                                        <span className="text-gray-500 text-xs font-mono tracking-[0.3em]">VS</span>
+                                        <div className="flex-1 h-px bg-gradient-to-l from-transparent via-gray-500 to-transparent" />
                                     </div>
 
                                     {/* 2 Players */}

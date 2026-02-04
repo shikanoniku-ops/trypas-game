@@ -225,13 +225,16 @@ function GameOverModal({
           ) : (
             <div className="space-y-4">
               {/* Time display */}
+              {/* Time display */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center mb-2"
+                className="flex items-baseline justify-center gap-3 mb-4"
               >
-                <span className="text-gray-500 text-xs mr-2 uppercase tracking-widest font-mono">TOTAL TIME</span>
-                <span className="font-mono font-bold text-cyan-400">{formatTime(elapsedTime)}</span>
+                <span className="text-gray-500 text-sm font-mono tracking-widest">TOTAL TIME</span>
+                <span className="text-4xl font-black font-mono text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]">
+                  {formatTime(elapsedTime)}
+                </span>
               </motion.div>
 
               {/* Winner announcement */}

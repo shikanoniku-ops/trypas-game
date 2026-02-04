@@ -11,6 +11,8 @@ import RulesContentNew from './components/RulesContentNew';
 import Legend from './components/Legend';
 import TutorialGuide from './components/TutorialGuide';
 import GameOverModal from './components/GameOverModal';
+import FeedbackModal from './components/FeedbackModal'; // Import Feedback Modal
+import ControlNeonButton from './components/ControlNeonButton';
 import CyberpunkBackground from './components/CyberpunkBackground';
 import { PIECE_SCORES, PIECE_COLORS } from './constants/colors';
 import tryPasTheme from './assets/sounds/TRYPAS_Theme.mp3';
@@ -76,7 +78,8 @@ function App() {
     prevReplayStep,
     jumpToReplayStep,
     showTrypas,
-    getGameHint
+    getGameHint,
+    gameOverReason
   } = useGameLogic(gameMode);
 
   // Tutorial Mode
@@ -257,7 +260,7 @@ function App() {
               <div className="w-full flex-shrink-0 flex flex-row items-start justify-between px-2" style={{ marginBottom: 'clamp(0.25rem, 1vh, 1rem)' }}>
 
                 {/* Left: Logo & Status Pill */}
-                <div className="flex flex-col items-start gap-3">
+                <div className="flex flex-col items-start gap-3 mt-3">
                   <img
                     src={`${import.meta.env.BASE_URL}trypas-logo-new.png`}
                     alt="TRYPAS"
@@ -296,13 +299,30 @@ function App() {
                     scores={isReplaying ? replayScores : scores}
                     turn={isReplaying ? replayTurn : turn}
                     phase={phase}
-                    lastActionMessage={lastActionMessage}
+                    lastActionMessage={phase === 'GAME_OVER' ? '' : lastActionMessage}
                     gameMode={gameMode}
                     totalThinkingTime={totalThinkingTime}
                     capturedPieces={capturedPieces}
                     isReplaying={isReplaying}
                     compactMode={true}
                   />
+
+                  {/* Game Result Banner */}
+                  {(phase === 'GAME_OVER' || (isReplaying && gameOverReason)) && gameOverReason && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-4 relative group"
+                    >
+                      <div className="absolute inset-0 bg-cyan-500/20 blur-md rounded-lg"></div>
+                      <div className="relative bg-slate-900/90 border border-cyan-400 text-white px-4 py-3 rounded-xl shadow-lg flex items-center justify-center gap-3">
+                        <span className="text-2xl filter drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">🏆</span>
+                        <span className="font-bold text-sm sm:text-base tracking-wider text-center" style={{ textShadow: "0 0 10px rgba(6,182,212,0.5)" }}>
+                          {gameOverReason}
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               </div>
 
@@ -439,11 +459,23 @@ function App() {
                   </div>
                 ) : phase !== 'GAME_OVER' && !isReplaying && (
                   <div className="text-center">
-                    <div className="font-black font-mono tracking-widest text-blue-300 drop-shadow-[0_0_10px_rgba(96,165,250,0.6)] bg-gray-900/50 px-6 py-1 rounded-full border border-gray-700/50" style={{ fontSize: 'clamp(1.125rem, 4vw, 1.75rem)' }}>
-                      {phase === 'REMOVING' ? '00:00' : (isSoloMode ?
-                        `${Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:${(elapsedTime % 60).toString().padStart(2, '0')}` :
-                        `${Math.floor(turnTime / 60).toString().padStart(2, '0')}:${(turnTime % 60).toString().padStart(2, '0')}`
-                      )}
+                    <div className="
+                        relative inline-flex items-center justify-center
+                        bg-gray-950/80 backdrop-blur-xl
+                        border border-cyan-500/30
+                        px-8 py-1 rounded-lg
+                        shadow-[0_0_15px_rgba(0,255,255,0.1)]
+                    ">
+                      {/* Decorative side bars */}
+                      <div className="absolute left-1 h-3/5 w-[2px] bg-cyan-500/50 rounded-full" />
+                      <div className="absolute right-1 h-3/5 w-[2px] bg-cyan-500/50 rounded-full" />
+
+                      <span className="font-mono font-black tracking-[0.2em] text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]" style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)' }}>
+                        {phase === 'REMOVING' ? '00:00' : (isSoloMode ?
+                          `${Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:${(elapsedTime % 60).toString().padStart(2, '0')}` :
+                          `${Math.floor(turnTime / 60).toString().padStart(2, '0')}:${(turnTime % 60).toString().padStart(2, '0')}`
+                        )}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -452,13 +484,19 @@ function App() {
                 <Legend />
 
                 {/* Controls Buttons */}
-                <div className="w-full flex mt-1" style={{ gap: 'clamp(0.375rem, 1vw, 0.75rem)' }}>
-                  <button onClick={handleBackToTitle} className="flex-1 bg-gray-800 text-white font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all" style={{ padding: 'clamp(0.5rem, 1.5vh, 0.75rem) 0.5rem', fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)' }}>TITLE</button>
-                  <button onClick={resetGame} className="flex-1 bg-gray-800 text-white font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all" style={{ padding: 'clamp(0.5rem, 1.5vh, 0.75rem) 0.5rem', fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)' }}>RESET</button>
-                  <button onClick={() => setShowRulesInGame(true)} className="flex-1 bg-gray-800 text-white font-bold rounded-full border border-gray-600 hover:bg-gray-700 transition-all" style={{ padding: 'clamp(0.5rem, 1.5vh, 0.75rem) 0.5rem', fontSize: 'clamp(0.7rem, 2.5vw, 0.875rem)' }}>ルール</button>
-                  <button onClick={toggleAudio} className="flex-shrink-0 flex items-center justify-center bg-gray-800 text-white rounded-full border border-gray-600 hover:bg-gray-700 transition-all" style={{ width: 'clamp(40px, 10vw, 50px)', height: 'clamp(40px, 10vw, 50px)' }}>
-                    <span className="text-xl">{isMuted ? '🔇' : '🔊'}</span>
-                  </button>
+                <div className="w-full grid grid-cols-4 gap-2 sm:gap-3 mt-1 px-1">
+                  <ControlNeonButton onClick={handleBackToTitle} variant="secondary">
+                    TITLE
+                  </ControlNeonButton>
+                  <ControlNeonButton onClick={() => resetGame()} variant="danger">
+                    RESET
+                  </ControlNeonButton>
+                  <ControlNeonButton onClick={() => setShowRulesInGame(true)} variant="primary">
+                    RULES
+                  </ControlNeonButton>
+                  <ControlNeonButton onClick={toggleAudio} variant="secondary" isIcon={true}>
+                    {isMuted ? '🔇' : '🔊'}
+                  </ControlNeonButton>
                 </div>
 
                 {/* Replay Controls (Conditional) */}

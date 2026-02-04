@@ -15,18 +15,18 @@ const RulesContentNew = () => {
     return (
         <div className="space-y-8 text-blue-100/90 leading-relaxed text-sm font-sans">
             {/* ヘッダーセクション */}
-            <div className="text-center space-y-3 mb-8">
+            <div className="text-center space-y-4 mb-10 mt-2">
                 <div className="relative inline-block group">
                     <img
                         src={`${import.meta.env.BASE_URL}trypas-logo-new.png`}
                         alt="TRYPAS"
                         className="mx-auto transform transition-transform group-hover:scale-105 duration-500"
                         style={{
-                            width: 'clamp(140px, 40vw, 180px)',
-                            filter: 'drop-shadow(0 0 15px rgba(34,211,238,0.4))'
+                            width: 'clamp(220px, 60vw, 340px)',
+                            filter: 'drop-shadow(0 0 20px rgba(34,211,238,0.5))'
                         }}
                     />
-                    <div className="absolute inset-0 bg-cyan-400/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+                    <div className="absolute inset-0 bg-cyan-400/20 blur-3xl rounded-full opacity-30 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
                 </div>
             </div>
 
@@ -34,7 +34,7 @@ const RulesContentNew = () => {
             <section className="bg-gradient-to-br from-slate-900/80 to-blue-900/40 p-6 rounded-2xl border border-blue-500/20 shadow-lg relative overflow-hidden backdrop-blur-md">
                 <div className="relative z-10">
                     <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2">
-                        <span className="text-xl">🌍</span> 世界初の盤上ゲーム
+                        <span className="text-xl">🌍</span> ドクターQが発明した世界初の盤上ゲーム
                     </h3>
                     <p className="text-sm leading-7 mb-4">
                         <strong className="text-cyan-300 font-bold">TRYPAS</strong>（トライパス）は、年齢や経験を問わず、誰もが対等に楽しめる戦略ボードゲームです。
@@ -237,8 +237,21 @@ const RulesContentNew = () => {
 
                         <div className="py-2 sm:py-4 relative">
                             {/* モバイル調整: テキストサイズを画面幅に合わせて調整 */}
-                            <div className="text-3xl sm:text-4xl font-black text-white tracking-[0.1em] transform rotate-[-2deg] drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">
-                                「トライパス！」
+                            <div className="relative inline-block">
+                                <h1
+                                    className="relative text-5xl sm:text-6xl font-black italic tracking-tighter text-white z-10 transform -rotate-2"
+                                    style={{
+                                        textShadow: "0 0 10px rgba(0,170,255,0.8), 0 0 20px rgba(0,170,255,0.5), 0 0 40px rgba(0,170,255,0.3)"
+                                    }}
+                                >
+                                    <span className="bg-gradient-to-b bg-clip-text text-transparent from-white via-cyan-100 to-blue-200">
+                                        TRYPAS!
+                                    </span>
+                                    {/* Neon Glow Outline */}
+                                    <span className="absolute inset-0 blur-sm select-none text-cyan-400/40" aria-hidden="true">
+                                        TRYPAS!
+                                    </span>
+                                </h1>
                             </div>
                             {/* 背景グロー */}
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-cyan-500/10 blur-xl rounded-full -z-10"></div>
@@ -246,7 +259,7 @@ const RulesContentNew = () => {
 
                         <div className="bg-blue-500/10 border border-blue-400/30 rounded-xl px-4 py-3 mx-auto max-w-sm w-full backdrop-blur-sm">
                             <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed font-bold">
-                                元気に宣言して <span className="text-yellow-300 border-b border-yellow-300 mx-1">もう一度プレイ</span> しよう！
+                                赤コマを<span className="text-yellow-300 border-b border-yellow-300 mx-1">もう一回プレイ</span>
                             </p>
                         </div>
                     </div>
