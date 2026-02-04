@@ -78,7 +78,7 @@ const ControlNeonButton = ({ children, onClick, variant = "primary", isIcon = fa
                 <div className={`absolute bottom-0 right-0 w-[1px] h-full bg-gradient-to-t ${style.accent}`} />
             </div>
 
-            <span className={`relative z-10 font-bold tracking-wider ${style.text} flex items-center justify-center ${isIcon ? 'text-lg' : 'text-[10px] sm:text-xs font-mono'}`}>
+            <span className={`relative z-10 font-bold tracking-wider ${style.text} flex items-center justify-center ${isIcon ? 'text-xl' : 'text-xs sm:text-sm font-mono'}`}>
                 {children}
             </span>
         </button>
