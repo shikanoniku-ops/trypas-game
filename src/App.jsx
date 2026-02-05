@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Analytics } from '@vercel/analytics/react';
 import { useGameLogic } from './hooks/useGameLogic';
 import { useBackgroundMusic } from './hooks/useBackgroundMusic';
 import { useTutorial } from './hooks/useTutorial';
@@ -588,6 +589,7 @@ function App() {
           />
         </AnimatePresence>
       </div>
+      <Analytics />
     </div>
   );
 }
