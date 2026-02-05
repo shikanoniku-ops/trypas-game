@@ -277,6 +277,20 @@ const TitleScreen = ({ onStart, onToggleAudio, isMuted }) => {
                                         <p className="text-cyan-400/40 text-[10px] sm:text-xs tracking-[0.35em] uppercase font-mono">
                                             Abstract Strategy Game
                                         </p>
+                                        <div className="flex items-center gap-2 sm:gap-3 px-4 py-1.5 bg-cyan-500/5 border border-cyan-400/20 rounded-full backdrop-blur-sm">
+                                            <motion.div
+                                                animate={{ opacity: [0.4, 1, 0.4] }}
+                                                transition={{ duration: 1.8, repeat: Infinity }}
+                                                className="w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-[0_0_6px_rgba(0,255,255,0.8)]"
+                                            />
+                                            <span className="text-[9px] sm:text-[10px] text-cyan-400/80 tracking-[0.15em] font-semibold uppercase">
+                                                Prototype
+                                            </span>
+                                            <div className="w-px h-2.5 bg-cyan-400/25" />
+                                            <span className="text-[9px] sm:text-[10px] text-cyan-300/50 font-mono">
+                                                v{packageJson.version}
+                                            </span>
+                                        </div>
 
                                     </motion.div>
                                 </motion.div>
