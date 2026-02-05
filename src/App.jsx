@@ -309,21 +309,33 @@ function App() {
                   />
 
                   {/* Game Result Banner */}
-                  {(phase === 'GAME_OVER' || (isReplaying && gameOverReason)) && gameOverReason && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-4 relative group"
-                    >
-                      <div className="absolute inset-0 bg-cyan-500/20 blur-md rounded-lg"></div>
-                      <div className="relative bg-slate-900/90 border border-cyan-400 text-white px-4 py-3 rounded-xl shadow-lg flex items-center justify-center gap-3">
-                        <span className="text-2xl filter drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">🏆</span>
-                        <span className="font-bold text-sm sm:text-base tracking-wider text-center" style={{ textShadow: "0 0 10px rgba(6,182,212,0.5)" }}>
-                          {gameOverReason}
-                        </span>
-                      </div>
-                    </motion.div>
-                  )}
+                  {/* Unified Game Status Banner */}
+                  <AnimatePresence mode="wait">
+                    {(phase === 'GAME_OVER' || (isReplaying && gameOverReason) || lastActionMessage) && (
+                      <motion.div
+                        key={phase === 'GAME_OVER' ? 'game-over' : (lastActionMessage || 'status')}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="mt-4 relative group w-full flex justify-center z-20"
+                      >
+                        <div className="absolute inset-0 bg-cyan-500/10 blur-md rounded-lg mx-auto w-3/4"></div>
+                        <div className="relative bg-slate-900/90 border border-cyan-400/50 text-white px-6 py-2 rounded-xl shadow-[0_0_15px_rgba(34,211,238,0.15)] flex items-center justify-center gap-2 min-w-[280px]">
+                          {/* Icon Logic */}
+                          {(phase === 'GAME_OVER' || (isReplaying && gameOverReason)) && (
+                            <span className="text-xl filter drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]">🏆</span>
+                          )}
+
+                          <span className="font-bold text-xs sm:text-sm tracking-wider text-center font-mono text-cyan-50" style={{ textShadow: "0 0 10px rgba(6,182,212,0.3)" }}>
+                            {phase === 'GAME_OVER' || (isReplaying && gameOverReason)
+                              ? gameOverReason
+                              : lastActionMessage
+                            }
+                          </span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 

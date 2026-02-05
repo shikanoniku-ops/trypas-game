@@ -100,21 +100,7 @@ const ScoreBoard = ({
             </div>
 
             {/* メッセージ表示エリア */}
-            <div className="absolute bottom-0 left-0 right-0 h-6 flex justify-center items-center pointer-events-none">
-                <AnimatePresence mode="wait">
-                    {lastActionMessage && (
-                        <motion.span
-                            key={lastActionMessage}
-                            initial={{ opacity: 0, y: 3 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -3 }}
-                            className="text-[10px] sm:text-xs font-mono text-cyan-200/50 tracking-wider"
-                        >
-                            {lastActionMessage}
-                        </motion.span>
-                    )}
-                </AnimatePresence>
-            </div>
+
         </div>
     );
 };
