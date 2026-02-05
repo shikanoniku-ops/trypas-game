@@ -295,7 +295,7 @@ function App() {
                 </div>
 
                 {/* Right: ScoreBoard */}
-                <div className="flex-shrink-0 mt-2">
+                <div className="flex-shrink-0 mt-2 relative">
                   <ScoreBoard
                     scores={isReplaying ? replayScores : scores}
                     turn={isReplaying ? replayTurn : turn}
@@ -317,7 +317,7 @@ function App() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
-                        className="mt-4 relative group w-full flex justify-center z-20"
+                        className="absolute top-full left-0 right-0 mt-2 group w-full flex justify-center z-50 pointer-events-none"
                       >
                         <div className="absolute inset-0 bg-cyan-500/10 blur-md rounded-lg mx-auto w-3/4"></div>
                         <div className="relative bg-slate-900/90 border border-cyan-400/50 text-white px-6 py-2 rounded-xl shadow-[0_0_15px_rgba(34,211,238,0.15)] flex items-center justify-center gap-2 min-w-[280px]">
