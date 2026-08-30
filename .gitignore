@@ -112,3 +112,15 @@ dist
 
 # MacOS
 .DS_Store
+
+# 機密ファイル候補（セキュリティ監査 2026-08-07 追加）
+.env.*
+*.key
+*.pem
+credentials*.json
+service-account*.json
+secrets*
+*.p12
+
+# Claude Code のローカル作業ディレクトリ
+.claude/
