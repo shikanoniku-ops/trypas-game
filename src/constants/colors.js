@@ -17,10 +17,11 @@ export const PIECE_NUMBERS = {
     WHITE: 5,
 };
 
+// 取ったときの点数（2026-11-26 に10〜50点から1〜5点へ。コマの数字と同じ）
 export const PIECE_SCORES = {
-    RED: 10,
-    YELLOW: 20,
-    GREEN: 30,
-    BLUE: 40,
-    WHITE: 50,
+    RED: 1,
+    YELLOW: 2,
+    GREEN: 3,
+    BLUE: 4,
+    WHITE: 5,
 };
