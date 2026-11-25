@@ -160,7 +160,7 @@ const RulesContentNew = () => {
                     <div className="grid grid-cols-5 gap-2 relative z-10">
                         {/* 5点: 白 */}
                         <div className="flex flex-col items-center gap-1.5 group">
-                            <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="WHITE" />
                             </div>
                             <div className="text-center">
@@ -171,7 +171,7 @@ const RulesContentNew = () => {
 
                         {/* 4点: 青 */}
                         <div className="flex flex-col items-center gap-1.5 group">
-                            <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="BLUE" />
                             </div>
                             <div className="text-center">
@@ -182,7 +182,7 @@ const RulesContentNew = () => {
 
                         {/* 3点: 緑 */}
                         <div className="flex flex-col items-center gap-1.5 group">
-                            <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="GREEN" />
                             </div>
                             <div className="text-center">
@@ -193,7 +193,7 @@ const RulesContentNew = () => {
 
                         {/* 2点: 黄 */}
                         <div className="flex flex-col items-center gap-1.5 group">
-                            <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="YELLOW" />
                             </div>
                             <div className="text-center">
@@ -204,7 +204,7 @@ const RulesContentNew = () => {
 
                         {/* 1点: 赤 */}
                         <div className="flex flex-col items-center gap-1.5 group">
-                            <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="RED" />
                             </div>
                             <div className="text-center">
