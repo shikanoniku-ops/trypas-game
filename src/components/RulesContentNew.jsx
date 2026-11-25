@@ -158,7 +158,7 @@ const RulesContentNew = () => {
 
                 <div className="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/50 relative overflow-hidden">
                     <div className="grid grid-cols-5 gap-2 relative z-10">
-                        {/* 50点: 白 */}
+                        {/* 5点: 白 */}
                         <div className="flex flex-col items-center gap-1.5 group">
                             <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="WHITE" />
@@ -169,7 +169,7 @@ const RulesContentNew = () => {
                             </div>
                         </div>
 
-                        {/* 40点: 青 */}
+                        {/* 4点: 青 */}
                         <div className="flex flex-col items-center gap-1.5 group">
                             <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="BLUE" />
@@ -180,7 +180,7 @@ const RulesContentNew = () => {
                             </div>
                         </div>
 
-                        {/* 30点: 緑 */}
+                        {/* 3点: 緑 */}
                         <div className="flex flex-col items-center gap-1.5 group">
                             <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="GREEN" />
@@ -191,7 +191,7 @@ const RulesContentNew = () => {
                             </div>
                         </div>
 
-                        {/* 20点: 黄 */}
+                        {/* 2点: 黄 */}
                         <div className="flex flex-col items-center gap-1.5 group">
                             <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="YELLOW" />
@@ -202,7 +202,7 @@ const RulesContentNew = () => {
                             </div>
                         </div>
 
-                        {/* 10点: 赤 */}
+                        {/* 1点: 赤 */}
                         <div className="flex flex-col items-center gap-1.5 group">
                             <div className="w-4 h-4 sm:w-6 sm:h-6 mx-auto transform group-hover:scale-125 transition-transform">
                                 <Piece color="RED" />
@@ -361,7 +361,7 @@ const RulesContentNew = () => {
 
                                 <div className="text-xs font-bold text-yellow-300 mb-1 uppercase tracking-wider">High Score Goal</div>
                                 <div className="text-4xl font-black text-white mb-2 tabular-nums tracking-tighter text-shadow-yellow">
-                                    440<span className="text-sm font-bold text-yellow-500/80 ml-1">pts</span>
+                                    44<span className="text-sm font-bold text-yellow-500/80 ml-1">pts</span>
                                 </div>
                                 <div className="bg-slate-900/60 px-3 py-1 text-[10px] text-slate-300 border border-yellow-500/20 shadow-sm rounded-full">
                                     <span className="text-yellow-400 font-bold mr-1">MISSION:</span>

@@ -8,11 +8,11 @@ import { PIECE_COLORS, PIECE_SCORES } from '../constants/colors';
 const RulesContent = () => {
     // 得点表の順序（白から赤へ、高得点順）
     const scoreOrder = [
-        { key: 'WHITE', label: '白', tailwindColor: 'text-white', score: 50 },
-        { key: 'BLUE', label: '青', tailwindColor: 'text-blue-400', score: 40 },
-        { key: 'GREEN', label: '緑', color: PIECE_COLORS.GREEN, score: 30 },
-        { key: 'YELLOW', label: '黄', tailwindColor: 'text-yellow-400', score: 20 },
-        { key: 'RED', label: '赤', tailwindColor: 'text-red-400', score: 10 },
+        { key: 'WHITE', label: '白', tailwindColor: 'text-white', score: 5 },
+        { key: 'BLUE', label: '青', tailwindColor: 'text-blue-400', score: 4 },
+        { key: 'GREEN', label: '緑', color: PIECE_COLORS.GREEN, score: 3 },
+        { key: 'YELLOW', label: '黄', tailwindColor: 'text-yellow-400', score: 2 },
+        { key: 'RED', label: '赤', tailwindColor: 'text-red-400', score: 1 },
     ];
 
     return (
@@ -155,7 +155,7 @@ const RulesContent = () => {
             {/* 最高得点 */}
             <section className="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 p-5 rounded-xl border border-yellow-500/30">
                 <h3 className="text-lg font-bold text-yellow-400 mb-2 flex items-center gap-2">
-                    <span className="text-xl">🏆</span> 最高得点：440点
+                    <span className="text-xl">🏆</span> 最高得点：44点
                 </h3>
                 <p className="text-sm text-gray-300">
                     赤を1個だけ残して終われば達成！

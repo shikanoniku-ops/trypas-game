@@ -48,7 +48,7 @@ export const TUTORIAL_STEPS = [
     // 初手: 0番(YELLOW)を取り除く
     {
         type: 'REMOVE',
-        message: '【初手】最初は好きな場所を選べます。\n試しに黄(20点)をタップ！',
+        message: '【初手】最初は好きな場所を選べます。\n試しに黄(2点)をタップ！',
         subMessage: '最初の1個を取り除いてスペースを作ります',
         targetSpot: 0,
         highlightSpots: [0],
@@ -64,12 +64,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '緑(30点)を飛び越えて獲得！',
+        message: '緑(3点)を飛び越えて獲得！',
         subMessage: '0番をタップ',
         targetSpot: 0,
         highlightSpots: [0],
         capturedSpot: 1,
-        gainPoints: 30,
+        gainPoints: 3,
     },
 
     // Move 2
@@ -82,12 +82,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '青(40点)を飛び越えて獲得！',
+        message: '青(4点)を飛び越えて獲得！',
         subMessage: '3番をタップ',
         targetSpot: 3,
         highlightSpots: [3],
         capturedSpot: 4,
-        gainPoints: 40,
+        gainPoints: 4,
     },
 
     // Move 3
@@ -100,12 +100,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '青(40点)を飛び越えて獲得！',
+        message: '青(4点)を飛び越えて獲得！',
         subMessage: '5番をタップ',
         targetSpot: 5,
         highlightSpots: [5],
         capturedSpot: 9,
-        gainPoints: 40,
+        gainPoints: 4,
     },
 
     // Move 4
@@ -118,12 +118,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '青(40点)を飛び越えて獲得！',
+        message: '青(4点)を飛び越えて獲得！',
         subMessage: '9番をタップ',
         targetSpot: 9,
         highlightSpots: [9],
         capturedSpot: 5,
-        gainPoints: 40,
+        gainPoints: 4,
     },
 
     // Move 5
@@ -136,12 +136,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '緑(30点)を獲得！',
+        message: '緑(3点)を獲得！',
         subMessage: '5番をタップ',
         targetSpot: 5,
         highlightSpots: [5],
         capturedSpot: 8,
-        gainPoints: 30,
+        gainPoints: 3,
     },
 
     // Move 6
@@ -154,12 +154,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '白(50点)を飛び越えて獲得！大きい！',
+        message: '白(5点)を飛び越えて獲得！大きい！',
         subMessage: '12番をタップ',
         targetSpot: 12,
         highlightSpots: [12],
         capturedSpot: 11,
-        gainPoints: 50,
+        gainPoints: 5,
     },
 
     // Move 7
@@ -172,12 +172,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '黄(20点)を獲得',
+        message: '黄(2点)を獲得',
         subMessage: '11番をタップ',
         targetSpot: 11,
         highlightSpots: [11],
         capturedSpot: 12,
-        gainPoints: 20,
+        gainPoints: 2,
     },
 
     // Move 8
@@ -190,12 +190,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '赤(10点)を獲得。連続ターンです。',
+        message: '赤(1点)を獲得。連続ターンです。',
         subMessage: '4番をタップ',
         targetSpot: 4,
         highlightSpots: [4],
         capturedSpot: 7,
-        gainPoints: 10,
+        gainPoints: 1,
     },
 
     // Move 9
@@ -208,12 +208,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '赤(10点)を獲得。さらに連続ターン。',
+        message: '赤(1点)を獲得。さらに連続ターン。',
         subMessage: '2番をタップ',
         targetSpot: 2,
         highlightSpots: [2],
         capturedSpot: 5,
-        gainPoints: 10,
+        gainPoints: 1,
     },
 
     // Move 10
@@ -226,12 +226,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '黄(20点)を獲得',
+        message: '黄(2点)を獲得',
         subMessage: '1番をタップ',
         targetSpot: 1,
         highlightSpots: [1],
         capturedSpot: 3,
-        gainPoints: 20,
+        gainPoints: 2,
     },
 
     // Move 11
@@ -244,12 +244,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '白(50点)を獲得！',
+        message: '白(5点)を獲得！',
         subMessage: '3番をタップ',
         targetSpot: 3,
         highlightSpots: [3],
         capturedSpot: 1,
-        gainPoints: 50,
+        gainPoints: 5,
     },
 
     // Move 12
@@ -262,12 +262,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '緑(30点)を獲得！',
+        message: '緑(3点)を獲得！',
         subMessage: '5番をタップ',
         targetSpot: 5,
         highlightSpots: [5],
         capturedSpot: 4,
-        gainPoints: 30,
+        gainPoints: 3,
     },
 
     // Move 13
@@ -280,12 +280,12 @@ export const TUTORIAL_STEPS = [
     },
     {
         type: 'MOVE_TO',
-        message: '白(50点)を獲得！',
+        message: '白(5点)を獲得！',
         subMessage: '0番をタップ',
         targetSpot: 0,
         highlightSpots: [0],
         capturedSpot: 2,
-        gainPoints: 50,
+        gainPoints: 5,
     },
 
     {
@@ -293,7 +293,7 @@ export const TUTORIAL_STEPS = [
         message: '🎉 赤1個残し達成！\nチュートリアルクリアです！',
         subMessage: 'おめでとうございます',
         highlightSpots: [0],
-        finalScore: 460,
+        finalScore: 44,
     },
 ];
 
