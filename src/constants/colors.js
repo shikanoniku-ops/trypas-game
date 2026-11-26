@@ -8,15 +8,6 @@ export const PIECE_COLORS = {
 
 export const PIECE_TYPES = ['RED', 'GREEN', 'BLUE', 'YELLOW', 'WHITE'];
 
-// コマの真ん中に出す数字（赤1・黄2・緑3・青4・白5）
-export const PIECE_NUMBERS = {
-    RED: 1,
-    YELLOW: 2,
-    GREEN: 3,
-    BLUE: 4,
-    WHITE: 5,
-};
-
 // 取ったときの点数（2026-11-26 に10〜50点から1〜5点へ。コマの数字と同じ）
 export const PIECE_SCORES = {
     RED: 1,
@@ -25,3 +16,6 @@ export const PIECE_SCORES = {
     BLUE: 4,
     WHITE: 5,
 };
+
+// コマの真ん中に出す数字は点数と同じ（数字＝点数。点数表を1つにして、ずれないようにする）
+export const PIECE_NUMBERS = PIECE_SCORES;

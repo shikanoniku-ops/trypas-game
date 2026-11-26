@@ -183,7 +183,7 @@ export const TUTORIAL_STEPS = [
     // Move 8
     {
         type: 'MOVE',
-        message: '【8】赤を選択（連続ターン発動）',
+        message: '【8】緑を選択（赤を取って連続ターン）',
         subMessage: '11番をタップ',
         selectSpot: 11,
         highlightSpots: [11],
